@@ -12,9 +12,9 @@ public enum ExperimentEvents
 
 public enum ExperimentStates
 {
-	ProprioceptiveDrift,
 	Delay1,
 	Trial,
+	ProprioceptiveDrift,
 };
 
 
@@ -33,7 +33,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	{
 		trialList = new TrialList(protocolFile);
 		Debug.Log("Loaded " + trialList.Count () + " trials");
-		
+
 		this.StartMachine();
 	}
 	
@@ -45,20 +45,18 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		if(!IsStarted())
 			return;
 		
-		switch(GetState()) 
-		{
+		switch(GetState()) {
 		case ExperimentStates.Trial:
-			if(ev == ExperimentEvents.TrialFinished)
-			{
-				ChangeState(ExperimentStates.ProprioceptiveDrift);
-			}
-			break;
-		case ExperimentStates.ProprioceptiveDrift:
-			if(ev == ExperimentEvents.ProprioceptiveDriftMeasured)
-			{
+			if(ev == ExperimentEvents.TrialFinished) {
 				ChangeState(ExperimentStates.Delay1);
 			}
-			break;	
+			break;
+//		case ExperimentStates.ProprioceptiveDrift:
+//			if(ev == ExperimentEvents.ProprioceptiveDriftMeasured)
+//			{
+//				ChangeState(ExperimentStates.Delay1);
+//			}
+//			break;	
 		}
 	}
 	
@@ -68,67 +66,66 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		if(!IsStarted())
 			return;
 		
-		switch(GetState()) 
-		{
-		case ExperimentStates.ProprioceptiveDrift:
-			if (!trialList.HasMore ())
-			{
-				Debug.Log("No more trials, measuring proprioceptive drift");
-				markerController.isStarted = true;
-				Debug.Log(markerController.proprioceptiveDrift);
-			}
-			break;
+		switch(GetState()) {
+//		case ExperimentStates.ProprioceptiveDrift:
+//			if (!trialList.HasMore ())
+//			{
+//				Debug.Log("No more trials, measuring proprioceptive drift");
+//				markerController.isStarted = true;
+//				Debug.Log(markerController.proprioceptiveDrift);
+//			}
+//			break;
 		case ExperimentStates.Delay1:
 			// Stop the experiment if all trials have been done
-			if(!trialList.HasMore()) 
-			{
+			if(!trialList.HasMore()) {
 				Debug.Log("No more trials, stopping machine");
 				StopMachine();					
 			} 
-			else if(GetTimeInState() > 1.5f)
-			{
+			else if(GetTimeInState() > 1.5f) {
 				ChangeState(ExperimentStates.Trial);
+				Debug.Log ("Changing ExperimentStates to Trial");
 			}
 			break;
 		}
 	}
 	
-	
 	protected override void OnEnter(ExperimentStates oldState)
 	{
 		switch(GetState()) {
-			case ExperimentStates.Trial:				
-				// Load next trial from list
-				Dictionary<string, string> trial = trialList.Pop ();
+		case ExperimentStates.Trial:				
+			// Load next trial from list
+			Dictionary<string, string> trial = trialList.Pop ();
 			
-				Debug.Log("Starting new trial");
+			Debug.Log("Starting new trial");
 			
-				// Determine which hand to use for given gapsize
-				if(trial["GapStatus"] == "Inactive")
-					trialController.hand = 0;
-				else if(trial["GapStatus"] == "Active")
-					trialController.hand = 1;
-				else {
-					Debug.Log ("Invalid GapSize in protocol");
-					trialController.hand = -1;
-				}
+			// Determine which hand to use for given gapsize
+			if(trial["GapSize"] == "Small")
+				trialController.hand = 0;
+			else if(trial["GapSize"] == "Active")
+				trialController.hand = 1;
+
+			else {
+				Debug.Log ("Invalid GapSize in protocol");
+				trialController.hand = -1;
+			}
 				
-				Debug.Log("Gap: " + trial["GapSize"]);
+			Debug.Log("Gap: " + trial["GapSize"]);
 			
-				// Get offset
-				int offset;
-				int.TryParse(trial["Offset"], out offset);
-			    trialController.offset = offset;
+
+			// Get offset
+			int offset;
+			int.TryParse(trial["Offset"], out offset);
+			trialController.offset = offset;
 				
-				Debug.Log("Offset: " + offset);
+			Debug.Log("Offset: " + offset);
 			
-				// Start trial
-				trialController.waveCounter = 0;
-				trialController.StartMachine();
-				break;
-			
-			case ExperimentStates.Delay1:
-				break;	
+			// Start trial
+			trialController.waveCounter = 0;
+			trialController.StartMachine();
+			break;
+
+		case ExperimentStates.Delay1:
+			break;	
 		}
 	}
 	
@@ -141,9 +138,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		case ExperimentStates.Trial:
 			// Append result of trial to data file
 			if(trialController.hand == 0)
-				writer.Write("No gap, ");
+				writer.Write("Short, ");
 			else if(trialController.hand == 1)
-				writer.Write("With gap, ");
+				writer.Write("Long, ");
 			else
 				writer.Write("Unknown, ");
 
@@ -151,14 +148,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			writer.Write(", ");
 			writer.Write(trialController.response);
 			writer.WriteLine();
-				
-				writer.Close();
-				
-				break;
-		case ExperimentStates.ProprioceptiveDrift:
-			writer.Write(markerController.proprioceptiveDrift);
+
+			writer.Close();
+
 			break;
 
+		// case ExperimentStates.ProprioceptiveDrift:
+//			writer.Write(markerController.proprioceptiveDrift);
+//			break;
 		}
 	}
 }

@@ -15,7 +15,7 @@ public enum TrialStates
 	WaitForWave,
 	TooLate,
 	WithoutFeedback,
-	Final
+	Final,
 };
 
 
@@ -45,39 +45,48 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			return;
 	
 		switch(GetState()) {
-			
-			case TrialStates.WaitForWave:
-				if(ev == TrialEvents.Wave_1 && currentLight == 0) {
-					waveCounter++;
-					
-					if(waveCounter < wavesRequired)
-						ChangeState (TrialStates.WaitForWave);
-					else
-						ChangeState(TrialStates.WithoutFeedback);
+		case TrialStates.WaitForWave:
+			if(ev == TrialEvents.Wave_1 && currentLight == 0) {
+				waveCounter++;
+
+				if(waveCounter < wavesRequired){
+					ChangeState (TrialStates.WaitForWave);
+					Debug.Log ("State Changed to WaitForWave");
 				}
-				
-				if(ev == TrialEvents.Wave_2 && currentLight == 1){
-					waveCounter++;
-				
-					if(waveCounter < wavesRequired)
-						ChangeState (TrialStates.WaitForWave);
-					else
-						ChangeState(TrialStates.WithoutFeedback);
+				else {
+					ChangeState(TrialStates.WithoutFeedback);
+					Debug.Log ("State Changed to WithoutFeedback");
 				}
+			}
 				
-				if(ev == TrialEvents.Wave_3 && currentLight == 2){
-					waveCounter++;
-				
-					if(waveCounter < wavesRequired)
-						ChangeState (TrialStates.WaitForWave);
-					else
-						ChangeState(TrialStates.WithoutFeedback);
+			if(ev == TrialEvents.Wave_2 && currentLight == 1){
+				waveCounter++;
+
+				if(waveCounter < wavesRequired){
+					ChangeState (TrialStates.WaitForWave);
+					Debug.Log ("State Changed to WaitForWave");
 				}
-					
-				break;
+				else {
+					ChangeState(TrialStates.WithoutFeedback);
+					Debug.Log ("State Changed to WithoutFeedback");
+				}
+			}
+				
+			if(ev == TrialEvents.Wave_3 && currentLight == 2){
+				waveCounter++;
+				
+				if(waveCounter < wavesRequired){
+					ChangeState (TrialStates.WaitForWave);
+					Debug.Log ("State Changed to WaitForWave");
+				}
+				else {
+					ChangeState(TrialStates.WithoutFeedback);
+					Debug.Log ("State Changed to WithoutFeedback");
+				}
+			}
+			break;
 		}
 	}
-	
 	
 	public void Update()
 	{
@@ -103,50 +112,48 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 		}
 	}
 	
-	
 	protected override void OnEnter(TrialStates oldState)
 	{
 		switch(GetState()) {
-			case TrialStates.WaitForWave:
+		case TrialStates.WaitForWave:
 
 			// set the offset
 
-				handSwitcher.selected = hand;
-				currentLight = Random.Range(0, lights.Length);
-				lights[currentLight].activeMaterial = 1;	
-				break;
-			
-			case TrialStates.WithoutFeedback:
-				handSwitcher.selected = 2;
-				currentLight = Random.Range(0, lights.Length);				
-				lights[currentLight].activeMaterial = 1;		
-				break;
+			handSwitcher.selected = hand;
+			currentLight = Random.Range(0, lights.Length);
+			lights[currentLight].activeMaterial = 1;	
+			break;
+
+		case TrialStates.WithoutFeedback:
+			handSwitcher.selected = 2;
+			currentLight = Random.Range(0, lights.Length);				
+			lights[currentLight].activeMaterial = 1;		
+			break;
 						
-			case TrialStates.TooLate:
-				break;
+		case TrialStates.TooLate:
+			break;
 				
-			case TrialStates.Final:
-				StopMachine();
-				experimentController.HandleEvent(ExperimentEvents.TrialFinished);
-				break;
+		case TrialStates.Final:
+			StopMachine();
+			experimentController.HandleEvent(ExperimentEvents.TrialFinished);
+			break;
 		}
 	}
-	
 	
 	protected override void OnExit(TrialStates newState)
 	{
 		switch(GetState()) {
-			case TrialStates.WaitForWave:
-				lights[currentLight].activeMaterial = 0;
-				break;
+		case TrialStates.WaitForWave:
+			lights[currentLight].activeMaterial = 0;
+			break;
 		
-			case TrialStates.WithoutFeedback:
-				handSwitcher.selected = 3;
-				lights[currentLight].activeMaterial = 0;
-				break;		
+		case TrialStates.WithoutFeedback:
+			handSwitcher.selected = 3;
+			lights[currentLight].activeMaterial = 0;
+			break;		
 		
-			case TrialStates.TooLate:
-				break;
+		case TrialStates.TooLate:
+			break;
 		}
 	}
 }
