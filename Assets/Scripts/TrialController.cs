@@ -45,9 +45,6 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			return;
 	
 		switch(GetState()) {
-		case TrialStates.WaitingForFirstTrial:
-			ChangeState(TrialStates.WaitForWave);
-			break;
 
 		case TrialStates.WaitForWave:
 			if(ev == TrialEvents.Wave_1 && currentLight == 0) {
@@ -92,6 +89,8 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			return;
 
 		switch(GetState()) {
+
+
 		case TrialStates.WaitForWave:
 			if(GetTimeInState() > 5.0f)
 				ChangeState(TrialStates.TooLate);

@@ -14,7 +14,6 @@ public enum ExperimentStates
 {
 	AccomodationTime,
 	Delay1,
-	FirstTrial,
 	Trial,
 //	ProprioceptiveDrift,
 };
@@ -65,8 +64,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	
 	public void Update()
 	{
-//		Debug.Log (GetTimeInState ());
-
 		if(!IsStarted())
 			return;
 		
@@ -79,16 +76,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 //				Debug.Log(markerController.proprioceptiveDrift);
 //			}
 //			break;
-//		case ExperimentStates.StartingTimeWait:
-//			if (GetTimeInState() > 10.0f) {
-//				ChangeState(ExperimentStates.Trial);
-//			}
-//			break;
 
 		case ExperimentStates.AccomodationTime:
-			if (GetTimeInState() > 15.0f){
-				ChangeState(ExperimentStates.FirstTrial);
-				trialController.ChangeState(TrialStates.WaitingForFirstTrial);
+			if (GetTimeInState() > 60.0f){
+				ChangeState(ExperimentStates.Trial);
 			}
 			break;
 
@@ -110,16 +101,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	{
 		switch(GetState()) {
 
-		case ExperimentStates.FirstTrial:
-			trialController.ChangeState (TrialStates.WaitForWave);
-			break;
+		case ExperimentStates.Trial:	
 
-		case ExperimentStates.Trial:				
+
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
-			
+
 			Debug.Log("Starting new trial");
-			
+
 			// Determine which hand to use for given gapsize
 			if(trial["GapSize"] == "Small")
 				trialController.hand = 0;
@@ -144,6 +133,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			// Start trial
 			trialController.waveCounter = 0;
 			trialController.StartMachine();
+			trialController.ChangeState(TrialStates.WaitForWave);
 			break;
 
 		case ExperimentStates.Delay1:
