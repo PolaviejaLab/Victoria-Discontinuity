@@ -12,9 +12,11 @@ public enum ExperimentEvents
 
 public enum ExperimentStates
 {
+	AccomodationTime,
 	Delay1,
+	FirstTrial,
 	Trial,
-	ProprioceptiveDrift,
+//	ProprioceptiveDrift,
 };
 
 
@@ -63,6 +65,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	
 	public void Update()
 	{
+//		Debug.Log (GetTimeInState ());
+
 		if(!IsStarted())
 			return;
 		
@@ -75,6 +79,20 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 //				Debug.Log(markerController.proprioceptiveDrift);
 //			}
 //			break;
+//		case ExperimentStates.StartingTimeWait:
+//			if (GetTimeInState() > 10.0f) {
+//				ChangeState(ExperimentStates.Trial);
+//			}
+//			break;
+
+		case ExperimentStates.AccomodationTime:
+			if (GetTimeInState() > 15.0f){
+				ChangeState(ExperimentStates.FirstTrial);
+				trialController.ChangeState(TrialStates.WaitingForFirstTrial);
+			}
+			break;
+
+
 		case ExperimentStates.Delay1:
 			// Stop the experiment if all trials have been done
 			if(!trialList.HasMore()) {
@@ -83,7 +101,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			} 
 			else if(GetTimeInState() > 1.5f) {
 				ChangeState(ExperimentStates.Trial);
-				Debug.Log ("Changing ExperimentStates to Trial");
 			}
 			break;
 		}
@@ -92,6 +109,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	protected override void OnEnter(ExperimentStates oldState)
 	{
 		switch(GetState()) {
+
+		case ExperimentStates.FirstTrial:
+			trialController.ChangeState (TrialStates.WaitForWave);
+			break;
+
 		case ExperimentStates.Trial:				
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
@@ -101,7 +123,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			// Determine which hand to use for given gapsize
 			if(trial["GapSize"] == "Small")
 				trialController.hand = 0;
-			else if(trial["GapSize"] == "Active")
+			else if(trial["GapSize"] == "Large")
 				trialController.hand = 1;
 
 			else {
@@ -130,11 +152,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 	
 	
-	protected override void OnExit(ExperimentStates newState)
-	{
+	protected override void OnExit(ExperimentStates newState){
+
 		StreamWriter writer = new StreamWriter(outputFile, true);
-		switch(GetState()) 
-		{
+
+		switch(GetState()) {
 		case ExperimentStates.Trial:
 			// Append result of trial to data file
 			if(trialController.hand == 0)

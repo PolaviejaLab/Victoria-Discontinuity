@@ -12,6 +12,7 @@ public enum TrialEvents
 
 public enum TrialStates
 {
+	WaitingForFirstTrial,
 	WaitForWave,
 	TooLate,
 	WithoutFeedback,
@@ -35,8 +36,7 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 	public int wavesRequired;
 	
 	public int waveCounter;
-
-
+	
 	public void HandleEvent(TrialEvents ev)
 	{
 		Debug.Log ("Event " + ev.ToString());
@@ -45,17 +45,19 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			return;
 	
 		switch(GetState()) {
+		case TrialStates.WaitingForFirstTrial:
+			ChangeState(TrialStates.WaitForWave);
+			break;
+
 		case TrialStates.WaitForWave:
 			if(ev == TrialEvents.Wave_1 && currentLight == 0) {
 				waveCounter++;
 
 				if(waveCounter < wavesRequired){
 					ChangeState (TrialStates.WaitForWave);
-					Debug.Log ("State Changed to WaitForWave");
 				}
 				else {
 					ChangeState(TrialStates.WithoutFeedback);
-					Debug.Log ("State Changed to WithoutFeedback");
 				}
 			}
 				
@@ -64,11 +66,9 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 
 				if(waveCounter < wavesRequired){
 					ChangeState (TrialStates.WaitForWave);
-					Debug.Log ("State Changed to WaitForWave");
 				}
 				else {
 					ChangeState(TrialStates.WithoutFeedback);
-					Debug.Log ("State Changed to WithoutFeedback");
 				}
 			}
 				
@@ -77,11 +77,9 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 				
 				if(waveCounter < wavesRequired){
 					ChangeState (TrialStates.WaitForWave);
-					Debug.Log ("State Changed to WaitForWave");
 				}
 				else {
 					ChangeState(TrialStates.WithoutFeedback);
-					Debug.Log ("State Changed to WithoutFeedback");
 				}
 			}
 			break;
@@ -93,22 +91,21 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 		if(!IsStarted())
 			return;
 
-		switch(GetState()) 
-		{
-			case TrialStates.WaitForWave:
-				if(GetTimeInState() > 5.0f)
-					ChangeState(TrialStates.TooLate);
-				break;
+		switch(GetState()) {
+		case TrialStates.WaitForWave:
+			if(GetTimeInState() > 5.0f)
+				ChangeState(TrialStates.TooLate);
+			break;
 			
-			case TrialStates.TooLate:
-				if(GetTimeInState() > 2.0f)
-					ChangeState(TrialStates.Final);
-				break;		
+		case TrialStates.TooLate:
+			if(GetTimeInState() > 2.0f)
+				ChangeState(TrialStates.Final);
+			break;		
 				
-			case TrialStates.WithoutFeedback:
-				if(GetTimeInState() > 1.0f)
-					ChangeState(TrialStates.Final);
-				break;	
+		case TrialStates.WithoutFeedback:
+			if(GetTimeInState() > 1.0f)
+				ChangeState(TrialStates.Final);
+			break;	
 		}
 	}
 	
