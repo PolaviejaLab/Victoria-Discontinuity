@@ -50,7 +50,6 @@ public class MarkerController : MonoBehaviour {
 				dirRight = true;
 			}
 		}	
-
 		MeasureProprioceptiveDrift ();
 	}
 

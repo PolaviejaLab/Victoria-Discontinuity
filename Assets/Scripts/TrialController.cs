@@ -29,8 +29,10 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 	
 	public HandSwitcher handSwitcher;
 	public int hand;
-	
+
+	public OffsetSwitcher offsetSwitcher;
 	public int offset;
+
 	public int response;
 	
 	public int wavesRequired;
@@ -112,10 +114,11 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 	{
 		switch(GetState()) {
 		case TrialStates.WaitForWave:
-
 			// set the offset
-
+			offsetSwitcher.offset = offset;
+			// set the hand
 			handSwitcher.selected = hand;
+			// turn on random light
 			currentLight = Random.Range(0, lights.Length);
 			lights[currentLight].activeMaterial = 1;	
 			break;

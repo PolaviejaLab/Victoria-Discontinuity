@@ -78,7 +78,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 //			break;
 
 		case ExperimentStates.AccomodationTime:
-			if (GetTimeInState() > 60.0f){
+			if (GetTimeInState() > 10.0f){
 				ChangeState(ExperimentStates.Trial);
 			}
 			break;
@@ -150,9 +150,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		case ExperimentStates.Trial:
 			// Append result of trial to data file
 			if(trialController.hand == 0)
-				writer.Write("Short, ");
+				writer.Write("Without gap, ");
 			else if(trialController.hand == 1)
-				writer.Write("Long, ");
+				writer.Write("With gap, ");
 			else
 				writer.Write("Unknown, ");
 
