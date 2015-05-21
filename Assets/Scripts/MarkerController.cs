@@ -7,7 +7,7 @@ public class MarkerController : MonoBehaviour {
 	private GameObject marker; 
 	private GameObject pointer;
 
-	public bool isStarted = false; 
+	public bool isStarted; 
 
 	private bool dirRight = true;
 	private float speed = 0.05f;
@@ -64,7 +64,6 @@ public class MarkerController : MonoBehaviour {
 			proprioceptiveDrift += pointer.transform.position.z;
 			Debug.Log(proprioceptiveDrift);
 			experimentController.HandleEvent (ExperimentEvents.ProprioceptiveDriftMeasured);
-			isStarted = false;
 		}
 	return proprioceptiveDrift;
 	}

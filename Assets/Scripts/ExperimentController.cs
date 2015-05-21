@@ -13,7 +13,6 @@ public enum ExperimentEvents
 public enum ExperimentStates
 {
 	AccomodationTime,
-	Delay1,
 	Trial,
 	ProprioceptiveDrift,
 	Finished,
@@ -31,8 +30,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public string outputFile;
 	
 			
-	public void Start()
-	{
+	public void Start() {
 		trialList = new TrialList(protocolFile);
 		Debug.Log("Loaded " + trialList.Count () + " trials");
 
@@ -40,8 +38,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 	
 	
-	public void HandleEvent(ExperimentEvents ev)
-	{
+	public void HandleEvent(ExperimentEvents ev) {
 		Debug.Log ("Event " + ev.ToString());
 		
 		if(!IsStarted())
@@ -50,21 +47,19 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		switch(GetState()) {
 		case ExperimentStates.Trial:
 			if(ev == ExperimentEvents.TrialFinished) {
-				ChangeState(ExperimentStates.Delay1);
+				if(GetTimeInState() > 1.0f) {
+					Debug.Log("measuring proprioceptive drift");
+					ChangeState(ExperimentStates.ProprioceptiveDrift);
+				} 
+//				ChangeState(ExperimentStates.AccomodationTime);
 			}
 			break;
 		case ExperimentStates.ProprioceptiveDrift:
 			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
-				ChangeState(ExperimentStates.Finished);
+				ChangeState(ExperimentStates.AccomodationTime);
 				Debug.Log ("PD measured");
 			}
 			break;
-//		case ExperimentStates.ProprioceptiveDrift:
-//			if(ev == ExperimentEvents.ProprioceptiveDriftMeasured)
-//			{
-//				ChangeState(ExperimentStates.Delay1);
-//			}
-//			break;	
 		}
 	}
 	
@@ -76,33 +71,20 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		
 		switch(GetState()) {
 		case ExperimentStates.AccomodationTime:
-			if (GetTimeInState() > 1.0f){
+			if (!trialList.HasMore()){
+				ChangeState(ExperimentStates.Finished);
+			}
+			else if (GetTimeInState() > 1.0f){
 				ChangeState(ExperimentStates.Trial);
 			}
 			break;
-
-		case ExperimentStates.Delay1:
-			// Stop the experiment if all trials have been done
-			if(!trialList.HasMore()) {
-				Debug.Log("No more trials, measuring proprioceptive drift");
-				ChangeState(ExperimentStates.ProprioceptiveDrift);
-
-			} 
-			else if(GetTimeInState() > 1.5f) {
-				ChangeState(ExperimentStates.Trial);
-			}
-			break;
-
-
 		}
 	}
 	
 	protected override void OnEnter(ExperimentStates oldState)
 	{
 		switch(GetState()) {
-
 		case ExperimentStates.Trial:	
-
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
 
@@ -113,7 +95,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 				trialController.hand = 0;
 			else if(trial["GapSize"] == "Large")
 				trialController.hand = 1;
-
 			else {
 				Debug.Log ("Invalid GapSize in protocol");
 				trialController.hand = -1;
@@ -121,7 +102,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 				
 			Debug.Log("Gap: " + trial["GapSize"]);
 			
-
 			// Get offset
 			float offset;
 			float.TryParse(trial["Offset"], out offset);
@@ -141,11 +121,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.Finished:
 			Debug.Log("No more trials, stopping machine");
+//			markerController.isStarted = false;
 			StopMachine();	
 			break;
-
-		case ExperimentStates.Delay1:
-			break;	
 		}
 	}
 	
@@ -169,15 +147,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			writer.Write(trialController.response);
 			writer.WriteLine();
 
-
-
 			break;
 
 		 case ExperimentStates.ProprioceptiveDrift:
 			writer.Write(markerController.proprioceptiveDrift);
 			break;
-
-		
 		}
 		writer.Close();
 	}
