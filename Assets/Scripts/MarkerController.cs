@@ -4,39 +4,41 @@ using System.Collections;
 public class MarkerController : MonoBehaviour {
 
 	public ExperimentController experimentController;
-	public GameObject marker; 
+	private GameObject marker; 
+	private GameObject pointer;
 
-	public bool isStarted; 
+	public bool isStarted = false; 
 
 	private bool dirRight = true;
-	private float speed = 0.3f;
+	private float speed = 0.05f;
 
 	public float proprioceptiveDrift;
 
-
-	void Start ()
+	public void Start ()
 	{
 		marker = GameObject.Find ("Marker");
-		marker.SetActive (false);
+		pointer = GameObject.Find ("Pointer");
 	}
 	
-	void Update () 
-	{
-		if (isStarted) 
-		{
+	public void Update(){
+		if (!isStarted) {
+			marker.SetActive (false);
+		}
+		if (isStarted) {
 			marker.SetActive(true);
 			StartMarker();
 		}
 	}
 
-	private void StartMarker()
+	public void StartMarker()
 	{
-		Vector2 movement = new Vector2 (1, 0);
+
+		Vector3 movement = new Vector3 (0, 0, 1);
 		// marker moving from left to right in the x axis
 		if (dirRight) 
 		{
-			transform.Translate (movement * speed * Time.deltaTime);
-			if (transform.position.x >= 0.35f)
+			pointer.transform.Translate (movement * speed * Time.deltaTime);
+			if (pointer.transform.position.z >= 0.26f)
 			{
 				dirRight = false;
 			}
@@ -44,8 +46,8 @@ public class MarkerController : MonoBehaviour {
 		else 
 			// change to the opposite direction along the axis. 
 		{
-			transform.Translate (-movement * speed * Time.deltaTime);
-			if (transform.position.x <= -0.35f) 
+			pointer.transform.Translate (-movement * speed * Time.deltaTime);
+			if (pointer.transform.position.z <= -0.40f) 
 			{
 				dirRight = true;
 			}
@@ -59,7 +61,8 @@ public class MarkerController : MonoBehaviour {
 		if (Input.GetKeyDown ("space") && isStarted) 
 		{
 			speed = 0.0f;
-			proprioceptiveDrift += transform.position.x;
+			proprioceptiveDrift += pointer.transform.position.z;
+			Debug.Log(proprioceptiveDrift);
 			experimentController.HandleEvent (ExperimentEvents.ProprioceptiveDriftMeasured);
 			isStarted = false;
 		}

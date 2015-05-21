@@ -3,9 +3,9 @@ using System.Collections;
 
 public class OffsetSwitcher : MonoBehaviour {
 
-	public int offset = 0;
+	public float offset = 0;
 
-	private int previous = -1; 
+	private float previous = -1; 
 
 	private GameObject controller;
 
@@ -27,6 +27,6 @@ public class OffsetSwitcher : MonoBehaviour {
 		// method that will make the offset change, get the handcontroller to shift with the offset
 		// use a find method 
 		controller = GameObject.Find ("HandController");
-		controller.transform.position += Vector3.forward * offset;
+		controller.transform.position = new Vector3(0, 0, offset);
 	}
 }

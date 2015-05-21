@@ -15,7 +15,8 @@ public enum ExperimentStates
 	AccomodationTime,
 	Delay1,
 	Trial,
-//	ProprioceptiveDrift,
+	ProprioceptiveDrift,
+	Finished,
 };
 
 
@@ -52,6 +53,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 				ChangeState(ExperimentStates.Delay1);
 			}
 			break;
+		case ExperimentStates.ProprioceptiveDrift:
+			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
+				ChangeState(ExperimentStates.Finished);
+				Debug.Log ("PD measured");
+			}
+			break;
 //		case ExperimentStates.ProprioceptiveDrift:
 //			if(ev == ExperimentEvents.ProprioceptiveDriftMeasured)
 //			{
@@ -68,32 +75,25 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			return;
 		
 		switch(GetState()) {
-//		case ExperimentStates.ProprioceptiveDrift:
-//			if (!trialList.HasMore ())
-//			{
-//				Debug.Log("No more trials, measuring proprioceptive drift");
-//				markerController.isStarted = true;
-//				Debug.Log(markerController.proprioceptiveDrift);
-//			}
-//			break;
-
 		case ExperimentStates.AccomodationTime:
-			if (GetTimeInState() > 10.0f){
+			if (GetTimeInState() > 1.0f){
 				ChangeState(ExperimentStates.Trial);
 			}
 			break;
 
-
 		case ExperimentStates.Delay1:
 			// Stop the experiment if all trials have been done
 			if(!trialList.HasMore()) {
-				Debug.Log("No more trials, stopping machine");
-				StopMachine();					
+				Debug.Log("No more trials, measuring proprioceptive drift");
+				ChangeState(ExperimentStates.ProprioceptiveDrift);
+
 			} 
 			else if(GetTimeInState() > 1.5f) {
 				ChangeState(ExperimentStates.Trial);
 			}
 			break;
+
+
 		}
 	}
 	
@@ -102,7 +102,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		switch(GetState()) {
 
 		case ExperimentStates.Trial:	
-
 
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
@@ -124,8 +123,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			
 
 			// Get offset
-			int offset;
-			int.TryParse(trial["Offset"], out offset);
+			float offset;
+			float.TryParse(trial["Offset"], out offset);
 			trialController.offset = offset;
 				
 			Debug.Log("Offset: " + offset);
@@ -134,6 +133,15 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			trialController.waveCounter = 0;
 			trialController.StartMachine();
 			trialController.ChangeState(TrialStates.WaitForWave);
+			break;
+
+		case ExperimentStates.ProprioceptiveDrift:
+			markerController.isStarted = true;
+			break;
+
+		case ExperimentStates.Finished:
+			Debug.Log("No more trials, stopping machine");
+			StopMachine();	
 			break;
 
 		case ExperimentStates.Delay1:
@@ -161,13 +169,16 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			writer.Write(trialController.response);
 			writer.WriteLine();
 
-			writer.Close();
+
 
 			break;
 
-		// case ExperimentStates.ProprioceptiveDrift:
-//			writer.Write(markerController.proprioceptiveDrift);
-//			break;
+		 case ExperimentStates.ProprioceptiveDrift:
+			writer.Write(markerController.proprioceptiveDrift);
+			break;
+
+		
 		}
+		writer.Close();
 	}
 }

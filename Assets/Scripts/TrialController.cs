@@ -31,13 +31,14 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 	public int hand;
 
 	public OffsetSwitcher offsetSwitcher;
-	public int offset;
+	public float offset;
 
 	public int response;
 	
 	public int wavesRequired;
 	
 	public int waveCounter;
+	public int trialCounter;
 	
 	public void HandleEvent(TrialEvents ev)
 	{
@@ -121,6 +122,7 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			// turn on random light
 			currentLight = Random.Range(0, lights.Length);
 			lights[currentLight].activeMaterial = 1;	
+			trialCounter = trialCounter + 1;
 			break;
 
 		case TrialStates.WithoutFeedback:
