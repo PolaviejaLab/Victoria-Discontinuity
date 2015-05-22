@@ -58,6 +58,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
 				Debug.Log ("PD measured");
 				ChangeState(ExperimentStates.Questionnaire);
+				markerController.isStarted = false;
 			}
 			break;
 		}
@@ -70,9 +71,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			return;
 		
 		switch(GetState()) {
-
 		case ExperimentStates.AccomodationTime:
-			if (GetTimeInState() > 1.0f) {
+			if (!trialList.HasMore()) {
+				ChangeState (ExperimentStates.Finished);
+			}
+
+			else if (GetTimeInState() > 1.0f) {
 				ChangeState(ExperimentStates.Trial);
 			}
 			break;
@@ -93,6 +97,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		case ExperimentStates.AccomodationTime:
 			markerController.isStarted = false;
 			break;
+
 		case ExperimentStates.Trial:	
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
@@ -129,12 +134,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			break;
 
 		case ExperimentStates.Questionnaire:
-			markerController.isStarted = false;
 			break;
 
 		case ExperimentStates.Finished:
-			Debug.Log("No more trials, stopping machine");
 			StopMachine();	
+			Debug.Log("No more trials, stopping machine");
 			break;
 		}
 	}
@@ -147,13 +151,17 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		switch(GetState()) {
 		 case ExperimentStates.ProprioceptiveDrift:
 			// Append result of trial to data file
+			writer.Write(trialController.trialCounter);
+			writer.Write(", ");
+
 			if(trialController.hand == 0)
 				writer.Write("Without gap, ");
 			else if(trialController.hand == 1)
 				writer.Write("With gap, ");
 			else
 				writer.Write("Unknown, ");
-			
+
+
 			writer.Write(trialController.offset);
 			writer.Write(", ");
 			writer.Write(trialController.response);
