@@ -13,6 +13,7 @@ public enum TrialEvents
 public enum TrialStates
 {
 	WaitingForFirstTrial,
+	WaitingForNextTrial,
 	WaitForWave,
 	TooLate,
 	WithoutFeedback,

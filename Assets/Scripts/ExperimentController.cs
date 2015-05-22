@@ -15,6 +15,7 @@ public enum ExperimentStates
 	AccomodationTime,
 	Trial,
 	ProprioceptiveDrift,
+	Questionnaire,
 	Finished,
 };
 
@@ -56,7 +57,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		case ExperimentStates.ProprioceptiveDrift:
 			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
 				Debug.Log ("PD measured");
-				ChangeState(ExperimentStates.AccomodationTime);
+				ChangeState(ExperimentStates.Questionnaire);
 			}
 			break;
 		}
@@ -69,11 +70,17 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			return;
 		
 		switch(GetState()) {
+
 		case ExperimentStates.AccomodationTime:
+			if (GetTimeInState() > 1.0f) {
+				ChangeState(ExperimentStates.Trial);
+			}
+			break;
+		case ExperimentStates.Questionnaire:
 			if (!trialList.HasMore()){
 				ChangeState(ExperimentStates.Finished);
 			}
-			else if (GetTimeInState() > 1.0f){
+			else if (Input.GetKeyDown (KeyCode.Return)) {
 				ChangeState(ExperimentStates.Trial);
 			}
 			break;
@@ -119,6 +126,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.ProprioceptiveDrift:
 			markerController.isStarted = true;
+			break;
+
+		case ExperimentStates.Questionnaire:
+			markerController.isStarted = false;
 			break;
 
 		case ExperimentStates.Finished:

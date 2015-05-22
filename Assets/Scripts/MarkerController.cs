@@ -21,6 +21,7 @@ public class MarkerController : MonoBehaviour {
 	public void Start () {
 		marker = GameObject.Find ("Marker");
 		pointer = GameObject.Find ("Pointer");
+
 		// get the original position of the pointer
 		pointerx = pointer.transform.localPosition.x;
 		pointery = pointer.transform.localPosition.y;
