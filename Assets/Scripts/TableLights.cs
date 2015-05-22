@@ -9,7 +9,7 @@ public class TableLights : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		//lights = GameObject.FindGameObjectsWithTag("TableLight");
+		// lights = GameObject.FindGameObjectsWithTag("TableLight");
 		
 	}
 	

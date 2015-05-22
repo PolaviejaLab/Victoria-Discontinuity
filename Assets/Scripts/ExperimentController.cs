@@ -51,13 +51,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 					Debug.Log("measuring proprioceptive drift");
 					ChangeState(ExperimentStates.ProprioceptiveDrift);
 				} 
-//				ChangeState(ExperimentStates.AccomodationTime);
 			}
 			break;
 		case ExperimentStates.ProprioceptiveDrift:
 			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
-				ChangeState(ExperimentStates.AccomodationTime);
 				Debug.Log ("PD measured");
+				ChangeState(ExperimentStates.AccomodationTime);
 			}
 			break;
 		}
@@ -84,6 +83,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	protected override void OnEnter(ExperimentStates oldState)
 	{
 		switch(GetState()) {
+		case ExperimentStates.AccomodationTime:
+			markerController.isStarted = false;
+			break;
 		case ExperimentStates.Trial:	
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
@@ -121,7 +123,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.Finished:
 			Debug.Log("No more trials, stopping machine");
-//			markerController.isStarted = false;
 			StopMachine();	
 			break;
 		}
@@ -133,7 +134,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		StreamWriter writer = new StreamWriter(outputFile, true);
 
 		switch(GetState()) {
-		case ExperimentStates.Trial:
+		 case ExperimentStates.ProprioceptiveDrift:
 			// Append result of trial to data file
 			if(trialController.hand == 0)
 				writer.Write("Without gap, ");
@@ -141,18 +142,16 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 				writer.Write("With gap, ");
 			else
 				writer.Write("Unknown, ");
-
+			
 			writer.Write(trialController.offset);
 			writer.Write(", ");
 			writer.Write(trialController.response);
-			writer.WriteLine();
-
-			break;
-
-		 case ExperimentStates.ProprioceptiveDrift:
+			writer.Write(", ");
 			writer.Write(markerController.proprioceptiveDrift);
+			writer.WriteLine();
 			break;
 		}
+
 		writer.Close();
 	}
 }
