@@ -34,22 +34,17 @@ public class MarkerController : MonoBehaviour {
 		}
 		if (isStarted) {
 			marker.SetActive(true);
-			proprioceptiveDrift = 0;
 			speed = 0.05f;
 			StartMarker();
 		}
 	}
 
 	public void StartMarker(){
-
-
-	
-
 		Vector3 movement = new Vector3 (0, 0, 1);
 		// marker moving from left to right in the x axis
 		if (dirRight){
 			pointer.transform.Translate (movement * speed * Time.deltaTime);
-			if (pointer.transform.position.z >= 0.28f)
+			if (pointer.transform.position.z >= 0.26f)
 			{
 				dirRight = false;
 			}
@@ -74,7 +69,6 @@ public class MarkerController : MonoBehaviour {
 			experimentController.HandleEvent (ExperimentEvents.ProprioceptiveDriftMeasured);
 			// Restarts the pointer position to its original value (Start())
 			pointer.transform.localPosition =  new Vector3(pointerx, pointery, pointerz);
-
 		}
 	return proprioceptiveDrift;
 	}
