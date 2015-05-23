@@ -29,7 +29,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	private TrialList trialList;
 	public string protocolFile;
 	public string outputFile;
-	
+
+	public int trialCounter;
 			
 	public void Start() {
 		trialList = new TrialList(protocolFile);
@@ -102,6 +103,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
 
+			trialCounter++;
+
 			Debug.Log("Starting new trial");
 
 			// Determine which hand to use for given gapsize
@@ -151,7 +154,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		switch(GetState()) {
 		 case ExperimentStates.ProprioceptiveDrift:
 			// Append result of trial to data file
-			writer.Write(trialController.trialCounter);
+			writer.Write(trialCounter);
 			writer.Write(", ");
 
 			if(trialController.hand == 0)

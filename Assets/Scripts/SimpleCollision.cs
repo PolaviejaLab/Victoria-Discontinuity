@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SimpleCollision : MonoBehaviour {
 
-	public TrialController controller;
+	public TrialController trialController;
 	public TrialEvents triggerEvent;
 	public GameObject[] objects;
 
@@ -12,15 +12,15 @@ public class SimpleCollision : MonoBehaviour {
 	void OnTriggerStay(Collider col)
 	{		
 		if(objects.Length == 0) {
-			controller.HandleEvent(triggerEvent);
+			trialController.HandleEvent(triggerEvent);
 		} else {
 			for(int i = 0; i < objects.Length; i++) {
 				if(CompareByName) {
 					if(col.gameObject.name == objects[i].name)
-						controller.HandleEvent(triggerEvent);
+						trialController.HandleEvent(triggerEvent);
 				} else {
 					if(col.gameObject == objects[i])
-						controller.HandleEvent(triggerEvent);
+						trialController.HandleEvent(triggerEvent);
 				}
 			}
 		}
