@@ -5,7 +5,6 @@ public class Debbuging : MonoBehaviour {
 
 	public TrialController trialController;
 
-
 	void Start () {
 	}
 	

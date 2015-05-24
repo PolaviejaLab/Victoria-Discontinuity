@@ -50,79 +50,44 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			return;
 	
 		switch(GetState()) {
-
 		case TrialStates.WaitForWave:
 			// correct waves
 			if(ev == TrialEvents.Wave_1 && currentLight == 0) {
 				correctWaves++;
 				ChangeState (TrialStates.Waved);
-				Debug.Log ("Num of Correct Waves: " + correctWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
 			}
 			if(ev == TrialEvents.Wave_2 && currentLight == 1){
 				correctWaves++;
 				ChangeState (TrialStates.Waved);
-				Debug.Log ("Num of Correct Waves: " + correctWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
-
 			}
 			if(ev == TrialEvents.Wave_3 && currentLight == 2){
 				correctWaves++;
 				ChangeState(TrialStates.Waved);
-				Debug.Log ("Num of Correct Waves: " + correctWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
-	
 			}
 			// incorrect waves
 			if (ev == TrialEvents.Wave_1 && currentLight == 1){
 				incorrectWaves++;
 				ChangeState(TrialStates.Waved);
-				Debug.Log ("Num of Incorrect Waves: " + incorrectWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
-		
 			}
 			if (ev == TrialEvents.Wave_1 && currentLight == 2){
 				incorrectWaves++;
 				ChangeState(TrialStates.Waved);
-				Debug.Log ("Total num of waves: " + waveCounter);
-				Debug.Log ("Num of Incorrect Waves: " + incorrectWaves);
-
 			}
 			if (ev == TrialEvents.Wave_2 && currentLight == 0){
 				incorrectWaves++;
 				ChangeState(TrialStates.Waved);
-				Debug.Log ("Num of Incorrect Waves: " + incorrectWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
-
 			}
 			if (ev == TrialEvents.Wave_2 && currentLight == 2){
 				incorrectWaves++;
 				ChangeState(TrialStates.Waved);
-				Debug.Log ("Num of Incorrect Waves: " + incorrectWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
-
 			}
 			if (ev == TrialEvents.Wave_3 && currentLight == 0){
 				incorrectWaves++;
 				ChangeState(TrialStates.Waved);
-				Debug.Log ("Num of Incorrect Waves: " + incorrectWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
-
 			}
 			if (ev == TrialEvents.Wave_3 && currentLight == 1){
 				incorrectWaves++;
 				ChangeState(TrialStates.Waved);
-				Debug.Log ("Num of Incorrect Waves: " + incorrectWaves);
-				Debug.Log ("Total num of waves: " + waveCounter);
-
-
 			}
 			break;
 		}
@@ -134,16 +99,20 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			return;
 
 		switch(GetState()) {
-
-
 		case TrialStates.WaitForWave:
 			if(GetTimeInState() > 5.0f)
 				ChangeState(TrialStates.TooLate);
 			break;
 			
-		case TrialStates.TooLate:
-//			if(GetTimeInState() > 2.0f)
-//				ChangeState(TrialStates.WaitForWave);
+		case TrialStates.Waved:
+			if (GetTimeInState() > 1.0f) {
+				if (waveCounter < wavesRequired){
+					ChangeState (TrialStates.WaitForWave);
+				} 
+				else {
+					ChangeState (TrialStates.WithoutFeedback);
+				}
+			}
 			break;		
 				
 		case TrialStates.WithoutFeedback:
@@ -153,10 +122,10 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 		}
 	}
 	
-	protected override void OnEnter(TrialStates oldState)
-	{
+	protected override void OnEnter(TrialStates oldState) {
 		switch(GetState()) {
 		case TrialStates.WaitForWave:
+			waveCounter++;
 			// set the offset
 			offsetSwitcher.offset = offset;
 			// set the hand
@@ -166,49 +135,30 @@ public class TrialController: StateMachine<TrialStates, TrialEvents>
 			lights[currentLight].activeMaterial = 1;	
 			break;
 
-		case TrialStates.WithoutFeedback:
-			lights[currentLight].activeMaterial = 0;
-			handSwitcher.selected = 3;
-//			handSwitcher.selected = 2;
-//			currentLight = Random.Range(0, lights.Length);				
-//			lights[currentLight].activeMaterial = 1;		
+		case TrialStates.Waved:
 			break;
-						
+		
+		case TrialStates.WithoutFeedback:
+			break;
+
 		case TrialStates.TooLate:
 			ChangeState(TrialStates.Waved);
 			break;
 
-		case TrialStates.Waved:
-			waveCounter++;
-			Debug.Log ("miaw+");
-			if (waveCounter <= wavesRequired){
-				ChangeState (TrialStates.WaitForWave);
-			} 
-			else {
-				ChangeState (TrialStates.WithoutFeedback);
-			}
-			break;
-
 		case TrialStates.Final:
-			Debug.Log (correctWaves);
-			Debug.Log (incorrectWaves);
-			Debug.Log (waveCounter);
-			StopMachine();
 			experimentController.HandleEvent(ExperimentEvents.TrialFinished);
+			StopMachine();
 			break;
 		}
 	}
 	
-	protected override void OnExit(TrialStates newState)
-	{
+	protected override void OnExit(TrialStates newState){
 		switch(GetState()) {
 		case TrialStates.WaitForWave:
 			lights[currentLight].activeMaterial = 0;
 			break;
 		
 		case TrialStates.WithoutFeedback:
-//			handSwitcher.selected = 3;
-//			lights[currentLight].activeMaterial = 0;
 			break;		
 		
 		case TrialStates.TooLate:

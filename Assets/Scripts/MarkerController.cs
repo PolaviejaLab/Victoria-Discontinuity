@@ -9,7 +9,7 @@ public class MarkerController : MonoBehaviour {
 
 	public bool isStarted; 
 
-	private bool dirRight = true;
+	public bool dirRight;
 	private float speed;
 
 	public float proprioceptiveDrift;

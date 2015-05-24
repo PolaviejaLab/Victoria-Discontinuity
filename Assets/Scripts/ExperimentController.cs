@@ -31,7 +31,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public string outputFile;
 
 	public int trialCounter;
-			
+
 	public void Start() {
 		trialList = new TrialList(protocolFile);
 		Debug.Log("Loaded " + trialList.Count () + " trials");
@@ -60,14 +60,13 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 				Debug.Log ("PD measured");
 				ChangeState(ExperimentStates.Questionnaire);
 				markerController.isStarted = false;
+
 			}
 			break;
 		}
 	}
 	
-	
-	public void Update()
-	{
+	public void Update() {
 		if(!IsStarted())
 			return;
 		
@@ -75,38 +74,35 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		case ExperimentStates.AccomodationTime:
 			if (!trialList.HasMore()) {
 				ChangeState (ExperimentStates.Finished);
+				Debug.Log ("miaw1");
 			}
-
 			else if (GetTimeInState() > 1.0f) {
 				ChangeState(ExperimentStates.Trial);
 			}
 			break;
 		case ExperimentStates.Questionnaire:
-			if (!trialList.HasMore()){
-				ChangeState(ExperimentStates.Finished);
+			if (trialList.HasMore() && Input.GetKeyDown (KeyCode.Return)){
+				ChangeState(ExperimentStates.AccomodationTime);
+				Debug.Log ("miaw2");
 			}
-			else if (Input.GetKeyDown (KeyCode.Return)) {
-				ChangeState(ExperimentStates.Trial);
+			else if (!trialList.HasMore()){
+				ChangeState(ExperimentStates.Finished);
 			}
 			break;
 		}
 	}
 	
-	protected override void OnEnter(ExperimentStates oldState)
-	{
+	protected override void OnEnter(ExperimentStates oldState) {
+
 		switch(GetState()) {
 		case ExperimentStates.AccomodationTime:
 			markerController.isStarted = false;
 			break;
 
 		case ExperimentStates.Trial:	
+			trialCounter++;
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
-
-			trialCounter++;
-
-			Debug.Log("Starting new trial");
-
 			// Determine which hand to use for given gapsize
 			if(trial["GapSize"] == "Small")
 				trialController.hand = 0;
@@ -128,12 +124,15 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			
 			// Start trial
 			trialController.waveCounter = 0;
+			trialController.incorrectWaves = 0;
+			trialController.correctWaves =0;
 			trialController.StartMachine();
 			trialController.ChangeState(TrialStates.WaitForWave);
 			break;
 
 		case ExperimentStates.ProprioceptiveDrift:
 			markerController.isStarted = true;
+			markerController.dirRight = true;
 			break;
 
 		case ExperimentStates.Questionnaire:
@@ -167,13 +166,21 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 			writer.Write(trialController.offset);
 			writer.Write(", ");
-			writer.Write(trialController.response);
+			writer.Write(trialController.waveCounter);
 			writer.Write(", ");
+			writer.Write(trialController.correctWaves);
+			writer.Write(", ");
+			writer.Write(trialController.incorrectWaves);
+			writer.Write(", ");
+//			writer.Write(trialController.response);
+//			writer.Write(", ");
 			writer.Write(markerController.proprioceptiveDrift);
 			writer.WriteLine();
 			break;
-		}
 
+		case ExperimentStates.Questionnaire:
+			break;
+		}
 		writer.Close();
 	}
 }
