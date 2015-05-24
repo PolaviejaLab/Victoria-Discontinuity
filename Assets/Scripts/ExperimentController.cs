@@ -25,6 +25,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public HandSwitcher handSwitcher;
 	public TrialController trialController;
 	public MarkerController markerController;
+	public TableLights tableLights;
 	
 	private TrialList trialList;
 	public string protocolFile;
@@ -33,6 +34,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public int trialCounter;
 
 	public void Start() {
+
 		trialList = new TrialList(protocolFile);
 		Debug.Log("Loaded " + trialList.Count () + " trials");
 
@@ -42,25 +44,23 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	
 	public void HandleEvent(ExperimentEvents ev) {
 		Debug.Log ("Event " + ev.ToString());
-		
+
+
 		if(!IsStarted())
 			return;
 		
 		switch(GetState()) {
 		case ExperimentStates.Trial:
 			if(ev == ExperimentEvents.TrialFinished) {
-				if(GetTimeInState() > 1.0f) {
-					Debug.Log("measuring proprioceptive drift");
-					ChangeState(ExperimentStates.ProprioceptiveDrift);
-				} 
-			}
+				tableLights.isOn = false;
+				ChangeState(ExperimentStates.ProprioceptiveDrift);
+			} 
 			break;
 		case ExperimentStates.ProprioceptiveDrift:
 			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
 				Debug.Log ("PD measured");
 				ChangeState(ExperimentStates.Questionnaire);
 				markerController.isStarted = false;
-
 			}
 			break;
 		}
@@ -72,10 +72,13 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		
 		switch (GetState ()) {
 		case ExperimentStates.AccomodationTime:
+			tableLights.isOn = true;
 			if (trialList.HasMore () && GetTimeInState() > 1.0f) {
 				ChangeState (ExperimentStates.Trial);
+
 			}
 			break;
+
 		case ExperimentStates.Questionnaire:
 			if (Input.GetKeyDown (KeyCode.Return)) {
 				ChangeState (ExperimentStates.AccomodationTime);
@@ -131,7 +134,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.ProprioceptiveDrift:
 			markerController.isStarted = true;
-			markerController.dirRight = true;
+			markerController.dirRight = true;			
+
 			break;
 
 		case ExperimentStates.Questionnaire:
@@ -145,12 +149,15 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		}
 	}
 	
-	
 	protected override void OnExit(ExperimentStates newState){
 
 		StreamWriter writer = new StreamWriter(outputFile, true);
 
 		switch(GetState()) {
+		case ExperimentStates.Trial:
+
+			break;
+
 		 case ExperimentStates.ProprioceptiveDrift:
 			// Append result of trial to data file
 			writer.Write(trialCounter);
@@ -179,6 +186,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			break;
 
 		case ExperimentStates.Questionnaire:
+
 			break;
 		}
 		writer.Close();
