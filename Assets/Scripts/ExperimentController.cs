@@ -70,23 +70,15 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		if(!IsStarted())
 			return;
 		
-		switch(GetState()) {
+		switch (GetState ()) {
 		case ExperimentStates.AccomodationTime:
-			if (!trialList.HasMore()) {
-				ChangeState (ExperimentStates.Finished);
-				Debug.Log ("miaw1");
-			}
-			else if (GetTimeInState() > 1.0f) {
-				ChangeState(ExperimentStates.Trial);
+			if (trialList.HasMore () && GetTimeInState() > 1.0f) {
+				ChangeState (ExperimentStates.Trial);
 			}
 			break;
 		case ExperimentStates.Questionnaire:
-			if (trialList.HasMore() && Input.GetKeyDown (KeyCode.Return)){
-				ChangeState(ExperimentStates.AccomodationTime);
-				Debug.Log ("miaw2");
-			}
-			else if (!trialList.HasMore()){
-				ChangeState(ExperimentStates.Finished);
+			if (Input.GetKeyDown (KeyCode.Return)) {
+				ChangeState (ExperimentStates.AccomodationTime);
 			}
 			break;
 		}
@@ -97,12 +89,18 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		switch(GetState()) {
 		case ExperimentStates.AccomodationTime:
 			markerController.isStarted = false;
+			if (!trialList.HasMore()){
+				ChangeState(ExperimentStates.Finished);
+			}
+
 			break;
 
-		case ExperimentStates.Trial:	
+		case ExperimentStates.Trial:
 			trialCounter++;
+
 			// Load next trial from list
 			Dictionary<string, string> trial = trialList.Pop ();
+
 			// Determine which hand to use for given gapsize
 			if(trial["GapSize"] == "Small")
 				trialController.hand = 0;
@@ -122,10 +120,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 				
 			Debug.Log("Offset: " + offset);
 			
-			// Start trial
+			// Start trial and restart counters
 			trialController.waveCounter = 0;
 			trialController.incorrectWaves = 0;
 			trialController.correctWaves =0;
+		
 			trialController.StartMachine();
 			trialController.ChangeState(TrialStates.WaitForWave);
 			break;
@@ -136,6 +135,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			break;
 
 		case ExperimentStates.Questionnaire:
+
 			break;
 
 		case ExperimentStates.Finished:

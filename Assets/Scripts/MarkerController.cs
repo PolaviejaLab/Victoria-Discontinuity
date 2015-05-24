@@ -41,10 +41,6 @@ public class MarkerController : MonoBehaviour {
 	}
 
 	public void StartMarker(){
-
-
-	
-
 		Vector3 movement = new Vector3 (0, 0, 1);
 		// marker moving from left to right in the x axis
 		if (dirRight){
@@ -74,7 +70,6 @@ public class MarkerController : MonoBehaviour {
 			experimentController.HandleEvent (ExperimentEvents.ProprioceptiveDriftMeasured);
 			// Restarts the pointer position to its original value (Start())
 			pointer.transform.localPosition =  new Vector3(pointerx, pointery, pointerz);
-
 		}
 	return proprioceptiveDrift;
 	}
