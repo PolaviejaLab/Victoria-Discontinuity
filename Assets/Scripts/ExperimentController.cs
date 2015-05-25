@@ -119,14 +119,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			// Get offset
 			float offset;
 			float.TryParse(trial["Offset"], out offset);
-			trialController.offset = offset;
+			trialController.offset = offset / 100.0f;
 				
 			Debug.Log("Offset: " + offset);
 			
 			// Start trial and restart counters
 			trialController.waveCounter = 0;
 			trialController.incorrectWaves = 0;
-			trialController.correctWaves =0;
+			trialController.correctWaves = 0;
 		
 			trialController.StartMachine();
 			trialController.ChangeState(TrialStates.WaitForWave);
