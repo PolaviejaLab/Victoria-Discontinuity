@@ -89,7 +89,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			if (!trialList.HasMore())
 				ChangeState(ExperimentStates.Finished);
 
-				StartTrial();
+			StartTrial();
 			break;
 
 		case ExperimentStates.ProprioceptiveDrift:
