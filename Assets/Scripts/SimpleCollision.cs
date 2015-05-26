@@ -12,6 +12,7 @@ public class SimpleCollision : MonoBehaviour {
 	void OnTriggerStay(Collider col)
 	{		
 		if(objects.Length == 0) {
+			Debug.Log("Collission with " + col.name);
 			trialController.HandleEvent(triggerEvent);
 		} else {
 			for(int i = 0; i < objects.Length; i++) {

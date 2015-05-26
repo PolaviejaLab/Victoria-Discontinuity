@@ -40,8 +40,13 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 		if(!started)
 		{
 			started = true;
+			OnStart();
 			state = initialState;	
 			timeAtStateChange = Time.time;
+
+			Debug.Log ("Entering state " + state.ToString() + 
+			           " (machine just started)");
+
 			OnEnter(state);
 		}
 	}
@@ -121,7 +126,13 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 		if(StartOnInstantiation)
 			StartMachine();
 	}
-	
+
+
+	/**
+	 * Called when the state machine is started
+	 */
+	virtual protected void OnStart() { }
+
 
 	/**
 	 * Called when leaving a state.

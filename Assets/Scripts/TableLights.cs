@@ -9,6 +9,7 @@ public class TableLights : MonoBehaviour {
 	private GameObject light1;
 	private GameObject light2;
 	private GameObject light3; 
+	private GameObject light4;
 
 	public bool isOn;
 
@@ -17,6 +18,7 @@ public class TableLights : MonoBehaviour {
 		light1 = GameObject.Find ("TableLights1");
 		light2 = GameObject.Find ("TableLights2");
 		light3 = GameObject.Find ("TableLights3");
+		light4 = GameObject.Find ("TableLightsInitial");
 
 		isOn = true;
 	}
@@ -27,10 +29,12 @@ public class TableLights : MonoBehaviour {
 			light1.SetActive (false);
 			light2.SetActive (false);
 			light3.SetActive (false);
+			light4.SetActive (false);
 		} else if (isOn) {
 			light1.SetActive (true);
 			light2.SetActive (true);
 			light3.SetActive (true);
+			light4.SetActive (true);
 		}
 	}
 }
