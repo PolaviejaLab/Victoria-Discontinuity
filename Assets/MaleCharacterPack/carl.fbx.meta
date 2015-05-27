@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: d22c6018a8c27ba40a99183394ebc4c4
+guid: 32e11b8ebedf1f8418968688df2226a6
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: Glasses
-    100002: Head
-    100004: HeadTop_End
-    100006: Hips
-    100008: Jaw
-    100010: JawEND
-    100012: //RootNode
+    100000: //RootNode
+    100002: CarlMidGeo
+    100004: Head
+    100006: HeadTop_End
+    100008: Hips
+    100010: Jaw
+    100012: JawEND
     100014: LeftArm
     100016: LeftCheek
     100018: LeftEye
@@ -95,14 +95,13 @@ ModelImporter:
     100178: Spine2
     100180: TongueBack
     100182: TongueTip
-    100184: Toon_Geo
-    400000: Glasses
-    400002: Head
-    400004: HeadTop_End
-    400006: Hips
-    400008: Jaw
-    400010: JawEND
-    400012: //RootNode
+    400000: //RootNode
+    400002: CarlMidGeo
+    400004: Head
+    400006: HeadTop_End
+    400008: Hips
+    400010: Jaw
+    400012: JawEND
     400014: LeftArm
     400016: LeftCheek
     400018: LeftEye
@@ -188,12 +187,9 @@ ModelImporter:
     400178: Spine2
     400180: TongueBack
     400182: TongueTip
-    400184: Toon_Geo
-    4300000: Glasses
-    4300002: Toon_Geo
+    4300000: CarlMidGeo
     11100000: //RootNode
-    13700000: Glasses
-    13700002: Toon_Geo
+    13700000: CarlMidGeo
   materials:
     importMaterials: 1
     materialName: 3

@@ -8,138 +8,217 @@ using UnityEngine;
 using System.Collections.Generic;
 using Leap;
 
-// Overall Controller object that will instantiate hands and tools when they appear.
-public class HandController : MonoBehaviour {
 
-  // Reference distance from thumb base to pinky base in mm.
-  protected const float GIZMO_SCALE = 5.0f;
-  protected const float MM_TO_M = 0.001f;
+/**
+ * Overall Controller object that will instantiate hands and tools when they appear.
+ */
+public class HandController :MonoBehaviour 
+{
+	protected const float MM_TO_M = 0.001f;
 
-  public bool separateLeftRight = false;
+	public bool separateLeftRight = false;
 
-  // Allow multiple hand models
-  public HandModel[] leftGraphicsModels;
-  public HandModel[] rightGraphicsModels;
-  public HandModel[] leftPhysicsModels;
-  public HandModel[] rightPhysicsModels;
+	// Allow multiple hand models
+	public HandModel[] leftGraphicsModels;
+	public HandModel[] rightGraphicsModels;
+	public HandModel[] leftPhysicsModels;
+	public HandModel[] rightPhysicsModels;
 
-  public bool isHeadMounted = false;
-  public bool mirrorZAxis = false;
+	public bool isHeadMounted = false;
+	public bool mirrorZAxis = false;
 
-  public Vector3 handMovementScale = Vector3.one;
+	public Vector3 handMovementScale = Vector3.one;
 
-  protected Controller leap_controller_;
-
-    
-  void OnDrawGizmos() {
-    // Draws the little Leap Motion Controller in the Editor view.
-    Gizmos.matrix = Matrix4x4.Scale(GIZMO_SCALE * Vector3.one);
-    Gizmos.DrawIcon(transform.position, "leap_motion.png");
-  }
-
-  void Awake() {
-    leap_controller_ = new Controller();
-
-    // Optimize for top-down tracking if on head mounted display.
-    Controller.PolicyFlag policy_flags = leap_controller_.PolicyFlags;
-    if (isHeadMounted)
-      policy_flags |= Controller.PolicyFlag.POLICY_OPTIMIZE_HMD;
-    else
-      policy_flags &= ~Controller.PolicyFlag.POLICY_OPTIMIZE_HMD;
-
-    leap_controller_.SetPolicyFlags(policy_flags);
-  }
-
-  void Start() {
-    if (leap_controller_ == null) {
-      Debug.LogWarning(
-          "Cannot connect to controller. Make sure you have Leap Motion v2.0+ installed");
-    }
-  }
+	protected Controller leap_controller_;
 
 
-  public void IgnoreCollisionsWithHands(GameObject to_ignore, bool ignore = true) {
-    foreach (HandModel hand in leftPhysicsModels)
-      Leap.Utils.IgnoreCollisions(hand.gameObject, to_ignore, ignore);
-	foreach (HandModel hand in rightPhysicsModels)
-      Leap.Utils.IgnoreCollisions(hand.gameObject, to_ignore, ignore);
-  }
+	// Recorder
+	public bool enableRecordPlayback = true;
+	public float recorderSpeed = 1.0f;
+	public bool recorderLoop = true;
+	
+	protected LeapRecorder recorder_ = new LeapRecorder();
+	
 
+	/**
+	 * Initialize LEAP when script instance is being loaded.
+	 */
+	void Awake()
+	{
+		leap_controller_ = new Controller();
 
-  protected void UpdateHandModels(HandList leap_hands, HandModel[] left, HandModel[] right) 
-  {
-    // Go through all the active hands and update them.
-    int num_hands = leap_hands.Count;
-    for (int h = 0; h < num_hands; ++h) {
-      Hand leap_hand = leap_hands[h];      
-      HandModel[] models = (mirrorZAxis != leap_hand.IsLeft) ? left:right;
-      
-	  foreach (HandModel hand in models) {
-	  	hand.SetController(this);
-	    hand.SetLeapHand(leap_hand);	  
-	    hand.MirrorZAxis(mirrorZAxis);
-					
-	    float hand_scale = MM_TO_M * leap_hand.PalmWidth / hand.handModelPalmWidth;
-	    hand.transform.localScale = hand_scale * transform.lossyScale;
-	    hand.UpdateHand();		  
-	  }      
+		if(leap_controller_ == null) 
+		{
+			Debug.LogWarning("Cannot connect to controller. Make sure you have Leap Motion v2.0+ installed");
+			return;
+		}
+
+		// Optimize for top-down tracking if on head mounted display.
+		Controller.PolicyFlag policy_flags = leap_controller_.PolicyFlags;
+		if (isHeadMounted)
+			policy_flags |= Controller.PolicyFlag.POLICY_OPTIMIZE_HMD;
+		else
+			policy_flags &= ~Controller.PolicyFlag.POLICY_OPTIMIZE_HMD;
+
+		leap_controller_.SetPolicyFlags(policy_flags);
+		
+		// Set recorder state to stopped
+		recorder_.Stop();
+		
+		// Find number of devices
+		Debug.Log("Number of LEAP devices found: " + leap_controller_.Devices.Count);
 	}
-  }
 
 
-  public Controller GetLeapController() {
-    return leap_controller_;
-  }
+	public void IgnoreCollisionsWithHands(GameObject to_ignore, bool ignore = true)
+	{
+		foreach (HandModel hand in leftPhysicsModels)
+			Leap.Utils.IgnoreCollisions(hand.gameObject, to_ignore, ignore);
+		foreach (HandModel hand in rightPhysicsModels)
+			Leap.Utils.IgnoreCollisions(hand.gameObject, to_ignore, ignore);
+	}
 
 
-  public Frame GetFrame() {
-    return leap_controller_.Frame();
-  }
+	protected void UpdateHandModels(HandList leap_hands, HandModel[] left, HandModel[] right) 
+	{
+		// Go through all the active hands and update them.
+		int num_hands = leap_hands.Count;
+		
+		for (int h = 0; h < num_hands; ++h) {
+			Hand leap_hand = leap_hands[h];      
+			HandModel[] models = (mirrorZAxis != leap_hand.IsLeft) ? left:right;
+
+			foreach (HandModel hand in models) {
+				hand.SetController(this);
+				hand.SetLeapHand(leap_hand);	  
+				hand.MirrorZAxis(mirrorZAxis);
+					
+				float hand_scale = MM_TO_M * leap_hand.PalmWidth / hand.handModelPalmWidth;
+				hand.transform.localScale = hand_scale * transform.lossyScale;
+	    		hand.UpdateHand();
+			}      
+		}
+	}
 
 
-  void Update() {
-    if (leap_controller_ == null)
-      return;
+	public Controller GetLeapController() 
+	{
+		return leap_controller_;
+	}
+
+
+	public Frame GetFrame() 
+	{
+		if(enableRecordPlayback && recorder_.state == RecorderState.Playing)
+			return recorder_.GetCurrentFrame();
+	
+		return leap_controller_.Frame();
+	}
+
+
+	/**
+	 * Update GraphicsModels every frame.
+	 */
+	void Update() 
+	{
+		if(leap_controller_ == null)
+			return;
     
-    Frame frame = GetFrame();
-    UpdateHandModels(frame.Hands, leftGraphicsModels, rightGraphicsModels);
-  }
+    	UpdateRecorder();
+    
+		Frame frame = GetFrame();
+		UpdateHandModels(frame.Hands, leftGraphicsModels, rightGraphicsModels);
+	}
 
 
-  void FixedUpdate() {
-    if (leap_controller_ == null)
-      return;
+	/**
+	 * Update PhysicsModels every fixed frame.
+	 */
+	void FixedUpdate() 
+	{
+		if (leap_controller_ == null)
+			return;
 
-    Frame frame = GetFrame();
-    UpdateHandModels(frame.Hands, leftPhysicsModels, rightPhysicsModels);
-  }
-
-
-  public bool IsConnected() {
-    return leap_controller_.IsConnected;
-  }
-
-  public bool IsEmbedded() {
-    DeviceList devices = leap_controller_.Devices;
-    if (devices.Count == 0)
-      return false;
-    return devices[0].IsEmbedded;
-  }
-
-  public HandModel[] GetAllGraphicsHands() {
-    return new HandModel[0];
-  }
-
-  public HandModel[] GetAllPhysicsHands() {
-    return new HandModel[0];
-  }
-
-  public void DestroyAllHands() {
-  }
+		Frame frame = GetFrame();
+		UpdateHandModels(frame.Hands, leftPhysicsModels, rightPhysicsModels);
+	}
 
 
+	/**
+	 * Returns true if LEAP is connected.
+	 */
+	public bool IsConnected() 
+	{
+		return leap_controller_.IsConnected;
+	}
 
-  public void Record() { }  
-  public string FinishAndSaveRecording() { return ""; }
-  public void ResetRecording() { }
+
+	public HandModel[] GetAllGraphicsHands() 
+	{
+		return new HandModel[0];
+	}
+
+
+	public HandModel[] GetAllPhysicsHands()
+	{
+		return new HandModel[0];
+	}
+
+
+	public void DestroyAllHands()
+	{
+	}
+
+
+	public float GetRecordingProgress()
+	{
+		return recorder_.GetProgress();
+	}
+
+
+	public void StopRecording()
+	{
+		recorder_.Stop();
+	}
+
+
+	public void PauseRecording()
+	{
+		recorder_.Pause();
+	}
+
+
+	public string FinishAndSaveRecording()
+	{	
+		string path = recorder_.SaveToNewFile();
+		recorder_.Reset();
+		return path;
+	}
+	
+
+	public void ResetRecording()
+	{
+		recorder_.Reset ();
+	}
+
+
+	public void Record()
+	{
+		recorder_.Record();
+	}
+
+
+	protected void UpdateRecorder() 
+	{
+		if(!enableRecordPlayback)
+			return;
+
+		recorder_.speed = recorderSpeed;
+		recorder_.loop = recorderLoop;
+		
+		if(recorder_.state == RecorderState.Recording)
+			recorder_.AddFrame(leap_controller_.Frame());
+		else
+			recorder_.NextFrame();
+	}
 }
