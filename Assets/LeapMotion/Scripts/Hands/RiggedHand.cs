@@ -26,7 +26,7 @@ public class RiggedHand :HandModel
 
 	// Debug mode
 	public bool debugMode;
-	protected bool partOfAvatar = false;
+	public bool partOfAvatar = false;
 
 	public void Awake()
 	{
