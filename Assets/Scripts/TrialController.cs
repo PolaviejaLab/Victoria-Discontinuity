@@ -110,7 +110,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		switch (GetState ()) {
 			case TrialStates.AccomodationTime:				
-				if (GetTimeInState() > 15.0f)
+				if (GetTimeInState() >5.0f)
 					ChangeState(TrialStates.WaitForInitial);
 				break;
 
@@ -143,11 +143,10 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	protected override void OnEnter (TrialStates oldState)
 	{
 		switch (GetState ()) {
-
-			case TrialStates.AccomodationTime:
-				handSwitcher.showLeftHand = true;
-
-				break;
+		case TrialStates.AccomodationTime:
+			handSwitcher.showLeftHand = true;
+			handSwitcher.showRightHand = true;
+			break;
 
 			// Turn initial light on
 			case TrialStates.WaitForInitial:

@@ -99,7 +99,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			break;
 
 		case ExperimentStates.Questionnaire:
-
 			break;
 
 		case ExperimentStates.Finished:
