@@ -84,7 +84,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		switch(GetState()) {
 
-
 		case ExperimentStates.Trial:
 			if (!trialList.HasMore())
 				ChangeState(ExperimentStates.Finished);
@@ -156,9 +155,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		float.TryParse(trial["Offset"], out offset);
 		trialController.offset = offset / 100.0f;
 
-		Debug.Log("---------------------------");
 		Debug.Log("Offset: " + offset);
-		Debug.Log("---------------------------");
 
 		// Turn table lights on
 		tableLights.isOn = true;

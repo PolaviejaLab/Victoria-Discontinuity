@@ -110,7 +110,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		switch (GetState ()) {
 			case TrialStates.AccomodationTime:				
-				if (GetTimeInState() >5.0f)
+				if (GetTimeInState() > 10.0f)
 					ChangeState(TrialStates.WaitForInitial);
 				break;
 
