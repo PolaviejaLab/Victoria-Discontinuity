@@ -95,7 +95,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		case ExperimentStates.ProprioceptiveDrift:
 			markerController.isStarted = true;
 			markerController.dirRight = true;			
-
+			handSwitcher.showRightHand = false;
 			break;
 
 		case ExperimentStates.Questionnaire:
