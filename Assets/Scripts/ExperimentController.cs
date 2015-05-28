@@ -88,7 +88,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		case ExperimentStates.Trial:
 			if (!trialList.HasMore())
 				ChangeState(ExperimentStates.Finished);
-
+			
+			trialCounter++;
 			StartTrial();
 			break;
 
@@ -133,8 +134,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		// Do not start if already running
 		if(trialController.IsStarted())
 			return;
-		
-		trialCounter++;
+
 		
 		// Load next trial from list
 		Dictionary<string, string> trial = trialList.Pop();
@@ -155,8 +155,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		float offset;
 		float.TryParse(trial["Offset"], out offset);
 		trialController.offset = offset / 100.0f;
-		
+
+		Debug.Log("---------------------------");
 		Debug.Log("Offset: " + offset);
+		Debug.Log("---------------------------");
 
 		// Turn table lights on
 		tableLights.isOn = true;
@@ -198,8 +200,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		writer.Write(", ");
 		writer.Write(trialController.lateWaves);
 		writer.Write(", ");
-		// writer.Write(trialController.response);
-		// writer.Write(", ");
 		writer.Write(markerController.proprioceptiveDrift);
 		writer.WriteLine();
 		

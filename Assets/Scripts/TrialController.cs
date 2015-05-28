@@ -48,7 +48,6 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	// Parameters of the current trial
 	public int hand;
 	public float offset;
-	public int response;
 
 	// Keep track of required number of waves
 	public int wavesRequired;
@@ -61,7 +60,6 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 	// Number of the light that is currently on
 	private int currentLight;
-
 
 	public void HandleEvent (TrialEvents ev)
 	{
@@ -91,6 +89,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 	protected override void OnStart()
 	{
+		Debug.Log("Starting new trial, offset = " + offset + ", hand = " + hand);
+
 		// Set trial parameters
 		offsetSwitcher.offset = offset;
 		handSwitcher.selected = hand;
