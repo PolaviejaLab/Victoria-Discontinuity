@@ -197,6 +197,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		writer.Write(", ");
 		writer.Write(trialController.incorrectWaves);
 		writer.Write(", ");
+		writer.Write(trialController.lateWaves);
+		writer.Write(", ");
 		// writer.Write(trialController.response);
 		// writer.Write(", ");
 		writer.Write(markerController.proprioceptiveDrift);

@@ -22,7 +22,6 @@ public enum TrialEvents
 public enum TrialStates
 {
 	AccomodationTime,
-
 	WaitingForFirstTrial,
 	WaitForInitial,
 	WaitForWave,
@@ -181,8 +180,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		}
 	}
 	
-	protected override void OnExit (TrialStates newState)
-	{
+	protected override void OnExit (TrialStates newState){
 		switch (GetState ()) {
 			case TrialStates.AccomodationTime:
 				handSwitcher.showLeftHand = false;
