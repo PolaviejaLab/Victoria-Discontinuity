@@ -13,10 +13,14 @@ public class MarkerController : MonoBehaviour {
 	private float speed;
 
 	public float proprioceptiveDrift;
+	
+	public Transform handTransform;
 
 	private float pointerx;
 	private float pointery;
 	private float pointerz;
+	
+	public Vector3 handPosition;
 
 	public void Start () {
 		marker = GameObject.Find ("Marker");
@@ -45,7 +49,7 @@ public class MarkerController : MonoBehaviour {
 		// marker moving from left to right in the x axis
 		if (dirRight){
 			pointer.transform.Translate (movement * speed * Time.deltaTime);
-			if (pointer.transform.position.z >= 0.28f)
+			if (pointer.transform.localPosition.z >= 0.28f)
 			{
 				dirRight = false;
 			}
@@ -53,7 +57,7 @@ public class MarkerController : MonoBehaviour {
 		else {
 			// change to the opposite direction along the axis. 
 			pointer.transform.Translate (-movement * speed * Time.deltaTime);
-			if (pointer.transform.position.z <= -0.40f) 
+			if (pointer.transform.localPosition.z <= -0.28f) 
 			{
 				dirRight = true;
 			}
@@ -66,6 +70,9 @@ public class MarkerController : MonoBehaviour {
 		if (Input.GetKeyDown ("space") && isStarted) {
 			speed = 0.0f;
 			proprioceptiveDrift += pointer.transform.localPosition.z;
+
+			handPosition = handTransform.position;
+
 			// notifies ExpController that the PD has been measured
 			experimentController.HandleEvent (ExperimentEvents.ProprioceptiveDriftMeasured);
 			// Restarts the pointer position to its original value (Start())

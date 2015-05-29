@@ -27,7 +27,7 @@ public class OffsetSwitcher : MonoBehaviour {
 		// method that will make the offset change, get the handcontroller to shift with the offset
 		// use a find method 
 		controller = GameObject.Find ("HandController");
-		controller.transform.localPosition = new Vector3(offset, 0, 0);
+		controller.transform.localPosition = new Vector3(-offset, 0, 0);
 
 		Debug.Log("Changing offset: " + controller.transform.localPosition);
 	}

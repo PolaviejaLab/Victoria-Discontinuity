@@ -140,9 +140,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		
 		// Determine which hand to use for given gapsize
 		if(trial["GapStatus"] == "Inactive")
-			trialController.hand = 0;
-		else if(trial["GapStatus"] == "Active")
 			trialController.hand = 1;
+		else if(trial["GapStatus"] == "Active")
+			trialController.hand = 0;
 		else {
 			Debug.Log ("Invalid GapSize in protocol");
 			trialController.hand = -1;
@@ -180,9 +180,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		writer.Write(", ");
 		
 		if(trialController.hand == 0)
-			writer.Write("Without gap, ");
-		else if(trialController.hand == 1)
 			writer.Write("With gap, ");
+		else if(trialController.hand == 1)
+			writer.Write("Without gap, ");
 		else
 			writer.Write("Unknown, ");
 		
@@ -198,6 +198,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		writer.Write(trialController.lateWaves);
 		writer.Write(", ");
 		writer.Write(markerController.proprioceptiveDrift);
+		writer.Write(", ");
+		writer.Write(markerController.handPosition.x);
+		writer.Write(", ");
+		writer.Write(markerController.handPosition.y);
+		writer.Write(", ");
+		writer.Write(markerController.handPosition.z);
 		writer.WriteLine();
 		
 		writer.Close();
