@@ -59,7 +59,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			break;
 		case ExperimentStates.ProprioceptiveDrift:
 			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
-				Debug.Log ("PD measured");
 				ChangeState(ExperimentStates.Questionnaire);
 				markerController.isStarted = false;
 			}
@@ -128,12 +127,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	/**
 	 * Start the next trial
 	 */
-	private void StartTrial()
-	{
+	private void StartTrial(){
 		// Do not start if already running
 		if(trialController.IsStarted())
 			return;
-
 		
 		// Load next trial from list
 		Dictionary<string, string> trial = trialList.Pop();
@@ -171,8 +168,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	/**
 	 * Appends the result of the previous trial to the datafile
 	 */
-	private void SaveTrialResult()
-	{
+	private void SaveTrialResult() {
 		StreamWriter writer = new StreamWriter(outputFile, true);
 		
 		// Append result of trial to data file

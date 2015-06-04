@@ -191,7 +191,7 @@ MonoBehaviour:
   trialController: {fileID: 31432806}
   markerController: {fileID: 31432810}
   tableLights: {fileID: 2096310268}
-  protocolFile: C:/Users/User/Desktop/Experiment/Protocol/Protocol1.csv
+  protocolFile: D:\GitHub\Victoria-Discontinuity\Protocol\Pilot02.csv
   outputFile: Results/Result01.csv
   trialCounter: 0
 --- !u!114 &31432810

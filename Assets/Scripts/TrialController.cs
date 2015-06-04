@@ -7,20 +7,19 @@ using System.Collections;
  * 
  * Initial must be last and wave_1 ... N must correspond to lights 1 .. N
  */
-public enum TrialEvents
-{
+public enum TrialEvents {
 	Wave_0 = 0,
 	Wave_1 = 1,
 	Wave_2 = 2,
 	Wave_Initial,
+	Delay,
 };
 
 
 /**
  * States of the Trial statemachine
  */
-public enum TrialStates
-{
+public enum TrialStates {
 	AccomodationTime,
 	WaitingForFirstTrial,
 	WaitForInitial,
@@ -61,34 +60,39 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	// Number of the light that is currently on
 	private int currentLight;
 
-	public void HandleEvent (TrialEvents ev)
-	{
+	// Turn on/off lights
+	public bool greenLightOn;
+	public bool initialLightOn;
+
+	public void HandleEvent (TrialEvents ev){
 		Debug.Log ("Event " + ev.ToString ());
 	
 		if (!IsStarted ())
 			return;
 	
 		switch (GetState ()) {
-
 			case TrialStates.WaitForInitial:
 				if (ev == TrialEvents.Wave_Initial)
 					ChangeState (TrialStates.WaitForWave);
 				break;
 
-			case TrialStates.WaitForWave:
-				if((int)ev == currentLight) {
-					correctWaves++;
-					ChangeState(TrialStates.Waved);
-				} else if((int)ev != currentLight && ev != TrialEvents.Wave_Initial) {
-					incorrectWaves++;
-					ChangeState(TrialStates.Waved);
-				}
-				break;
+		case TrialStates.WaitForWave:
+			if (ev == TrialEvents.Delay && greenLightOn) {
+				// Turn on random target light
+				currentLight = Random.Range (0, lights.Length);
+				lights [currentLight].activeMaterial = 1;
+			} else if((int)ev == currentLight) {
+				correctWaves++;
+				ChangeState(TrialStates.Waved);
+			} else if((int)ev != currentLight && ev != TrialEvents.Wave_Initial) {
+				incorrectWaves++;
+				ChangeState(TrialStates.Waved);
+			}
+			break;
 		}
 	}
 
-	protected override void OnStart()
-	{
+	protected override void OnStart(){
 		Debug.Log("Starting new trial, offset = " + offset + ", hand = " + hand);
 
 		// Set trial parameters
@@ -103,64 +107,62 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	}
 
 
-	public void Update ()
-	{
+	public void Update (){
 		if (!IsStarted ())
 			return;
 
 		switch (GetState ()) {
-			case TrialStates.AccomodationTime:				
-				if (GetTimeInState() > 10.0f)
-					ChangeState(TrialStates.WaitForInitial);
-				break;
+		case TrialStates.AccomodationTime:				
+			if (GetTimeInState() > 10.0f)
+				ChangeState(TrialStates.WaitForInitial);
+			break;
 
-			// Move to next state if more than 5 seconds elapsed
-			case TrialStates.WaitForWave:
-				if (GetTimeInState () > 5.0f) {
-					lateWaves++;
-					ChangeState (TrialStates.TooLate);
-				}
-				break;
+		// Move to next state if more than 5 seconds elapsed
+		case TrialStates.WaitForWave:
+			if (GetTimeInState () > 1.0f && !greenLightOn){
+				greenLightOn = true;
+				HandleEvent(TrialEvents.Delay);
+			}
+			if (GetTimeInState () > 6.0f) {
+				lateWaves++;
+				ChangeState (TrialStates.TooLate);
+			}
+			break;
 
-			// Wait one second after the wave, and then start again
-			case TrialStates.Waved:
-				if (GetTimeInState () > 1.0f) {
-					if (waveCounter < wavesRequired) {
-						ChangeState (TrialStates.WaitForInitial);
-					} else {
-						ChangeState (TrialStates.WithoutFeedback);
-					}
+		// Wait one second after the wave, and then start again
+		case TrialStates.Waved:
+			if (GetTimeInState () > 1.0f) {
+				if (waveCounter < wavesRequired) {
+					ChangeState (TrialStates.WaitForInitial);
+				} else {
+					ChangeState (TrialStates.WithoutFeedback);
 				}
-				break;		
-				
-			case TrialStates.WithoutFeedback:
-				if (GetTimeInState () > 1.0f)
-					ChangeState (TrialStates.Final);
-				break;
+			}
+			break;		
+
+		case TrialStates.WithoutFeedback:
+			if (GetTimeInState () > 1.0f)
+				ChangeState (TrialStates.Final);
+			break;
 		}
 	}
 	
-	protected override void OnEnter (TrialStates oldState)
-	{
+	protected override void OnEnter (TrialStates oldState){
 		switch (GetState ()) {
 		case TrialStates.AccomodationTime:
 			handSwitcher.showLeftHand = true;
 			handSwitcher.showRightHand = true;
 			break;
 
-			// Turn initial light on
-			case TrialStates.WaitForInitial:
-				initialLight.activeMaterial = 1;
-				break;
+		// Turn initial light on
+		case TrialStates.WaitForInitial:
+			initialLight.activeMaterial = 1;
+			break;
 
-			case TrialStates.WaitForWave:
-				// Increment wave counter
-				waveCounter++;
-
-				// Turn on random target light
-				currentLight = Random.Range (0, lights.Length);
-				lights [currentLight].activeMaterial = 1;	
-				break;
+		case TrialStates.WaitForWave:
+			// Increment wave counter
+			waveCounter++;
+			break;
 
 		case TrialStates.Waved:
 			break;
@@ -180,24 +182,26 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	}
 	
 	protected override void OnExit (TrialStates newState){
+	
 		switch (GetState ()) {
-			case TrialStates.AccomodationTime:
-				handSwitcher.showLeftHand = false;
-				break;
+		case TrialStates.AccomodationTime:
+			handSwitcher.showLeftHand = false;
+			break;
 
-			case TrialStates.WaitForInitial:
-				initialLight.activeMaterial = 0;
-				break;
+		case TrialStates.WaitForInitial:
+			initialLight.activeMaterial = 0;
+			break;
 
-			case TrialStates.WaitForWave:
-				lights[currentLight].activeMaterial = 0;
-				break;
+		case TrialStates.WaitForWave:
+			lights[currentLight].activeMaterial = 0;
+			greenLightOn = false;
+			break;
 		
-			case TrialStates.WithoutFeedback:
-				break;		
+		case TrialStates.WithoutFeedback:
+			break;		
 		
-			case TrialStates.TooLate:
-				break;
+		case TrialStates.TooLate:
+			break;
 		}
 	}
 }
