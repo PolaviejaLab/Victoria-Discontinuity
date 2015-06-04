@@ -15,13 +15,11 @@ public enum TrialEvents {
 	Delay,
 };
 
-
 /**
  * States of the Trial statemachine
  */
 public enum TrialStates {
 	AccomodationTime,
-	WaitingForFirstTrial,
 	WaitForInitial,
 	WaitForWave,
 	Waved,
@@ -72,9 +70,12 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	
 		switch (GetState ()) {
 			case TrialStates.WaitForInitial:
-				if (ev == TrialEvents.Wave_Initial)
-					ChangeState (TrialStates.WaitForWave);
-				break;
+			if (ev == TrialEvents.Delay && initialLightOn) {
+				initialLight.activeMaterial = 1;
+			} else if (ev == TrialEvents.Wave_Initial){
+				ChangeState (TrialStates.WaitForWave);
+			}
+			break;
 
 		case TrialStates.WaitForWave:
 			if (ev == TrialEvents.Delay && greenLightOn) {
@@ -139,6 +140,12 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 				}
 			}
 			break;		
+		
+		case TrialStates.WaitForWave:
+			if (GetTimeInState ()> 1.0f && !initialLightOn) {
+				HandleEvent (TrialEvents.Delay);
+				initialLightOn = true;
+			}
 
 		case TrialStates.WithoutFeedback:
 			if (GetTimeInState () > 1.0f)
@@ -156,7 +163,6 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		// Turn initial light on
 		case TrialStates.WaitForInitial:
-			initialLight.activeMaterial = 1;
 			break;
 
 		case TrialStates.WaitForWave:
@@ -190,6 +196,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		case TrialStates.WaitForInitial:
 			initialLight.activeMaterial = 0;
+			initialLightOn = false;
 			break;
 
 		case TrialStates.WaitForWave:
