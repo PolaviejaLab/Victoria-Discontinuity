@@ -118,6 +118,13 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 				ChangeState(TrialStates.WaitForInitial);
 			break;
 
+		case TrialStates.WaitForInitial:
+			if (GetTimeInState ()> 1.0f && !initialLightOn) {
+				initialLightOn = true;
+				HandleEvent (TrialEvents.Delay);
+			}
+			break;
+
 		// Move to next state if more than 5 seconds elapsed
 		case TrialStates.WaitForWave:
 			if (GetTimeInState () > 1.0f && !greenLightOn){
@@ -140,12 +147,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 				}
 			}
 			break;		
-		
-		case TrialStates.WaitForWave:
-			if (GetTimeInState ()> 1.0f && !initialLightOn) {
-				HandleEvent (TrialEvents.Delay);
-				initialLightOn = true;
-			}
+
 
 		case TrialStates.WithoutFeedback:
 			if (GetTimeInState () > 1.0f)
