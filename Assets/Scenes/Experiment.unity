@@ -136,6 +136,8 @@ MonoBehaviour:
   incorrectWaves: 0
   greenLightOn: 0
   initialLightOn: 0
+  collisionLights: {fileID: 0}
+  collisionInitial: {fileID: 0}
 --- !u!4 &31432807
 Transform:
   m_ObjectHideFlags: 0
@@ -1642,7 +1644,7 @@ GameObject:
   - 65: {fileID: 1000434702}
   - 114: {fileID: 1000434701}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: CubeInitial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2951,7 +2953,7 @@ GameObject:
   - 65: {fileID: 1786008764}
   - 114: {fileID: 1786008766}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: CubeLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3113,7 +3115,7 @@ GameObject:
   - 65: {fileID: 1934596068}
   - 114: {fileID: 1934596070}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: CubeLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -62,6 +62,15 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	public bool greenLightOn;
 	public bool initialLightOn;
 
+	// Collider on/off
+	public GameObject collisionLights;
+	public GameObject collisionInitial;
+
+	public void Start () {
+		collisionLights = GameObject.Find ("CubeLight");
+		collisionInitial = GameObject.Find ("CubeInitial");
+	}
+
 	public void HandleEvent (TrialEvents ev){
 		Debug.Log ("Event " + ev.ToString ());
 	
@@ -72,6 +81,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			case TrialStates.WaitForInitial:
 			if (ev == TrialEvents.Delay && initialLightOn) {
 				initialLight.activeMaterial = 1;
+				collisionInitial.SetActive(true);
 			} else if (ev == TrialEvents.Wave_Initial){
 				ChangeState (TrialStates.WaitForWave);
 			}
@@ -82,6 +92,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 				// Turn on random target light
 				currentLight = Random.Range (0, lights.Length);
 				lights [currentLight].activeMaterial = 1;
+				collisionLights.SetActive (true);
 			} else if((int)ev == currentLight) {
 				correctWaves++;
 				ChangeState(TrialStates.Waved);
@@ -101,7 +112,6 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	}
 
 	protected override void OnStart(){
-		Debug.Log("Starting new trial, offset = " + offset + ", hand = " + hand);
 
 		// Set trial parameters
 		offsetSwitcher.offset = offset;
@@ -172,6 +182,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	protected override void OnEnter (TrialStates oldState){
 		switch (GetState ()) {
 		case TrialStates.AccomodationTime:
+			collisionInitial.SetActive (false);
+			collisionLights.SetActive (false);
 			handSwitcher.showLeftHand = true;
 			handSwitcher.showRightHand = true;
 			break;
@@ -212,11 +224,13 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		case TrialStates.WaitForInitial:
 			initialLight.activeMaterial = 0;
 			initialLightOn = false;
+			collisionInitial.SetActive(false);
 			break;
 
 		case TrialStates.WaitForWave:
 			lights[currentLight].activeMaterial = 0;
 			greenLightOn = false;
+			collisionLights.SetActive (false);
 			break;
 		
 		case TrialStates.WithoutFeedback:
