@@ -39,7 +39,7 @@ public class MarkerController : MonoBehaviour {
 		if (isStarted) {
 			marker.SetActive(true);
 			proprioceptiveDrift = 0;
-			speed = 0.05f;
+			speed = 0.03f;
 			StartMarker();
 		}
 	}

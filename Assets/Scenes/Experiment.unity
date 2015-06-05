@@ -134,6 +134,8 @@ MonoBehaviour:
   lateWaves: 0
   correctWaves: 0
   incorrectWaves: 0
+  greenLightOn: 0
+  initialLightOn: 0
 --- !u!4 &31432807
 Transform:
   m_ObjectHideFlags: 0
@@ -191,7 +193,7 @@ MonoBehaviour:
   trialController: {fileID: 31432806}
   markerController: {fileID: 31432810}
   tableLights: {fileID: 2096310268}
-  protocolFile: D:\GitHub\Victoria-Discontinuity\Protocol\Pilot02.csv
+  protocolFile: C:\Users\User\Desktop\Experiment\Protocol\Protocol1.csv
   outputFile: Results/Result01.csv
   trialCounter: 0
 --- !u!114 &31432810

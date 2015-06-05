@@ -90,6 +90,13 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 				ChangeState(TrialStates.Waved);
 			}
 			break;
+
+		case TrialStates.Final:
+			if (ev == TrialEvents.Wave_Initial){
+				experimentController.HandleEvent (ExperimentEvents.TrialFinished);
+				StopMachine();
+			}
+			break;
 		}
 	}
 
@@ -113,6 +120,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			return;
 
 		switch (GetState ()) {
+
 		case TrialStates.AccomodationTime:				
 			if (GetTimeInState() > 10.0f)
 				ChangeState(TrialStates.WaitForInitial);
@@ -125,12 +133,17 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			}
 			break;
 
-		// Move to next state if more than 5 seconds elapsed
+		
 		case TrialStates.WaitForWave:
+
+			// Wait between the lights turning on and off
 			if (GetTimeInState () > 1.0f && !greenLightOn){
 				greenLightOn = true;
 				HandleEvent(TrialEvents.Delay);
 			}
+
+			// Move to next state if more than 5 seconds elapsed 
+			// from the green light turning on
 			if (GetTimeInState () > 6.0f) {
 				lateWaves++;
 				ChangeState (TrialStates.TooLate);
@@ -183,8 +196,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			break;
 
 		case TrialStates.Final:
-			experimentController.HandleEvent (ExperimentEvents.TrialFinished);
-			StopMachine();
+			// last initial light on to mark a central point for the drift measure
+			initialLight.activeMaterial = 1;
 			break;
 		}
 	}
