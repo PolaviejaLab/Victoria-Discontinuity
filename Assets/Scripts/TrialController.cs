@@ -10,7 +10,6 @@ using System.Collections;
 public enum TrialEvents {
 	Wave_0 = 0,
 	Wave_1 = 1,
-	Wave_2 = 2,
 	Wave_Initial,
 	Delay,
 };
@@ -184,7 +183,6 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		case TrialStates.AccomodationTime:
 			collisionInitial.SetActive (false);
 			collisionLights.SetActive (false);
-			handSwitcher.showLeftHand = true;
 			handSwitcher.showRightHand = true;
 			break;
 
@@ -222,15 +220,15 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			break;
 
 		case TrialStates.WaitForInitial:
+			collisionInitial.SetActive(false);
 			initialLight.activeMaterial = 0;
 			initialLightOn = false;
-			collisionInitial.SetActive(false);
 			break;
 
 		case TrialStates.WaitForWave:
+			collisionLights.SetActive (false);
 			lights[currentLight].activeMaterial = 0;
 			greenLightOn = false;
-			collisionLights.SetActive (false);
 			break;
 		
 		case TrialStates.WithoutFeedback:
