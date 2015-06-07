@@ -63,8 +63,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			if (ev == ExperimentEvents.MeasureProprioceptiveDrift){
 				markerController.isStarted = true;
 				markerController.dirRight = true;		
-				handSwitcher.showRightHand = false;
-				tableLights.isOn = false;
+
 			} else if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
 				ChangeState(ExperimentStates.Questionnaire);
 				markerController.isStarted = false;
@@ -108,6 +107,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			break;
 
 		case ExperimentStates.ProprioceptiveDrift:
+			handSwitcher.showRightHand = false;
+			tableLights.isOn = false;
 			break;
 
 		case ExperimentStates.Questionnaire:
@@ -127,10 +128,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 				break;
 
 		 	case ExperimentStates.ProprioceptiveDrift:
+				SaveTrialResult();
 				break;
 
 			case ExperimentStates.Questionnaire:
-				SaveTrialResult();
 				break;
 		}
 	}
