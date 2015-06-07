@@ -49,16 +49,13 @@ public class MarkerController : MonoBehaviour {
 		// marker moving from left to right in the x axis
 		if (dirRight){
 			pointer.transform.Translate (movement * speed * Time.deltaTime);
-			if (pointer.transform.localPosition.z >= 0.28f)
-			{
+			if (pointer.transform.localPosition.z >= 0.28f){
 				dirRight = false;
 			}
-		} 
-		else {
+		} else {
 			// change to the opposite direction along the axis. 
 			pointer.transform.Translate (-movement * speed * Time.deltaTime);
-			if (pointer.transform.localPosition.z <= -0.28f) 
-			{
+			if (pointer.transform.localPosition.z <= -0.28f) {
 				dirRight = true;
 			}
 		}	

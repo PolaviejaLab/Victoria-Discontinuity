@@ -121,6 +121,10 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		lateWaves = 0;
 		correctWaves = 0;
 		incorrectWaves = 0;
+
+		initialLight.activeMaterial = 0;
+		collisionInitial.SetActive (false);
+		collisionLights.SetActive (false);
 	}
 
 
@@ -181,8 +185,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	protected override void OnEnter (TrialStates oldState){
 		switch (GetState ()) {
 		case TrialStates.AccomodationTime:
-			collisionInitial.SetActive (false);
-			collisionLights.SetActive (false);
+
 			handSwitcher.showRightHand = true;
 			break;
 
@@ -207,7 +210,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		case TrialStates.Final:
 			// last initial light on to mark a central point for the drift measure
-			initialLight.activeMaterial = 1;
+			initialLight.activeMaterial = 2;
+			collisionInitial.SetActive(true);
 			break;
 		}
 	}

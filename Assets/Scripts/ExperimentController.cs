@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public enum ExperimentEvents
 {
 	TrialFinished,
+	MeasureProprioceptiveDrift,
 	ProprioceptiveDriftMeasured,
 };
 
@@ -32,6 +33,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 	public int trialCounter;
 
+	private bool measurePD;
+
 	public void Start() {
 
 		trialList = new TrialList(protocolFile);
@@ -53,14 +56,19 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.Trial:
 			if(ev == ExperimentEvents.TrialFinished) {
-				tableLights.isOn = false;
 				ChangeState(ExperimentStates.ProprioceptiveDrift);
 			} 
 			break;
 		case ExperimentStates.ProprioceptiveDrift:
-			if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
+			if (ev == ExperimentEvents.MeasureProprioceptiveDrift){
+				markerController.isStarted = true;
+				markerController.dirRight = true;		
+				handSwitcher.showRightHand = false;
+				tableLights.isOn = false;
+			} else if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
 				ChangeState(ExperimentStates.Questionnaire);
 				markerController.isStarted = false;
+				measurePD = false;
 			}
 			break;
 		}
@@ -71,10 +79,18 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			return;
 		
 		switch (GetState ()) {
-			case ExperimentStates.Questionnaire:
-				if (Input.GetKeyDown (KeyCode.Return)) {
+		case ExperimentStates.Questionnaire:
+			if (Input.GetKeyDown (KeyCode.Return)) {
 					ChangeState (ExperimentStates.Trial);
 				}
+			break;
+
+		
+		case ExperimentStates.ProprioceptiveDrift:
+			if (GetTimeInState() > 2.0f && !measurePD) {
+				HandleEvent(ExperimentEvents.MeasureProprioceptiveDrift);
+				measurePD = true;
+			}
 			break;
 		}
 	}
@@ -92,9 +108,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			break;
 
 		case ExperimentStates.ProprioceptiveDrift:
-			markerController.isStarted = true;
-			markerController.dirRight = true;			
-			handSwitcher.showRightHand = false;
 			break;
 
 		case ExperimentStates.Questionnaire:
