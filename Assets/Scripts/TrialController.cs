@@ -44,9 +44,9 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	// Parameters of the current trial
 	public int hand;
 	public float offset;
+	public int wavesRequired;
 
 	// Keep track of required number of waves
-	public int wavesRequired;
 	public int waveCounter;
 
 	// Keep track of number of correct / incorrect waves

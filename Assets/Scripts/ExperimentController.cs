@@ -148,6 +148,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		
 		// Load next trial from list
 		Dictionary<string, string> trial = trialList.Pop();
+	
 		
 		// Determine which hand to use for given gapsize
 		if(trial["GapStatus"] == "Inactive")
@@ -167,6 +168,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		trialController.offset = offset / 100.0f;
 
 		Debug.Log("Offset: " + offset);
+
+		// Determine the number of waves per each trial
+		int wavesRequired;
+		int.TryParse(trial["WavesRequired"], out wavesRequired);
+		trialController.wavesRequired = wavesRequired;
 
 		// Turn table lights on
 		tableLights.isOn = true;
