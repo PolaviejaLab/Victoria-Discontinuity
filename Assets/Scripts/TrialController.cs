@@ -90,12 +90,19 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			if (ev == TrialEvents.Delay && greenLightOn) {
 				// Turn on random target light
 				currentLight = Random.Range (0, lights.Length);
+
+				WriteLog("Light: " + currentLight);
+
 				lights [currentLight].activeMaterial = 1;
 				collisionLights.SetActive (true);
 			} else if((int)ev == currentLight) {
+				WriteLog("Waved correctly");
+
 				correctWaves++;
 				ChangeState(TrialStates.Waved);
 			} else if((int)ev != currentLight && ev != TrialEvents.Wave_Initial) {
+				WriteLog("Waved incorrect");
+
 				incorrectWaves++;
 				ChangeState(TrialStates.Waved);
 			}

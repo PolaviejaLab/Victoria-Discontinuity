@@ -188,9 +188,9 @@ public class HandController :MonoBehaviour
 	}
 
 
-	public string FinishAndSaveRecording()
+	public string FinishAndSaveRecording(string filename)
 	{	
-		string path = recorder_.SaveToNewFile();
+		string path = recorder_.SaveToNewFile(filename);
 		recorder_.Reset();
 		return path;
 	}

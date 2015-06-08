@@ -15,7 +15,8 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	private States state;	
 	private float timeAtStateChange;	
 	private bool started;
-	
+
+	public Logger logger;
 	
 	/**
 	 * Initial state
@@ -32,6 +33,17 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	 */
 	public bool StartOnStopMachine = false;
 
+
+	/**
+	 * Write and entry to the log
+	 */
+	protected void WriteLog(string message)
+	{
+		Debug.Log(message);
+		logger.Write(this.GetType().ToString() + "\t" + message);
+	}
+
+
 	/**
 	 * Start the state machine
 	 */
@@ -44,8 +56,8 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 			state = initialState;	
 			timeAtStateChange = Time.time;
 
-			Debug.Log ("Entering state " + state.ToString() + 
-			           " (machine just started)");
+			WriteLog("Started");
+			WriteLog("Entering state " + state.ToString());
 
 			OnEnter(state);
 		}
@@ -61,7 +73,9 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 		{
 			OnExit(state);
 			timeAtStateChange = Time.time;
-			started = false;		
+			started = false;
+
+			WriteLog("Stopped");
 		}
 		
 		if(StartOnStopMachine) 
@@ -94,8 +108,7 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 		state = newState;	
 		timeAtStateChange = Time.time;	
 		
-		Debug.Log ("Entering state " + state.ToString() + 
-				   " (previous state was " + oldState.ToString() + ")");
+		WriteLog("Entering state " + state.ToString());
 		
 		OnEnter(oldState);
 	}	

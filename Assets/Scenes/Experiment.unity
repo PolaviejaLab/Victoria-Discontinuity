@@ -99,6 +99,7 @@ GameObject:
   - 114: {fileID: 31432808}
   - 114: {fileID: 31432809}
   - 114: {fileID: 31432810}
+  - 114: {fileID: 31432811}
   m_Layer: 0
   m_Name: ExperimentController
   m_TagString: Untagged
@@ -117,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 761a3fb0c8b01264d90f31409b808283, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logger: {fileID: 31432811}
   initialState: 0
   StartOnInstantiation: 0
   StartOnStopMachine: 0
@@ -188,15 +190,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edcaca1b907598249b04d140aea5c599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logger: {fileID: 31432811}
   initialState: 0
   StartOnInstantiation: 1
   StartOnStopMachine: 1
+  handController: {fileID: 745853846}
   handSwitcher: {fileID: 31432808}
   trialController: {fileID: 31432806}
   markerController: {fileID: 31432810}
   tableLights: {fileID: 2096310268}
   protocolFile: C:\Users\User\Desktop\Experiment\Protocol\Protocol1.csv
-  outputFile: Results/Result01.csv
+  outputDirectory: Results
+  participantName: Anonymous
   trialCounter: 0
 --- !u!114 &31432810
 MonoBehaviour:
@@ -215,6 +220,17 @@ MonoBehaviour:
   proprioceptiveDrift: 0
   handTransform: {fileID: 2008902583}
   handPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &31432811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 31432805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dff8cabe554573f409cdccd92c8c1ac2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &40460576
 GameObject:
   m_ObjectHideFlags: 0
@@ -1416,6 +1432,12 @@ GameObject:
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: c9f2277f2b4414ff9abf05e783890171, type: 2}
   m_PrefabInternal: {fileID: 1353448863}
+--- !u!114 &745853846 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11400000, guid: c9f2277f2b4414ff9abf05e783890171,
+    type: 2}
+  m_PrefabInternal: {fileID: 1353448863}
+  m_Script: {fileID: 11500000, guid: 2c4e0350c46ae405b8db39262c18b8f5, type: 3}
 --- !u!114 &745853847
 MonoBehaviour:
   m_ObjectHideFlags: 0

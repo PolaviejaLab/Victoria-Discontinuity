@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+
 
 public enum ExperimentEvents
 {
@@ -22,6 +24,8 @@ public enum ExperimentStates
 
 public class ExperimentController: StateMachine<ExperimentStates, ExperimentEvents>
 {
+	public HandController handController;
+
 	public HandSwitcher handSwitcher;
 	public TrialController trialController;
 	public MarkerController markerController;
@@ -29,24 +33,28 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	
 	private TrialList trialList;
 	public string protocolFile;
-	public string outputFile;
+
+	public string outputDirectory = "Results";
+	public string participantName = "Anonymous";
 
 	public int trialCounter;
 
 	private bool measurePD;
 
-	public void Start() {
+	public void Start() 
+	{
+		logger.OpenLog(GetLogFilename());
 
 		trialList = new TrialList(protocolFile);
-		Debug.Log("Loaded " + trialList.Count () + " trials");
+		WriteLog("Loaded " + trialList.Count () + " trials");
 
 		this.StartMachine();
 	}
 	
 	
-	public void HandleEvent(ExperimentEvents ev) {
-		Debug.Log ("Event " + ev.ToString());
-
+	public void HandleEvent(ExperimentEvents ev) 
+	{
+		WriteLog("Event " + ev.ToString());
 
 		if(!IsStarted())
 			return;
@@ -73,7 +81,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		}
 	}
 	
-	public void Update() {
+	public void Update() 
+	{
 		if(!IsStarted())
 			return;
 		
@@ -94,7 +103,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		}
 	}
 	
-	protected override void OnEnter(ExperimentStates oldState) {
+	protected override void OnEnter(ExperimentStates oldState) 
+	{
 
 		switch(GetState()) {
 
@@ -116,13 +126,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.Finished:
 			StopMachine();	
-			Debug.Log("No more trials, stopping machine");
+			WriteLog("No more trials, stopping machine");
 			break;
 		}
 	}
 
 
-	protected override void OnExit(ExperimentStates newState) {
+	protected override void OnExit(ExperimentStates newState) 
+	{
 		switch(GetState()) {
 			case ExperimentStates.Trial:
 				break;
@@ -141,14 +152,18 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	/**
 	 * Start the next trial
 	 */
-	private void StartTrial(){
+	private void StartTrial()
+	{
 		// Do not start if already running
 		if(trialController.IsStarted())
 			return;
-		
+
+		WriteLog("Starting trial");
+
 		// Load next trial from list
 		Dictionary<string, string> trial = trialList.Pop();
 	
+		handController.Record();
 		
 		// Determine which hand to use for given gapsize
 		if(trial["GapStatus"] == "Inactive")
@@ -156,18 +171,18 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		else if(trial["GapStatus"] == "Active")
 			trialController.hand = 0;
 		else {
-			Debug.Log ("Invalid GapSize in protocol");
+			WriteLog("Invalid GapSize in protocol");
 			trialController.hand = -1;
 		}
 		
-		Debug.Log("Gap: " + trial["GapStatus"]);
+		WriteLog("Gap: " + trial["GapStatus"]);
 		
 		// Get offset
 		float offset;
 		float.TryParse(trial["Offset"], out offset);
 		trialController.offset = offset / 100.0f;
 
-		Debug.Log("Offset: " + offset);
+		WriteLog("Offset: " + offset);
 
 		// Determine the number of waves per each trial
 		int wavesRequired;
@@ -183,13 +198,34 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		trialController.initialState = TrialStates.AccomodationTime;
 		trialController.StartMachine();
 	}
-	
+
+
+	private string GetLEAPFilename(int trial)
+	{
+		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".dat";
+	}
+
+
+	private string GetLogFilename()
+	{
+		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".log";
+	}
+
+
+	private string GetResultsFilename()
+	{
+		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".csv";
+	}
+
 	
 	/**
 	 * Appends the result of the previous trial to the datafile
 	 */
-	private void SaveTrialResult() {
-		StreamWriter writer = new StreamWriter(outputFile, true);
+	private void SaveTrialResult() 
+	{
+		handController.FinishAndSaveRecording(GetLEAPFilename(trialCounter));
+
+		StreamWriter writer = new StreamWriter(GetResultsFilename(), true);
 		
 		// Append result of trial to data file
 		writer.Write(trialCounter);
@@ -201,8 +237,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			writer.Write("Without gap, ");
 		else
 			writer.Write("Unknown, ");
-		
-		
+				
 		writer.Write(trialController.offset);
 		writer.Write(", ");
 		writer.Write(trialController.waveCounter);
