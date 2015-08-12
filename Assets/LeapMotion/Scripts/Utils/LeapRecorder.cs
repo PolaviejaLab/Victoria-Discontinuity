@@ -23,7 +23,7 @@ public class LeapRecorder
 	public float speed = 1.0f;
 	public bool loop = true;
 	public RecorderState state = RecorderState.Playing;
-	
+
 	protected List<byte[]> frames_;
 	protected float frame_index_;
 	protected Frame current_frame_ = new Frame();

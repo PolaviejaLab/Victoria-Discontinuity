@@ -163,7 +163,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		// Load next trial from list
 		Dictionary<string, string> trial = trialList.Pop();
 	
-		handController.Record();
+		handController.StartRecording(GetLEAPFilename(trialCounter));
 		
 		// Determine which hand to use for given gapsize
 		if(trial["GapStatus"] == "Inactive")
@@ -202,7 +202,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 	private string GetLEAPFilename(int trial)
 	{
-		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".dat";
+		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".csv";
 	}
 
 
@@ -223,7 +223,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	 */
 	private void SaveTrialResult() 
 	{
-		handController.FinishAndSaveRecording(GetLEAPFilename(trialCounter));
+		handController.StopRecording();
 
 		StreamWriter writer = new StreamWriter(GetResultsFilename(), true);
 		

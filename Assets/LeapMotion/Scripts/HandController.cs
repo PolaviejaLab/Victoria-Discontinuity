@@ -7,6 +7,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Leap;
+using System;
+using System.IO;
 
 
 /**
@@ -30,15 +32,7 @@ public class HandController :MonoBehaviour
 	public Vector3 handMovementScale = Vector3.one;
 
 	protected Controller leap_controller_;
-
-
-	// Recorder
-	public bool enableRecordPlayback = true;
-	public float recorderSpeed = 1.0f;
-	public bool recorderLoop = true;
-	
-	protected LeapRecorder recorder_ = new LeapRecorder();
-	
+	private StreamWriter streamWriter;
 
 	/**
 	 * Initialize LEAP when script instance is being loaded.
@@ -61,9 +55,6 @@ public class HandController :MonoBehaviour
 			policy_flags &= ~Controller.PolicyFlag.POLICY_OPTIMIZE_HMD;
 
 		leap_controller_.SetPolicyFlags(policy_flags);
-		
-		// Set recorder state to stopped
-		recorder_.Stop();
 		
 		// Find number of devices
 		Debug.Log("Number of LEAP devices found: " + leap_controller_.Devices.Count);
@@ -109,9 +100,6 @@ public class HandController :MonoBehaviour
 
 	public Frame GetFrame() 
 	{
-		if(enableRecordPlayback && recorder_.state == RecorderState.Playing)
-			return recorder_.GetCurrentFrame();
-	
 		return leap_controller_.Frame();
 	}
 
@@ -170,55 +158,59 @@ public class HandController :MonoBehaviour
 	}
 
 
-	public float GetRecordingProgress()
+	public void StartRecording(string filename)
 	{
-		return recorder_.GetProgress();
+		streamWriter = new StreamWriter(filename, true);
 	}
 
 
 	public void StopRecording()
 	{
-		recorder_.Stop();
+		streamWriter.Close();
 	}
 
 
-	public void PauseRecording()
+	/**
+	 * Writes a 3d vector to file
+	 */
+	private void WritePosition(StreamWriter writer, Vector vector)
 	{
-		recorder_.Pause();
-	}
-
-
-	public string FinishAndSaveRecording(string filename)
-	{	
-		string path = recorder_.SaveToNewFile(filename);
-		recorder_.Reset();
-		return path;
-	}
-	
-
-	public void ResetRecording()
-	{
-		recorder_.Reset ();
-	}
-
-
-	public void Record()
-	{
-		recorder_.Record();
+		writer.Write(vector.x);
+		writer.Write(", ");
+		writer.Write(vector.y);
+		writer.Write(", ");
+		writer.Write(vector.z);
 	}
 
 
 	protected void UpdateRecorder() 
 	{
-		if(!enableRecordPlayback)
+		if(streamWriter == null)
 			return;
 
-		recorder_.speed = recorderSpeed;
-		recorder_.loop = recorderLoop;
-		
-		if(recorder_.state == RecorderState.Recording)
-			recorder_.AddFrame(leap_controller_.Frame());
-		else
-			recorder_.NextFrame();
+		Frame frame = leap_controller_.Frame();
+		bool gotHand = false;
+
+		streamWriter.Write(DateTime.UtcNow.ToString("o") + ", ");
+
+		int num_hands = frame.Hands.Count;
+		for (int h = 0; h < num_hands; ++h) {
+			if(frame.Hands[h].IsRight) {
+				gotHand = true;
+
+				streamWriter.Write(frame.Hands[h].IsValid);
+				streamWriter.Write(", ");
+
+				WritePosition(streamWriter, frame.Hands[h].PalmPosition);
+				break;
+			}
+		}
+
+		if(!gotHand) {
+			streamWriter.Write("False, 0, 0, 0");
+		}
+
+		streamWriter.WriteLine();
+		streamWriter.Flush();
 	}
 }
