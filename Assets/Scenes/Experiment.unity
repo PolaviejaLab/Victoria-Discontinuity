@@ -193,7 +193,7 @@ MonoBehaviour:
   logger: {fileID: 31432811}
   initialState: 0
   StartOnInstantiation: 1
-  StartOnStopMachine: 1
+  StartOnStopMachine: 0
   handController: {fileID: 745853846}
   handSwitcher: {fileID: 31432808}
   trialController: {fileID: 31432806}
@@ -201,7 +201,7 @@ MonoBehaviour:
   tableLights: {fileID: 2096310268}
   protocolFile: C:\Users\User\Desktop\Experiment\Protocol\Protocol1.csv
   outputDirectory: Results
-  participantName: Anonymous
+  participantName: Test
   trialCounter: 0
 --- !u!114 &31432810
 MonoBehaviour:
