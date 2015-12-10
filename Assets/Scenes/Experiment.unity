@@ -2543,6 +2543,10 @@ Prefab:
       propertyPath: hasArm
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: b4189dbf66def4c9799dad49101582e9, type: 2}
+      propertyPath: enableNoise
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b4189dbf66def4c9799dad49101582e9, type: 2}
   m_IsPrefabParent: 0
