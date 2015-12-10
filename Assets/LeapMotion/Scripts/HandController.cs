@@ -14,7 +14,7 @@ using System.IO;
 /**
  * Overall Controller object that will instantiate hands and tools when they appear.
  */
-public class HandController :MonoBehaviour 
+public class HandController: MonoBehaviour 
 {
 	protected const float MM_TO_M = 0.001f;
 
@@ -74,18 +74,20 @@ public class HandController :MonoBehaviour
 	{
 		// Go through all the active hands and update them.
 		int num_hands = leap_hands.Count;
-		
-		for (int h = 0; h < num_hands; ++h) {
+					
+		for(int h = 0; h < num_hands; h++) 
+		{
 			Hand leap_hand = leap_hands[h];      
-			HandModel[] models = (mirrorZAxis != leap_hand.IsLeft) ? left:right;
+			HandModel[] models = (mirrorZAxis != leap_hand.IsLeft)?left:right;
 
-			foreach (HandModel hand in models) {
+			foreach(HandModel hand in models)
+			{
 				hand.SetController(this);
-				hand.SetLeapHand(leap_hand);	  
+				hand.SetLeapHand(leap_hand);
 				hand.MirrorZAxis(mirrorZAxis);
 					
 				float hand_scale = MM_TO_M * leap_hand.PalmWidth / hand.handModelPalmWidth;
-				hand.transform.localScale = hand_scale * transform.lossyScale;
+				hand.transform.localScale = hand_scale * transform.lossyScale;				
 	    		hand.UpdateHand();
 			}      
 		}
