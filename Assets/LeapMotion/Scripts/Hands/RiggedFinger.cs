@@ -20,8 +20,7 @@ public class RiggedFinger :FingerModel
 	public Vector3 modelFingerPointing = Vector3.forward;
 	public Vector3 modelPalmFacing = -Vector3.up;
 
-	
-	
+
 	private void GuessDirectionFromBones()
 	{
 		Transform first = bones[0];
@@ -99,9 +98,27 @@ public class RiggedFinger :FingerModel
 
 	public override void UpdateFinger() 
 	{
-		for (int i = 0; i < bones.Length; ++i) {
-			if (bones[i] != null)
-				bones[i].rotation = GetBoneRotation(i) * Reorientation();		
+		for (int i = 0; i < bones.Length; i++) {
+			if (bones[i] == null)
+				continue;
+				
+			bones[i].rotation = GetBoneRotation(i) * Reorientation();		
 		}
 	}
+	
+	public void AddNoise(float amplitude)
+	{
+		for(int i = 0; i < bones.Length; i++) {
+			if(bones[i] == null)
+				continue;
+
+			Quaternion rotationNoise = Quaternion.Euler(
+				amplitude * NormalRandom.NextGaussianFloat(new System.Random()),
+				amplitude * NormalRandom.NextGaussianFloat(new System.Random()),
+				amplitude * NormalRandom.NextGaussianFloat(new System.Random())
+			);
+			
+			bones[i].rotation *= rotationNoise;
+		}
+	}	
 }
