@@ -23,13 +23,13 @@ public class HandSwitcher : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		UpdateModels();
 	}
 	
 	void Update() {
 		if(selected < -1 || selected >= leftGraphicsModelMale.Length || selected >= rightGraphicsModelMale.Length)
-			selected = 0;
-		
+			selected = 0;		
+						
 		if(selected != previous || useMale != oldUseMale || showLeftHand != oldLeft || showRightHand != oldRight)
 			UpdateModels();
 
@@ -41,10 +41,10 @@ public class HandSwitcher : MonoBehaviour {
 	
 	protected void UpdateModels () {
 		for(int i = 0; i < leftGraphicsModelMale.Length; i++)
-			leftGraphicsModelMale[i].SetActive(i == selected && useMale && showLeftHand);
-		for(int i = 0; i < rightGraphicsModelMale.Length; i++)
+			leftGraphicsModelMale[i].SetActive(i == selected && useMale && showLeftHand);			
+		for(int i = 0; i < rightGraphicsModelMale.Length; i++)		
 			rightGraphicsModelMale[i].SetActive(i == selected && useMale && showRightHand);
-
+		
 		for(int i = 0; i < leftGraphicsModelFemale.Length; i++)
 			leftGraphicsModelFemale[i].SetActive(i == selected && !useMale && showLeftHand);
 		for(int i = 0; i < rightGraphicsModelFemale.Length; i++)

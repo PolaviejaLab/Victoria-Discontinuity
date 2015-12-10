@@ -1121,6 +1121,14 @@ Prefab:
       propertyPath: detectDirections
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
+      propertyPath: enableNoise
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
+      propertyPath: hasArm
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
   m_IsPrefabParent: 0
@@ -2120,6 +2128,10 @@ Prefab:
       propertyPath: detectDirections
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 1359daef346c74018956e347e75a2ce8, type: 2}
+      propertyPath: hasArm
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1359daef346c74018956e347e75a2ce8, type: 2}
   m_IsPrefabParent: 0
@@ -2292,6 +2304,18 @@ Prefab:
       propertyPath: enableRecordPlayback
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: c9f2277f2b4414ff9abf05e783890171, type: 2}
+      propertyPath: leftGraphicsModels.Array.data[4]
+      value: 
+      objectReference: {fileID: 1358293402}
+    - target: {fileID: 11400000, guid: c9f2277f2b4414ff9abf05e783890171, type: 2}
+      propertyPath: leftPhysicsModels.Array.data[1]
+      value: 
+      objectReference: {fileID: 1358293402}
+    - target: {fileID: 11400000, guid: c9f2277f2b4414ff9abf05e783890171, type: 2}
+      propertyPath: rightPhysicsModels.Array.data[1]
+      value: 
+      objectReference: {fileID: 294690385}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c9f2277f2b4414ff9abf05e783890171, type: 2}
   m_IsPrefabParent: 0
@@ -2515,6 +2539,10 @@ Prefab:
       propertyPath: detectDirections
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: b4189dbf66def4c9799dad49101582e9, type: 2}
+      propertyPath: hasArm
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b4189dbf66def4c9799dad49101582e9, type: 2}
   m_IsPrefabParent: 0
@@ -2661,6 +2689,10 @@ Prefab:
     - target: {fileID: 11400008, guid: 4b359b2f0d7d14ef0a97b45ec153a3ef, type: 2}
       propertyPath: handModelPalmWidth
       value: .0700000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400008, guid: 4b359b2f0d7d14ef0a97b45ec153a3ef, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4b359b2f0d7d14ef0a97b45ec153a3ef, type: 2}
@@ -3126,11 +3158,13 @@ MonoBehaviour:
   arm: {fileID: 0}
   foreArm: {fileID: 0}
   palm: {fileID: 0}
+  hasArm: 1
   detectDirections: 0
   modelFingerPointing: {x: 1, y: 0, z: 0}
   modelPalmFacing: {x: -0, y: -1, z: -0}
   debugMode: 0
   partOfAvatar: 0
+  enableNoise: 0
 --- !u!1 &1934596066
 GameObject:
   m_ObjectHideFlags: 0
@@ -3366,6 +3400,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400010, guid: 5f4f1a5349b3243bfb0946ddda8768c3, type: 2}
       propertyPath: detectDirections
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 5f4f1a5349b3243bfb0946ddda8768c3, type: 2}
+      propertyPath: hasArm
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
