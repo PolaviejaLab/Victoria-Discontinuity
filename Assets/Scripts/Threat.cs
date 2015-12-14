@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Threat : MonoBehaviour 
+
+public enum ThreatState {
+	Idle,
+	Falling,
+	Following 
+};
+
+public enum ThreatEvent { 
+	HandReached , 
+};
+
+public class Threat : StateMachine<ThreatState, ThreatEvent> 
 {
-	private enum ThreatState { Idle, Falling, Following };
-
-
-
 	// public Transform targetMovement;
 	public MarkerController markerController;
 
@@ -46,6 +53,7 @@ public class Threat : MonoBehaviour
 		handPosition = handTransform.position;
 		Debug.Log (handTransform.position);
 
+
 		if (Input.GetKeyDown ("space") && threatState == ThreatState.Idle) {
 			Debug.Log ("Knife falling");
 			threatState = ThreatState.Falling;
@@ -69,12 +77,23 @@ public class Threat : MonoBehaviour
 		}
 	}
 
+
+	protected override void OnEnter (ThreatState oldState)
+	{
+		throw new System.NotImplementedException ();
+	}
+
+	protected override void OnExit (ThreatState newState)
+	{
+
+	}
+
 	void FallOnTarget () {
 		threatSpeed += gravity * Time.deltaTime;
-
-			threat.transform.position = Vector3.MoveTowards (
-				threat.transform.position, 
-				handTransform.position, 
-				threatSpeed * Time.deltaTime);
+		
+		threat.transform.position = Vector3.MoveTowards (
+			threat.transform.position, 
+			handTransform.position, 
+			threatSpeed * Time.deltaTime);
 	}
 }
