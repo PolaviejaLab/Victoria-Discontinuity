@@ -34,8 +34,16 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 	public int trialCounter;
 
+
 	public void Start() {
 		logger.OpenLog(GetLogFilename());
+
+		Debug.Log("---");        
+
+		// If the path is relative, add current directory
+		if(!Path.IsPathRooted(protocolFile)) {
+			Debug.Log(Directory.GetCurrentDirectory());
+		}
 
 		trialList = new TrialList(protocolFile);
 		WriteLog("Loaded " + trialList.Count () + " trials");
