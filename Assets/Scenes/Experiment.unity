@@ -199,7 +199,7 @@ MonoBehaviour:
   trialController: {fileID: 31432806}
   threatController: {fileID: 924765751}
   tableLights: {fileID: 2096310268}
-  protocolFile: C:\Users\User\Desktop\Parkinson\Test1.txt
+  protocolFile: Protocol/Parkinson/Test01.csv
   outputDirectory: Results
   participantName: Test
   trialCounter: 0

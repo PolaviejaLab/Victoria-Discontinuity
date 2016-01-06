@@ -35,16 +35,17 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public int trialCounter;
 
 
-	public void Start() {
+	public void Start() 
+    {
 		logger.OpenLog(GetLogFilename());
-
-		Debug.Log("---");        
 
 		// If the path is relative, add current directory
 		if(!Path.IsPathRooted(protocolFile)) {
-			Debug.Log(Directory.GetCurrentDirectory());
+            // The default location is the current directory
+            protocolFile = Path.GetFullPath(protocolFile);
 		}
 
+        // Load protocol
 		trialList = new TrialList(protocolFile);
 		WriteLog("Loaded " + trialList.Count () + " trials");
 
@@ -52,7 +53,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 	
 	
-	public void HandleEvent(ExperimentEvents ev) {
+	public void HandleEvent(ExperimentEvents ev) 
+    {
 		WriteLog("Event " + ev.ToString());
 
 		if(!IsStarted())

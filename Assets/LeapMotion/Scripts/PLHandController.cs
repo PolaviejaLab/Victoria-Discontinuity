@@ -13,9 +13,12 @@ public class PLHandController : HandController {
 	
 	// Reference distance from thumb base to pinky base in mm.
 	protected const float GIZMO_SCALE = 5.0f;
-	protected const float MM_TO_M = 0.001f;
 	
-	public bool separateLeftRight = false;
+	// This constant is inherited from HandController
+	//protected const float MM_TO_M = 0.001f;
+	
+	// This variable is inherited from HandController
+	//public bool separateLeftRight = false;
 	public HandModel leftGraphicsModel;
 	public HandModel leftPhysicsModel;
 	public HandModel rightGraphicsModel;
@@ -23,8 +26,9 @@ public class PLHandController : HandController {
 	
 	public ToolModel toolModel;
 	
-	public bool isHeadMounted = false;
-	public bool mirrorZAxis = false;
+	// These variables are inherited from HandController
+	//public bool isHeadMounted = false;
+	//public bool mirrorZAxis = false;
 	
 	// If hands are in charge of Destroying themselves, make this false.
 	public bool destroyHands = true;

@@ -12,7 +12,7 @@ public enum ThreatEvent {
 	HandReached , 
 };
 
-public class Threat : StateMachine<ThreatState, ThreatEvent> 
+public class Threat: StateMachine<ThreatState, ThreatEvent> 
 {
 	// public Transform targetMovement;
 	public MarkerController markerController;
