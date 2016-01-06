@@ -33,8 +33,10 @@ public class Threat : StateMachine<ThreatState, ThreatEvent>
 	private float threatSpeed;
 	private float gravity = 9.81f;
 
+	public bool isActive = false; 
 
 	private ThreatState threatState;
+
 	Quaternion initialThreatRotation;
 	Quaternion savedRotation;
 
@@ -44,20 +46,25 @@ public class Threat : StateMachine<ThreatState, ThreatEvent>
 		threatState = ThreatState.Idle;
 	}
 	
-	// Update is called once per frame
 	void Update () {
-		// targetPositionx = targetMovement.position.x;
-		// targetPositiony = targetMovement.position.y;
-		// targetPositionz = targetMovement.position.z;
-		// Debug.Log (targetMovement.position);
+
 		handPosition = handTransform.position;
 		Debug.Log (handTransform.position);
 
+		if (!isActive) {
+			threat.SetActive (false);
+		}
+		if (isActive) {
+			Debug.Log("this is the miaw");
+			threat.SetActive (true);
 
+			// ChangeState(ThreatState.Falling);
+		}
+
+	
 		if (Input.GetKeyDown ("space") && threatState == ThreatState.Idle) {
 			Debug.Log ("Knife falling");
 			threatState = ThreatState.Falling;
-			threatSpeed = 0;
 		}
 
 		if (threatState == ThreatState.Falling) {

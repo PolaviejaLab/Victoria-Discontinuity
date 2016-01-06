@@ -70,8 +70,6 @@ public class MarkerController : MonoBehaviour {
 
 			handPosition = handTransform.position;
 
-			// notifies ExpController that the PD has been measured
-			experimentController.HandleEvent (ExperimentEvents.ProprioceptiveDriftMeasured);
 			// Restarts the pointer position to its original value (Start())
 			pointer.transform.localPosition =  new Vector3(pointerx, pointery, pointerz);
 		}

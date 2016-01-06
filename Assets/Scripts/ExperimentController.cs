@@ -5,30 +5,25 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public enum ExperimentEvents
-{
+public enum ExperimentEvents {
 	TrialFinished,
-	MeasureProprioceptiveDrift,
-	ProprioceptiveDriftMeasured,
+	HandThreatened, 
 };
 
 
-public enum ExperimentStates
-{
+public enum ExperimentStates {
 	Trial,
-	ProprioceptiveDrift,
-	Questionnaire,
+	Threat, 
 	Finished,
 };
 
 
-public class ExperimentController: StateMachine<ExperimentStates, ExperimentEvents>
-{
+public class ExperimentController: StateMachine<ExperimentStates, ExperimentEvents> {
 	public HandController handController;
-
 	public HandSwitcher handSwitcher;
 	public TrialController trialController;
-	public MarkerController markerController;
+	public Threat threatController;
+
 	public TableLights tableLights;
 	
 	private TrialList trialList;
@@ -39,10 +34,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 	public int trialCounter;
 
-	private bool measurePD;
-
-	public void Start() 
-	{
+	public void Start() {
 		logger.OpenLog(GetLogFilename());
 
 		trialList = new TrialList(protocolFile);
@@ -52,8 +44,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 	
 	
-	public void HandleEvent(ExperimentEvents ev) 
-	{
+	public void HandleEvent(ExperimentEvents ev) {
 		WriteLog("Event " + ev.ToString());
 
 		if(!IsStarted())
@@ -61,53 +52,30 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		
 		switch(GetState()) {
 
-
 		case ExperimentStates.Trial:
-			if(ev == ExperimentEvents.TrialFinished) {
-				ChangeState(ExperimentStates.ProprioceptiveDrift);
-			} 
-			break;
-		case ExperimentStates.ProprioceptiveDrift:
-			if (ev == ExperimentEvents.MeasureProprioceptiveDrift){
-				markerController.isStarted = true;
-				markerController.dirRight = true;		
-
-			} else if (ev == ExperimentEvents.ProprioceptiveDriftMeasured) {
-				ChangeState(ExperimentStates.Questionnaire);
-				markerController.isStarted = false;
-				measurePD = false;
+			if (ev == ExperimentEvents.TrialFinished) {
+				ChangeState (ExperimentStates.Threat);
 			}
 			break;
 		}
 	}
 	
-	public void Update() 
-	{
+	public void Update() {
 		if(!IsStarted())
 			return;
 		
 		switch (GetState ()) {
-		case ExperimentStates.Questionnaire:
-			if (Input.GetKeyDown (KeyCode.Return)) {
-					ChangeState (ExperimentStates.Trial);
-				}
-			break;
-
-		
-		case ExperimentStates.ProprioceptiveDrift:
-			if (GetTimeInState() > 2.0f && !measurePD) {
-				HandleEvent(ExperimentEvents.MeasureProprioceptiveDrift);
-				measurePD = true;
-			}
+		case ExperimentStates.Threat:
+//			if (GetTimeInState () > 4.0f)
+//				threatController.isActive = true;
+//			Debug.Log("miaw");
 			break;
 		}
 	}
 	
-	protected override void OnEnter(ExperimentStates oldState) 
-	{
+	protected override void OnEnter(ExperimentStates oldState) {
 
 		switch(GetState()) {
-
 		case ExperimentStates.Trial:
 			if (!trialList.HasMore())
 				ChangeState(ExperimentStates.Finished);
@@ -116,44 +84,36 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			StartTrial();
 			break;
 
-		case ExperimentStates.ProprioceptiveDrift:
-			handSwitcher.showRightHand = false;
-			tableLights.isOn = false;
-			break;
-
-		case ExperimentStates.Questionnaire:
+		case ExperimentStates.Threat:
+			threatController.isActive = true;
+			Debug.Log ("This knife is almost falling");
 			break;
 
 		case ExperimentStates.Finished:
-			StopMachine();	
+			SaveTrialResult();
+			StopMachine();
 			WriteLog("No more trials, stopping machine");
 			break;
 		}
 	}
 
 
-	protected override void OnExit(ExperimentStates newState) 
-	{
+	protected override void OnExit(ExperimentStates newState) {
 		switch(GetState()) {
-			case ExperimentStates.Trial:
+		case ExperimentStates.Trial:
+		
 				break;
+		case ExperimentStates.Threat:
+			break;
 
-		 	case ExperimentStates.ProprioceptiveDrift:
-				SaveTrialResult();
-				break;
-
-			case ExperimentStates.Questionnaire:
-				break;
 		}
 	}
 
 
-	
 	/**
 	 * Start the next trial
 	 */
-	private void StartTrial()
-	{
+	private void StartTrial() {
 		// Do not start if already running
 		if(trialController.IsStarted())
 			return;
@@ -192,22 +152,17 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		// Turn table lights on
 		tableLights.isOn = true;
 
-		// Turn proprioceptive drift marker off
-		markerController.isStarted = false;
-		
 		trialController.initialState = TrialStates.AccomodationTime;
 		trialController.StartMachine();
 	}
 
 
-	private string GetLEAPFilename(int trial)
-	{
+	private string GetLEAPFilename(int trial){
 		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".csv";
 	}
 
 
-	private string GetLogFilename()
-	{
+	private string GetLogFilename(){
 		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".log";
 	}
 
@@ -221,8 +176,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	/**
 	 * Appends the result of the previous trial to the datafile
 	 */
-	private void SaveTrialResult() 
-	{
+	private void SaveTrialResult() {
 		handController.StopRecording();
 
 		StreamWriter writer = new StreamWriter(GetResultsFilename(), true);
@@ -248,13 +202,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		writer.Write(", ");
 		writer.Write(trialController.lateWaves);
 		writer.Write(", ");
-		writer.Write(markerController.proprioceptiveDrift);
-		writer.Write(", ");
-		writer.Write(markerController.handPosition.x);
-		writer.Write(", ");
-		writer.Write(markerController.handPosition.y);
-		writer.Write(", ");
-		writer.Write(markerController.handPosition.z);
 		writer.WriteLine();
 		
 		writer.Close();
