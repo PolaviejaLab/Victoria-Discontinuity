@@ -16,7 +16,7 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	private float timeAtStateChange;	
 	private bool started;
 
-	public Logger logger;
+	public Logger logger = null;
 	
 	/**
 	 * Initial state
@@ -38,9 +38,10 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	 * Write and entry to the log
 	 */
 	protected void WriteLog(string message)
-	{
+	{    
 		Debug.Log(message);
-		logger.Write(this.GetType().ToString() + "\t" + message);
+        if(logger != null)
+		    logger.Write(this.GetType().ToString() + "\t" + message);
 	}
 
 
@@ -135,7 +136,7 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	/**
 	 * Initializes the state machine
 	 */
-	void Start () {
+	public void Start () {
 		if(StartOnInstantiation)
 			StartMachine();
 	}
