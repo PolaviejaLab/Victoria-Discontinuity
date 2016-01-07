@@ -7,22 +7,20 @@ using System.Collections.Generic;
 
 public enum ExperimentEvents {
 	TrialFinished,
-	HandThreatened, 
 };
 
 
 public enum ExperimentStates {
 	Trial,
-	Threat, 
 	Finished,
 };
 
 
-public class ExperimentController: StateMachine<ExperimentStates, ExperimentEvents> {
+public class ExperimentController: StateMachine<ExperimentStates, ExperimentEvents> 
+{
 	public HandController handController;
 	public HandSwitcher handSwitcher;
 	public TrialController trialController;
-	public Threat threatController;
 
 	public TableLights tableLights;
 	
@@ -64,60 +62,78 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.Trial:
 			if (ev == ExperimentEvents.TrialFinished) {
-				ChangeState (ExperimentStates.Threat);
+				//ChangeState (ExperimentStates.Threat);
 			}
 			break;
 		}
 	}
 	
-	public void Update() {
+    
+	public void Update() 
+    {
 		if(!IsStarted())
 			return;
-		
-		switch (GetState ()) {
-		case ExperimentStates.Threat:
-//			if (GetTimeInState () > 4.0f)
-//				threatController.isActive = true;
-//			Debug.Log("miaw");
-			break;
-		}
 	}
 	
-	protected override void OnEnter(ExperimentStates oldState) {
-
+    
+	protected override void OnEnter(ExperimentStates oldState)
+    {
 		switch(GetState()) {
-		case ExperimentStates.Trial:
-			if (!trialList.HasMore())
-				ChangeState(ExperimentStates.Finished);
-			
-			trialCounter++;
-			StartTrial();
-			break;
-
-		case ExperimentStates.Threat:
-			threatController.isActive = true;
-			Debug.Log ("This knife is almost falling");
-			break;
-
-		case ExperimentStates.Finished:
-			SaveTrialResult();
-			StopMachine();
-			WriteLog("No more trials, stopping machine");
-			break;
+    		case ExperimentStates.Trial:
+    			if (!trialList.HasMore())
+    				ChangeState(ExperimentStates.Finished);
+    			
+    			trialCounter++;
+    			StartTrial();
+    			break;
+    
+    		case ExperimentStates.Finished:
+    			SaveTrialResult();
+    			StopMachine();
+    			WriteLog("No more trials, stopping machine");
+    			break;
 		}
 	}
 
 
-	protected override void OnExit(ExperimentStates newState) {
+	protected override void OnExit(ExperimentStates newState) 
+    {
 		switch(GetState()) {
-		case ExperimentStates.Trial:
-		
-				break;
-		case ExperimentStates.Threat:
-			break;
-
+    		case ExperimentStates.Trial:
+   				break;                
 		}
 	}
+
+
+    /**
+     * Parse trial details and pass them to the trial controller
+     */
+    private void PrepareTrial(Dictionary<string, string> trial, TrialController trialController)
+    {
+        // Determine which hand to use for given gapsize
+        if(trial["GapStatus"] == "Inactive")
+            trialController.hand = 1;
+        else if(trial["GapStatus"] == "Active")
+            trialController.hand = 0;
+        else {
+            WriteLog("Invalid GapSize in protocol");
+            trialController.hand = -1;
+        }
+        
+        WriteLog("Gap: " + trial["GapStatus"]);
+        
+        // Get offset
+        float offset;
+        float.TryParse(trial["Offset"], out offset);
+        trialController.offset = offset / 100.0f;
+        
+        WriteLog("Offset: " + offset);
+        
+        // Determine the number of waves per each trial
+        int wavesRequired;
+        int.TryParse(trial["WavesRequired"], out wavesRequired);
+        trialController.wavesRequired = wavesRequired;
+    }    
 
 
 	/**
@@ -130,34 +146,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		WriteLog("Starting trial");
 
-		// Load next trial from list
+		// Get next trial from list and setup trialController
 		Dictionary<string, string> trial = trialList.Pop();
-	
+        PrepareTrial(trial, trialController);
+        
 		handController.StartRecording(GetLEAPFilename(trialCounter));
-		
-		// Determine which hand to use for given gapsize
-		if(trial["GapStatus"] == "Inactive")
-			trialController.hand = 1;
-		else if(trial["GapStatus"] == "Active")
-			trialController.hand = 0;
-		else {
-			WriteLog("Invalid GapSize in protocol");
-			trialController.hand = -1;
-		}
-		
-		WriteLog("Gap: " + trial["GapStatus"]);
-		
-		// Get offset
-		float offset;
-		float.TryParse(trial["Offset"], out offset);
-		trialController.offset = offset / 100.0f;
-
-		WriteLog("Offset: " + offset);
-
-		// Determine the number of waves per each trial
-		int wavesRequired;
-		int.TryParse(trial["WavesRequired"], out wavesRequired);
-		trialController.wavesRequired = wavesRequired;
 
 		// Turn table lights on
 		tableLights.isOn = true;
@@ -167,12 +160,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 
 
-	private string GetLEAPFilename(int trial){
+	private string GetLEAPFilename(int trial)
+    {
 		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".csv";
 	}
 
 
-	private string GetLogFilename(){
+	private string GetLogFilename()
+    {
 		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".log";
 	}
 
@@ -186,7 +181,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	/**
 	 * Appends the result of the previous trial to the datafile
 	 */
-	private void SaveTrialResult() {
+	private void SaveTrialResult() 
+    {
 		handController.StopRecording();
 
 		StreamWriter writer = new StreamWriter(GetResultsFilename(), true);
