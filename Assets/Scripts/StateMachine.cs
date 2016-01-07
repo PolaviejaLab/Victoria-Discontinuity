@@ -77,6 +77,7 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 			started = false;
 
 			WriteLog("Stopped");
+            OnStop();
 		}
 		
 		if(StartOnStopMachine) 
@@ -146,6 +147,12 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	 * Called when the state machine is started
 	 */
 	virtual protected void OnStart() { }
+    
+    
+    /**
+     * Called when the state machine is stopped
+     */
+    virtual protected void OnStop() { }
 
 
 	/**
