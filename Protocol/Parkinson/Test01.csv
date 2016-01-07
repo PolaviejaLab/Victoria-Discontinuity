@@ -1,2 +1,2 @@
-GapStatus, Offset, WavesRequired
-Inactive, 0, 2
+GapStatus, Offset, WavesRequired, KnifePresent, NoiseLevel
+Inactive, 0, 2, True, 1
