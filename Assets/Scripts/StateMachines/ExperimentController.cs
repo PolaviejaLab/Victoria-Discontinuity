@@ -141,6 +141,25 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         int wavesRequired;
         int.TryParse(trial["WavesRequired"], out wavesRequired);
         trialController.wavesRequired = wavesRequired;
+        
+        // Noise level
+        if(trial.ContainsKey("NoiseLevel")) {
+            float noiseLevel;
+            float.TryParse(trial["NoiseLevel"], out noiseLevel);
+            trialController.noiseLevel = noiseLevel;
+        } else {
+            trialController.noiseLevel = 0;
+        }
+        
+        // Knife
+        if(trial.ContainsKey("KnifePresent")) {
+            if(trial["KnifePresent"].ToLower() == "true")
+                trialController.knifePresent = true;
+            else if(trial["KnifePresent"].ToLower() == "false")
+                trialController.knifePresent = false;
+            else
+                throw new Exception("Invalid value in trial list for field KnifePresent");
+        }
     }    
 
 

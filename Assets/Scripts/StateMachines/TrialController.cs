@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+
 /**
  * Events handles by the Trial statemachine
  * 
@@ -12,6 +13,7 @@ public enum TrialEvents {
 	Wave_Initial,
 	Delay,
 };
+
 
 /**
  * States of the Trial statemachine
@@ -44,6 +46,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	public int hand;
 	public float offset;
 	public int wavesRequired;
+    public float noiseLevel;
+    public bool knifePresent;
 
 	// Keep track of required number of waves
 	public int waveCounter;
