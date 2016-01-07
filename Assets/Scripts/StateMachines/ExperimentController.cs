@@ -70,9 +70,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		switch(GetState()) {
 
 		case ExperimentStates.Trial:
-			if (ev == ExperimentEvents.TrialFinished) {
-				//ChangeState (ExperimentStates.Threat);
-			}
+			if (ev == ExperimentEvents.TrialFinished)
+				ChangeState (ExperimentStates.Trial)
 			break;
 		}
 	}
@@ -148,7 +147,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	/**
 	 * Start the next trial
 	 */
-	private void StartTrial() {
+	private void StartTrial() 
+    {
 		// Do not start if already running
 		if(trialController.IsStarted())
 			return;
