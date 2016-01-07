@@ -6,6 +6,7 @@ using System.Collections;
 
 public class StateMachineStoppedException :Exception { };
 
+public delegate void StoppedEventHandler(object sender, EventArgs e);
 
 /**
  * Generic state machine for use in experiments
@@ -15,6 +16,8 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	private States state;	
 	private float timeAtStateChange;	
 	private bool started;
+
+    public event StoppedEventHandler Stopped;
 
 	public Logger logger = null;
 	
@@ -77,6 +80,8 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 			started = false;
 
 			WriteLog("Stopped");
+            if(Stopped != null)
+                Stopped(this, EventArgs.Empty);
             OnStop();
 		}
 		

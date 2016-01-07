@@ -12,6 +12,7 @@ public enum TrialEvents {
 	Wave_1 = 1,
 	Wave_Initial,
 	Delay,
+    KnifeDone
 };
 
 
@@ -25,6 +26,7 @@ public enum TrialStates {
 	Waved,
 	TooLate,
 	WithoutFeedback,
+    Knife,
 	Final,
 };
 
@@ -33,6 +35,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 {
 	// Reference to the experiment controller
 	public ExperimentController experimentController;
+    public Threat threatController;
 
 	// Initial and subsequent lights
 	public MaterialChanger initialLight;
@@ -70,6 +73,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 	public void Start() 
     {
+        threatController.Stopped += (obj, ev) => HandleEvent(TrialEvents.KnifeDone);
+        
 		collisionLights = GameObject.Find("CubeLight");
 		collisionInitial = GameObject.Find("CubeInitial");
 	}
@@ -112,6 +117,11 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 				ChangeState(TrialStates.Waved);
 			}
 			break;
+
+        case TrialStates.Knife:
+            if(ev == TrialEvents.KnifeDone)
+                ChangeState(TrialStates.Final);
+            break;
 
 		case TrialStates.Final:
 			if (ev == TrialEvents.Wave_Initial){
@@ -188,8 +198,12 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 
 		case TrialStates.WithoutFeedback:
-			if (GetTimeInState () > 1.0f)
-				ChangeState (TrialStates.Final);
+			if (GetTimeInState() > 1.0f) {
+                if(knifePresent)
+                    ChangeState(TrialStates.Knife);
+                else
+				    ChangeState(TrialStates.Final);
+            }
 			break;
 		}
 	}
@@ -217,8 +231,12 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			break;
 
 		case TrialStates.TooLate:
-			ChangeState (TrialStates.Waved);
+			ChangeState(TrialStates.Waved);
 			break;
+            
+        case TrialStates.Knife:                        
+            threatController.Start();
+            break;
 
 		case TrialStates.Final:
 			// last initial light on to mark a central point for the drift measure
