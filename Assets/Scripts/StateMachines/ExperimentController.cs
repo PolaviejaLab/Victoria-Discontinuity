@@ -71,7 +71,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		case ExperimentStates.Trial:
 			if (ev == ExperimentEvents.TrialFinished)
-				ChangeState (ExperimentStates.Trial)
+				ChangeState(ExperimentStates.Trial);
 			break;
 		}
 	}
