@@ -1,4 +1,13 @@
-﻿using UnityEngine;
+﻿/**
+ * Main state machine controlling the flow of the experiment.
+ *  This state machine is responsible for loading trial descriptions,
+ *  running the appropriate trials in order and saving the results
+ *  back to the data file.
+ *
+ * Logic pertaining to the flow of a trial should be placed in the
+ *  trial state machine.
+ */
+using UnityEngine;
 using System;
 using System.IO;
 using System.Collections;
