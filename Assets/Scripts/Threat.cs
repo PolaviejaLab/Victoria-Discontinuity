@@ -1,106 +1,136 @@
-﻿using UnityEngine;
+﻿/**
+ * State machine for a threat (e.g. knife) that
+ * falls on a target (e.g. hand) and then follows it.
+ */
+ 
+using UnityEngine;
 using System.Collections;
 
 
+/**
+ * States the threat (knife) can be in
+ */
 public enum ThreatState {
-	Idle,
-	Falling,
-	Following 
+	Initial,    // Idle state
+	Falling,    // Falling on / towards target
+	Following   // Stick to target
 };
 
-public enum ThreatEvent { 
-	HandReached , 
+
+/**
+ * Events handled by the threat state machine.
+ */
+public enum ThreatEvent {
+    ReleaseThreat,  // Drop the knife
+	TargetReached     // Target reached
 };
+
 
 public class Threat: StateMachine<ThreatState, ThreatEvent> 
 {
-	// public Transform targetMovement;
-	public MarkerController markerController;
-
 	public GameObject threat;
-
-	private Vector3 targetPosition;
-	private Vector3 threatPosition;
-	
-	private float targetPositionx;
-	private float targetPositiony;
-	private float targetPositionz;
-
-	public Transform handTransform;
-
-	public Vector3 handPosition;
+	public Transform targetTransform;
 
 	private float threatSpeed;
 	private float gravity = 9.81f;
 
-	public bool isActive = false; 
-
-	private ThreatState threatState;
-
+    Vector3 initialThreatPosition;
 	Quaternion initialThreatRotation;
 	Quaternion savedRotation;
 
-	// Use this for initialization
-	void Start () {
+	
+	void Start()
+    {
+        // Store the initial transformation of the knife
+        //  this way we can reset it later
+        initialThreatPosition = threat.transform.position;
 		initialThreatRotation = threat.transform.rotation;
-		threatState = ThreatState.Idle;
 	}
 	
-	void Update () {
-
-		handPosition = handTransform.position;
-		Debug.Log (handTransform.position);
-
-		if (!isActive) {
-			threat.SetActive (false);
-		}
-		if (isActive) {
-			Debug.Log("this is the miaw");
-			threat.SetActive (true);
-
-			// ChangeState(ThreatState.Falling);
-		}
-
+    
+    protected override void OnStart()
+    {
+        threat.SetActive(true);
+    }
+    
+    
+    protected override void OnStop()
+    {
+        threat.SetActive(false);
+    }
+    
+    
+	void Update () 
+    {
+        switch(GetState()) {        
+            case ThreatState.Falling:
+                FallOnTarget ();
+                break;            
+        
+            case ThreatState.Following:
+                threat.transform.position = targetTransform.position;               
+                threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;                
+                break;                
+        }
 	
-		if (Input.GetKeyDown ("space") && threatState == ThreatState.Idle) {
-			Debug.Log ("Knife falling");
-			threatState = ThreatState.Falling;
-		}
-
-		if (threatState == ThreatState.Falling) {
-
-			if(Vector3.Distance(threat.transform.position, handTransform.position) < 0.001) {
-				threatState = ThreatState.Following;
-				savedRotation = handTransform.rotation;
-			}
-
-			FallOnTarget ();
-		}
-
-		if (threatState == ThreatState.Following) {
-			threat.transform.position = handTransform.position;
-
-			threat.transform.rotation = (handTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
-		}
-	}
+        // If threat is close to target, emit TargetReached event
+		if(Vector3.Distance(threat.transform.position, targetTransform.position) < 0.001)
+            HandleEvent(ThreatEvent.TargetReached);
+    }
 
 
-	protected override void OnEnter (ThreatState oldState)
+    public void HandleEvent(ThreatEvent ev)
+    {
+        switch(GetState()) {
+            case ThreatState.Initial:
+                if(ev == ThreatEvent.ReleaseThreat)
+                    ChangeState(ThreatState.Falling);
+                break;
+                
+            case ThreatState.Falling:
+                if(ev == ThreatEvent.TargetReached)
+                    ChangeState(ThreatState.Following);
+                break;
+        }
+    }
+
+
+	protected override void OnEnter(ThreatState oldState)
 	{
-		throw new System.NotImplementedException ();
-	}
+        switch(GetState()) {
+            case ThreatState.Falling:
+                threatSpeed = 0.0f;
+                break;
 
-	protected override void OnExit (ThreatState newState)
+            case ThreatState.Following:
+                savedRotation = targetTransform.rotation;
+                break;
+        }
+	}    
+
+
+	protected override void OnExit(ThreatState newState)
 	{
-
+        switch(GetState()) {
+            // Reset initial position and rotation when following is complete
+            case ThreatState.Following:
+                threat.transform.position = initialThreatPosition;
+                threat.transform.rotation = initialThreatRotation;
+                break;
+        }        
 	}
 
-	void FallOnTarget () {
+
+    /**
+     * Advances the threat position such that is falls on the target
+     */
+	private void FallOnTarget() 
+    {
 		threatSpeed += gravity * Time.deltaTime;
-		
-		threat.transform.position = Vector3.MoveTowards (
+		        
+		threat.transform.position = Vector3.MoveTowards(
 			threat.transform.position, 
-			handTransform.position, 
+			targetTransform.position, 
 			threatSpeed * Time.deltaTime);
 	}
 }
