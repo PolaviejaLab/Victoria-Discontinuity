@@ -123,6 +123,7 @@ MonoBehaviour:
   StartOnInstantiation: 0
   StartOnStopMachine: 0
   experimentController: {fileID: 31432809}
+  threatController: {fileID: 924765751}
   initialLight: {fileID: 243545321}
   lights:
   - {fileID: 357780511}
@@ -132,6 +133,8 @@ MonoBehaviour:
   hand: 0
   offset: 0
   wavesRequired: 50
+  noiseLevel: 0
+  knifePresent: 0
   waveCounter: 0
   lateWaves: 0
   correctWaves: 0
@@ -197,7 +200,6 @@ MonoBehaviour:
   handController: {fileID: 745853846}
   handSwitcher: {fileID: 31432808}
   trialController: {fileID: 31432806}
-  threatController: {fileID: 924765751}
   tableLights: {fileID: 2096310268}
   protocolFile: Protocol/Parkinson/Test01.csv
   outputDirectory: Results
@@ -1743,11 +1745,8 @@ MonoBehaviour:
   initialState: 0
   StartOnInstantiation: 0
   StartOnStopMachine: 0
-  markerController: {fileID: 31432810}
   threat: {fileID: 924765750}
-  handTransform: {fileID: 1439060255}
-  handPosition: {x: 0, y: 0, z: 0}
-  isActive: 0
+  targetTransform: {fileID: 1535472345}
 --- !u!1 &941264205 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100034, guid: c71966c97cd79448bb78426d92c4166a, type: 2}
@@ -2548,10 +2547,6 @@ MonoBehaviour:
   detectDirections: 0
   modelFingerPointing: {x: 1, y: 0, z: 0}
   modelPalmFacing: {x: -0, y: -1, z: -0}
---- !u!4 &1439060255 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400042, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
-  m_PrefabInternal: {fileID: 621582318}
 --- !u!1001 &1455164873
 Prefab:
   m_ObjectHideFlags: 0
@@ -2731,6 +2726,10 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 100046, guid: 1359daef346c74018956e347e75a2ce8, type: 2}
   m_PrefabInternal: {fileID: 1186839112}
+--- !u!4 &1535472345 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 400028, guid: c71966c97cd79448bb78426d92c4166a, type: 2}
+  m_PrefabInternal: {fileID: 294690383}
 --- !u!1001 &1536514400
 Prefab:
   m_ObjectHideFlags: 0

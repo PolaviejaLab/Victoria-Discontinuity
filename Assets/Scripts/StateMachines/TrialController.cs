@@ -103,7 +103,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 				WriteLog("Light: " + currentLight);
 
-				lights [currentLight].activeMaterial = 1;
+				lights[currentLight].activeMaterial = 1;
 				collisionLights.SetActive (true);
 			} else if((int)ev == currentLight) {
 				WriteLog("Waved correctly");
@@ -125,7 +125,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		case TrialStates.Final:
 			if (ev == TrialEvents.Wave_Initial){
-				experimentController.HandleEvent (ExperimentEvents.TrialFinished);
+				experimentController.HandleEvent(ExperimentEvents.TrialFinished);
 				StopMachine();
 			}
 			break;
@@ -150,7 +150,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	}
 
 
-	public void Update (){
+	public void Update(){
 		if (!IsStarted ())
 			return;
 
@@ -170,7 +170,6 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		
 		case TrialStates.WaitForWave:
-
 			// Wait between the lights turning on and off
 			if (GetTimeInState () > 1.0f && !greenLightOn){
 				greenLightOn = true;
@@ -234,8 +233,9 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			ChangeState(TrialStates.Waved);
 			break;
             
-        case TrialStates.Knife:                        
-            threatController.Start();
+        case TrialStates.Knife:
+            threatController.StartMachine();
+            threatController.HandleEvent(ThreatEvent.ReleaseThreat);
             break;
 
 		case TrialStates.Final:

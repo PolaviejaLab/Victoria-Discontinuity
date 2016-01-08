@@ -1,14 +1,18 @@
-﻿using NSubstitute;
+﻿using UnityEngine;
+using NSubstitute;
 using NUnit.Framework;
+
 
 enum StateMachineTestStates
 {
     Initial
 }
 
+
 enum StateMachineTestEvents
 {
 }
+
 
 class TestStateMachine: StateMachine<StateMachineTestStates, StateMachineTestEvents>
 {

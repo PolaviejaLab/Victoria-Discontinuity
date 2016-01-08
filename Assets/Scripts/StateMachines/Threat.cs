@@ -62,6 +62,9 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
     
 	void Update () 
     {
+        if(!IsStarted())
+            return;
+    
         switch(GetState()) {        
             case ThreatState.Falling:
                 FallOnTarget ();
