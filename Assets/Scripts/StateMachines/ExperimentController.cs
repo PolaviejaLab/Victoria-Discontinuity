@@ -56,6 +56,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		trialList = new TrialList(protocolFile);
 		WriteLog("Loaded " + trialList.Count () + " trials");
 
+        // When the trial controller is stopped, invoke an event
+        trialController.Stopped += 
+            (sender, e) => 
+                { HandleEvent(ExperimentEvents.TrialFinished); };
+
 		this.StartMachine();
 	}
 	

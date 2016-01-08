@@ -126,10 +126,10 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 break;
     
     		case TrialStates.Final:
-    			if (ev == TrialEvents.Wave_Initial) {
-    				experimentController.HandleEvent(ExperimentEvents.TrialFinished);
+    			if (ev == TrialEvents.Wave_Initial)
     				StopMachine();
-    			}
+                    //experimentController.HandleEvent(ExperimentEvents.TrialFinished);
+    			//}
     			break;
 		}
 	}
