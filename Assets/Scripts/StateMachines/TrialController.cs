@@ -71,6 +71,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	public GameObject collisionLights;
 	public GameObject collisionInitial;
 
+
 	public void Start() 
     {
         threatController.Stopped += (obj, ev) => HandleEvent(TrialEvents.KnifeDone);
@@ -78,6 +79,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		collisionLights = GameObject.Find("CubeLight");
 		collisionInitial = GameObject.Find("CubeInitial");
 	}
+
 
 	public void HandleEvent(TrialEvents ev)
     {
@@ -88,49 +90,50 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	
 		switch (GetState()) {
 			case TrialStates.WaitForInitial:
-			if (ev == TrialEvents.Delay && initialLightOn) {
-				initialLight.activeMaterial = 1;
-				collisionInitial.SetActive(true);
-			} else if (ev == TrialEvents.Wave_Initial){
-				ChangeState (TrialStates.WaitForWave);
-			}
-			break;
+    			if (ev == TrialEvents.Delay && initialLightOn) {
+    				initialLight.activeMaterial = 1;
+    				collisionInitial.SetActive(true);
+    			} else if (ev == TrialEvents.Wave_Initial){
+    				ChangeState (TrialStates.WaitForWave);
+    			}
+    			break;
 
-		case TrialStates.WaitForWave:
-			if (ev == TrialEvents.Delay && greenLightOn) {
-				// Turn on random target light
-				currentLight = Random.Range (0, lights.Length);
-
-				WriteLog("Light: " + currentLight);
-
-				lights[currentLight].activeMaterial = 1;
-				collisionLights.SetActive (true);
-			} else if((int)ev == currentLight) {
-				WriteLog("Waved correctly");
-
-				correctWaves++;
-				ChangeState(TrialStates.Waved);
-			} else if((int)ev != currentLight && ev != TrialEvents.Wave_Initial) {
-				WriteLog("Waved incorrect");
-
-				incorrectWaves++;
-				ChangeState(TrialStates.Waved);
-			}
-			break;
-
-        case TrialStates.Knife:
-            if(ev == TrialEvents.KnifeDone)
-                ChangeState(TrialStates.Final);
-            break;
-
-		case TrialStates.Final:
-			if (ev == TrialEvents.Wave_Initial){
-				experimentController.HandleEvent(ExperimentEvents.TrialFinished);
-				StopMachine();
-			}
-			break;
+    		case TrialStates.WaitForWave:
+    			if (ev == TrialEvents.Delay && greenLightOn) {
+    				// Turn on random target light
+    				currentLight = Random.Range (0, lights.Length);
+    
+    				WriteLog("Light: " + currentLight);
+    
+    				lights[currentLight].activeMaterial = 1;
+    				collisionLights.SetActive (true);
+    			} else if((int)ev == currentLight) {
+    				WriteLog("Waved correctly");
+    
+    				correctWaves++;
+    				ChangeState(TrialStates.Waved);
+    			} else if((int)ev != currentLight && ev != TrialEvents.Wave_Initial) {
+    				WriteLog("Waved incorrect");
+    
+    				incorrectWaves++;
+    				ChangeState(TrialStates.Waved);
+    			}
+    			break;
+    
+            case TrialStates.Knife:
+                if(ev == TrialEvents.KnifeDone)
+                    ChangeState(TrialStates.Final);
+                break;
+    
+    		case TrialStates.Final:
+    			if (ev == TrialEvents.Wave_Initial) {
+    				experimentController.HandleEvent(ExperimentEvents.TrialFinished);
+    				StopMachine();
+    			}
+    			break;
 		}
 	}
+
 
 	protected override void OnStart()
     {
@@ -150,126 +153,127 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	}
 
 
-	public void Update(){
+	public void Update()
+    {
 		if (!IsStarted ())
 			return;
 
 		switch (GetState ()) {
-
-		case TrialStates.AccomodationTime:				
-			if (GetTimeInState() > 10.0f)
-				ChangeState(TrialStates.WaitForInitial);
-			break;
-
-		case TrialStates.WaitForInitial:
-			if (GetTimeInState ()> 1.0f && !initialLightOn) {
-				initialLightOn = true;
-				HandleEvent (TrialEvents.Delay);
-			}
-			break;
-
-		
-		case TrialStates.WaitForWave:
-			// Wait between the lights turning on and off
-			if (GetTimeInState () > 1.0f && !greenLightOn){
-				greenLightOn = true;
-				HandleEvent(TrialEvents.Delay);
-			}
-
-			// Move to next state if more than 5 seconds elapsed 
-			// from the green light turning on
-			if (GetTimeInState () > 6.0f) {
-				lateWaves++;
-				ChangeState (TrialStates.TooLate);
-			}
-			break;
-
-		// Wait one second after the wave, and then start again
-		case TrialStates.Waved:
-			if (GetTimeInState () > 1.0f) {
-				if (waveCounter < wavesRequired) {
-					ChangeState (TrialStates.WaitForInitial);
-				} else {
-					ChangeState (TrialStates.WithoutFeedback);
-				}
-			}
-			break;		
-
-
-		case TrialStates.WithoutFeedback:
-			if (GetTimeInState() > 1.0f) {
-                if(knifePresent)
-                    ChangeState(TrialStates.Knife);
-                else
-				    ChangeState(TrialStates.Final);
-            }
-			break;
+    
+    		case TrialStates.AccomodationTime:				
+    			if (GetTimeInState() > 10.0f)
+    				ChangeState(TrialStates.WaitForInitial);
+    			break;
+    
+    		case TrialStates.WaitForInitial:
+    			if (GetTimeInState ()> 1.0f && !initialLightOn) {
+    				initialLightOn = true;
+    				HandleEvent (TrialEvents.Delay);
+    			}
+    			break;
+    
+    		case TrialStates.WaitForWave:
+    			// Wait between the lights turning on and off
+    			if (GetTimeInState () > 1.0f && !greenLightOn){
+    				greenLightOn = true;
+    				HandleEvent(TrialEvents.Delay);
+    			}
+    
+    			// Move to next state if more than 5 seconds elapsed 
+    			// from the green light turning on
+    			if (GetTimeInState () > 6.0f) {
+    				lateWaves++;
+    				ChangeState (TrialStates.TooLate);
+    			}
+    			break;
+    
+    		// Wait one second after the wave, and then start again
+    		case TrialStates.Waved:
+    			if (GetTimeInState () > 1.0f) {
+    				if (waveCounter < wavesRequired) {
+    					ChangeState (TrialStates.WaitForInitial);
+    				} else {
+    					ChangeState (TrialStates.WithoutFeedback);
+    				}
+    			}
+    			break;		
+    
+    
+    		case TrialStates.WithoutFeedback:
+    			if (GetTimeInState() > 1.0f) {
+                    if(knifePresent)
+                        ChangeState(TrialStates.Knife);
+                    else
+    				    ChangeState(TrialStates.Final);
+                }
+    			break;
 		}
 	}
 	
-	protected override void OnEnter (TrialStates oldState){
+	protected override void OnEnter(TrialStates oldState)
+    {
 		switch (GetState ()) {
-		case TrialStates.AccomodationTime:
-
-			handSwitcher.showRightHand = true;
-			break;
-
-		// Turn initial light on
-		case TrialStates.WaitForInitial:
-			break;
-
-		case TrialStates.WaitForWave:
-			// Increment wave counter
-			waveCounter++;
-			break;
-
-		case TrialStates.Waved:
-			break;
-		
-		case TrialStates.WithoutFeedback:
-			break;
-
-		case TrialStates.TooLate:
-			ChangeState(TrialStates.Waved);
-			break;
-            
-        case TrialStates.Knife:
-            threatController.StartMachine();
-            threatController.HandleEvent(ThreatEvent.ReleaseThreat);
-            break;
-
-		case TrialStates.Final:
-			// last initial light on to mark a central point for the drift measure
-			initialLight.activeMaterial = 2;
-			collisionInitial.SetActive(true);
-			break;
+    		case TrialStates.AccomodationTime:
+    
+    			handSwitcher.showRightHand = true;
+    			break;
+    
+    		// Turn initial light on
+    		case TrialStates.WaitForInitial:
+    			break;
+    
+    		case TrialStates.WaitForWave:
+    			// Increment wave counter
+    			waveCounter++;
+    			break;
+    
+    		case TrialStates.Waved:
+    			break;
+    		
+    		case TrialStates.WithoutFeedback:
+    			break;
+    
+    		case TrialStates.TooLate:
+    			ChangeState(TrialStates.Waved);
+    			break;
+                
+            case TrialStates.Knife:
+                threatController.StartMachine();
+                threatController.HandleEvent(ThreatEvent.ReleaseThreat);
+                break;
+    
+    		case TrialStates.Final:
+    			// last initial light on to mark a central point for the drift measure
+    			initialLight.activeMaterial = 2;
+    			collisionInitial.SetActive(true);
+    			break;
 		}
 	}
 	
-	protected override void OnExit (TrialStates newState){
-	
+	protected override void OnExit(TrialStates newState)
+    {
 		switch (GetState ()) {
-		case TrialStates.AccomodationTime:
-			handSwitcher.showLeftHand = false;
-			break;
-
-		case TrialStates.WaitForInitial:
-			collisionInitial.SetActive(false);
-			initialLight.activeMaterial = 0;
-			initialLightOn = false;
-			break;
-
-		case TrialStates.WaitForWave:
-			collisionLights.SetActive (false);
-			lights[currentLight].activeMaterial = 0;
-			greenLightOn = false;
-			break;
-		
-		case TrialStates.WithoutFeedback:
-			break;		
-		
-		case TrialStates.TooLate:
-			break;
+    		case TrialStates.AccomodationTime:
+    			handSwitcher.showLeftHand = false;
+    			break;
+    
+    		case TrialStates.WaitForInitial:
+    			collisionInitial.SetActive(false);
+    			initialLight.activeMaterial = 0;
+    			initialLightOn = false;
+    			break;
+    
+    		case TrialStates.WaitForWave:
+    			collisionLights.SetActive (false);
+    			lights[currentLight].activeMaterial = 0;
+    			greenLightOn = false;
+    			break;
+    		
+    		case TrialStates.WithoutFeedback:
+    			break;		
+    		
+    		case TrialStates.TooLate:
+    			break;
 		}
 	}
 }

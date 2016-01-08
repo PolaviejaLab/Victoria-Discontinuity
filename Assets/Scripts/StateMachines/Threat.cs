@@ -33,6 +33,10 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 
 	private float threatSpeed;
 	private float gravity = 9.81f;
+    
+    public float followingTimeout = 10.0f;
+    
+    public bool hideOnStopped = false;
 
     Vector3 initialThreatPosition;
 	Quaternion initialThreatRotation;
@@ -45,18 +49,23 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
         //  this way we can reset it later
         initialThreatPosition = threat.transform.position;
 		initialThreatRotation = threat.transform.rotation;
+        
+        if(hideOnStopped)
+            threat.SetActive(false);
 	}
 	
     
     protected override void OnStart()
     {
-        threat.SetActive(true);
+        if(hideOnStopped)
+            threat.SetActive(true);
     }
     
     
     protected override void OnStop()
     {
-        threat.SetActive(false);
+        if(hideOnStopped)
+            threat.SetActive(false);
     }
     
     
@@ -72,8 +81,12 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
         
             case ThreatState.Following:
                 threat.transform.position = targetTransform.position;               
-                threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;                
-                break;                
+                threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
+                
+                if(GetTimeInState() > followingTimeout)
+                    StopMachine();
+                
+                break;            
         }
 	
         // If threat is close to target, emit TargetReached event
