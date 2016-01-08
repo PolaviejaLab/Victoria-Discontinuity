@@ -93,11 +93,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
     {
 		switch(GetState()) {
     		case ExperimentStates.Trial:
-    			if (!trialList.HasMore())
-    				ChangeState(ExperimentStates.Finished);
-    			
-    			trialCounter++;
-    			StartTrial();
+    			if(trialList.HasMore()) {
+                    trialCounter++;
+                    StartTrial();
+                } else {    			
+                    ChangeState(ExperimentStates.Finished);
+                }
     			break;
     
     		case ExperimentStates.Finished:
