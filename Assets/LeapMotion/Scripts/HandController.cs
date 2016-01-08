@@ -169,6 +169,7 @@ public class HandController: MonoBehaviour
 	public void StopRecording()
 	{
 		streamWriter.Close();
+        streamWriter = null;
 	}
 
 
