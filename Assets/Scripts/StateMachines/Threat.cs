@@ -49,7 +49,10 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
         //  this way we can reset it later
         initialThreatPosition = threat.transform.position;
 		initialThreatRotation = threat.transform.rotation;
-        
+
+		// at start the threat is inactive
+		threat.SetActive (false);
+
         if(hideOnStopped)
             threat.SetActive(false);
 	}
