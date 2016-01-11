@@ -136,8 +136,9 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	protected override void OnStart()
     {
 		// Set trial parameters
-		offsetSwitcher.offset = offset;
+		offsetSwitcher.offset = offset; //for the offset of the knife (?)
 		handSwitcher.selected = hand;
+        // create noiseController -> to add noise or not
 
 		// Clear counters
 		waveCounter = 0;
@@ -159,7 +160,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		switch (GetState ()) {
     
     		case TrialStates.AccomodationTime:				
-    			if (GetTimeInState() > 10.0f)
+    			if (Input.GetKey(KeyCode.Space))
     				ChangeState(TrialStates.WaitForInitial);
     			break;
     
