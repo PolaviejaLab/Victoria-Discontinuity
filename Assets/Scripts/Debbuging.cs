@@ -13,7 +13,7 @@ public class Debbuging : MonoBehaviour {
 			trialController.HandleEvent(TrialEvents.Wave_0);
 		if (Input.GetKeyDown (KeyCode.B))
 			trialController.HandleEvent(TrialEvents.Wave_1);
-		if (Input.GetKeyDown (KeyCode.Space))
+		if (Input.GetKeyDown (KeyCode.X))
 			trialController.HandleEvent(TrialEvents.Wave_Initial);
 	}
 }

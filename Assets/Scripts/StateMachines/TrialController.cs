@@ -25,9 +25,9 @@ public enum TrialStates {
 	WaitForWave,
 	Waved,
 	TooLate,
-	WithoutFeedback,
+	ToOrigin,
+    EndWaving,
     Knife,
-	Final,
 };
 
 
@@ -44,6 +44,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	// Scripts to manipulate the hand and offset according to condition
 	public HandSwitcher handSwitcher;
 	public OffsetSwitcher offsetSwitcher;
+
 
 	// Parameters of the current trial
 	public int hand;
@@ -118,27 +119,26 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     				incorrectWaves++;
     				ChangeState(TrialStates.Waved);
     			}
-    			break;
-    
-            case TrialStates.Knife:
-                if(ev == TrialEvents.KnifeDone)
-                    ChangeState(TrialStates.Final);
                 break;
     
-    		case TrialStates.Final:
-    			if (ev == TrialEvents.Wave_Initial)
-    				StopMachine();                    
+    
+            case TrialStates.EndWaving:
+                if (ev == TrialEvents.Wave_Initial)
+                    ChangeState(TrialStates.Knife);
     			break;
-		}
-	}
 
-
-	protected override void OnStart()
-    {
+            case TrialStates.Knife:
+                if(ev == TrialEvents.KnifeDone)
+                    StopMachine ();
+                break;
+        }
+    }
+    
+    
+    protected override void OnStart() {
 		// Set trial parameters
-		offsetSwitcher.offset = offset; //for the offset of the knife (?)
+		offsetSwitcher.offset = offset;
 		handSwitcher.selected = hand;
-        // create noiseController -> to add noise or not
 
 		// Clear counters
 		waveCounter = 0;
@@ -152,8 +152,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	}
 
 
-	public void Update()
-    {
+	public void Update(){
 		if (!IsStarted ())
 			return;
 
@@ -192,25 +191,29 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     				if (waveCounter < wavesRequired) {
     					ChangeState (TrialStates.WaitForInitial);
     				} else {
-    					ChangeState (TrialStates.WithoutFeedback);
-    				}
+                        ChangeState (TrialStates.ToOrigin);
+                    }
     			}
     			break;		
+
+            case TrialStates.ToOrigin:
+                if (GetTimeInState () > 1.0f)
+                ChangeState (TrialStates.EndWaving);
+                break;
     
     
-    		case TrialStates.WithoutFeedback:
-    			if (GetTimeInState() > 1.0f) {
+    		case TrialStates.Knife:
+    			if (GetTimeInState() > 1.5f) {
                     if(knifePresent)
                         ChangeState(TrialStates.Knife);
-                    else
-    				    ChangeState(TrialStates.Final);
+//                    else
+//    				    ChangeState(TrialStates.EndWaving);
                 }
     			break;
 		}
 	}
 	
-	protected override void OnEnter(TrialStates oldState)
-    {
+	protected override void OnEnter(TrialStates oldState){
 		switch (GetState ()) {
     		case TrialStates.AccomodationTime:
     
@@ -229,28 +232,26 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     		case TrialStates.Waved:
     			break;
     		
-    		case TrialStates.WithoutFeedback:
+            case TrialStates.ToOrigin:
     			break;
     
     		case TrialStates.TooLate:
     			ChangeState(TrialStates.Waved);
     			break;
-                
+                  
+            case TrialStates.EndWaving:
+                 initialLight.activeMaterial = 2;
+                 collisionInitial.SetActive(true);
+                break;
+
             case TrialStates.Knife:
                 threatController.StartMachine();
                 threatController.HandleEvent(ThreatEvent.ReleaseThreat);
                 break;
+        }
+    }
     
-    		case TrialStates.Final:
-    			// last initial light on to mark a central point for the drift measure
-    			initialLight.activeMaterial = 2;
-    			collisionInitial.SetActive(true);
-    			break;
-		}
-	}
-	
-	protected override void OnExit(TrialStates newState)
-    {
+    protected override void OnExit(TrialStates newState) {
 		switch (GetState ()) {
     		case TrialStates.AccomodationTime:
     			handSwitcher.showLeftHand = false;
@@ -267,12 +268,18 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     			lights[currentLight].activeMaterial = 0;
     			greenLightOn = false;
     			break;
-    		
-    		case TrialStates.WithoutFeedback:
-    			break;		
-    		
+        		
     		case TrialStates.TooLate:
     			break;
+
+            case TrialStates.ToOrigin:
+                break;      
+                
+            case TrialStates.EndWaving:
+                initialLight.activeMaterial = 0;
+                collisionInitial.SetActive(false);
+                initialLightOn = false;
+                break;
 		}
 	}
 }

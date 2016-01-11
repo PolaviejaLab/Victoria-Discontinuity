@@ -15,9 +15,11 @@ public class HandSwitcher : MonoBehaviour {
 	public bool useMale;
 	private bool oldUseMale;
 
-
 	public bool showLeftHand = true;
 	public bool showRightHand = true;
+
+    public float noiseLevelLeft = 0.0f;
+    public float noiseLevelRight = 0.0f;
 
 	private bool oldRight, oldLeft;
 
@@ -30,8 +32,12 @@ public class HandSwitcher : MonoBehaviour {
 		if(selected < -1 || selected >= leftGraphicsModelMale.Length || selected >= rightGraphicsModelMale.Length)
 			selected = 0;		
 						
-		if(selected != previous || useMale != oldUseMale || showLeftHand != oldLeft || showRightHand != oldRight)
-			UpdateModels();
+        if (selected != previous || useMale != oldUseMale || 
+            showLeftHand != oldLeft || showRightHand != oldRight) {
+            UpdateModels();
+            UpdateNoiseLevels();
+        }
+		
 
 		previous = selected;
 		oldUseMale = useMale;
@@ -50,4 +56,27 @@ public class HandSwitcher : MonoBehaviour {
 		for(int i = 0; i < rightGraphicsModelFemale.Length; i++)
 			rightGraphicsModelFemale[i].SetActive(i == selected && !useMale && showRightHand);
 	}
+
+    protected void UpdateNoiseLevels() {
+        for(int i = 0; i < leftGraphicsModelMale.Length; i++) {
+            RiggedHand hand = leftGraphicsModelMale[i].GetComponent<RiggedHand>();
+            hand.enableNoise = noiseLevelLeft > 0.5f;
+        }
+
+        for(int i = 0; i <  rightGraphicsModelMale.Length; i++) {
+            RiggedHand hand = rightGraphicsModelMale[i].GetComponent<RiggedHand>();
+            hand.enableNoise = noiseLevelLeft > 0.5f;
+        }
+
+        for(int i = 0; i < leftGraphicsModelFemale.Length; i++) {
+            RiggedHand hand = leftGraphicsModelFemale[i].GetComponent<RiggedHand>();
+            hand.enableNoise = noiseLevelLeft > 0.5f;
+        }
+        
+        for(int i = 0; i <  rightGraphicsModelFemale.Length; i++) {
+            RiggedHand hand = rightGraphicsModelFemale[i].GetComponent<RiggedHand>();
+            hand.enableNoise = noiseLevelLeft > 0.5f;
+        }
+
+    }
 }
