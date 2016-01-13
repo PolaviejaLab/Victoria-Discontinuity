@@ -45,7 +45,6 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	public HandSwitcher handSwitcher;
 	public OffsetSwitcher offsetSwitcher;
 
-
 	// Parameters of the current trial
 	public int hand;
 	public float offset;
@@ -90,7 +89,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 			return;
 	
 		switch (GetState()) {
-			case TrialStates.WaitForInitial:
+			
+            case TrialStates.WaitForInitial:
     			if (ev == TrialEvents.Delay && initialLightOn) {
     				initialLight.activeMaterial = 1;
     				collisionInitial.SetActive(true);
@@ -128,8 +128,9 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     			break;
 
             case TrialStates.Knife:
-                if(ev == TrialEvents.KnifeDone)
+                if(ev == TrialEvents.KnifeDone) {
                     StopMachine ();
+                }
                 break;
         }
     }
@@ -139,6 +140,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		// Set trial parameters
 		offsetSwitcher.offset = offset;
 		handSwitcher.selected = hand;
+        handSwitcher.noiseLevelLeft = noiseLevel;
+        handSwitcher.noiseLevelRight = noiseLevel;
 
 		// Clear counters
 		waveCounter = 0;
@@ -156,15 +159,14 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		if (!IsStarted ())
 			return;
 
-		switch (GetState ()) {
-    
+		switch (GetState ()) {  
     		case TrialStates.AccomodationTime:				
     			if (Input.GetKey(KeyCode.Space))
     				ChangeState(TrialStates.WaitForInitial);
     			break;
     
     		case TrialStates.WaitForInitial:
-    			if (GetTimeInState ()> 1.0f && !initialLightOn) {
+    			if (GetTimeInState ()> 0.5f && !initialLightOn) {
     				initialLightOn = true;
     				HandleEvent (TrialEvents.Delay);
     			}
@@ -172,7 +174,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     
     		case TrialStates.WaitForWave:
     			// Wait between the lights turning on and off
-    			if (GetTimeInState () > 1.0f && !greenLightOn){
+    			if (GetTimeInState () > 0.5f && !greenLightOn){
     				greenLightOn = true;
     				HandleEvent(TrialEvents.Delay);
     			}
@@ -197,18 +199,12 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     			break;		
 
             case TrialStates.ToOrigin:
-                if (GetTimeInState () > 1.0f)
+                if (GetTimeInState () > 0.5f)
                 ChangeState (TrialStates.EndWaving);
                 break;
     
     
     		case TrialStates.Knife:
-    			if (GetTimeInState() > 1.5f) {
-                    if(knifePresent)
-                        ChangeState(TrialStates.Knife);
-//                    else
-//    				    ChangeState(TrialStates.EndWaving);
-                }
     			break;
 		}
 	}
@@ -245,8 +241,10 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.Knife:
-                threatController.StartMachine();
-                threatController.HandleEvent(ThreatEvent.ReleaseThreat);
+                if (knifePresent) {
+                    threatController.StartMachine();
+                    threatController.HandleEvent(ThreatEvent.ReleaseThreat);
+                }
                 break;
         }
     }
@@ -258,9 +256,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     			break;
     
     		case TrialStates.WaitForInitial:
-    			collisionInitial.SetActive(false);
-    			initialLight.activeMaterial = 0;
-    			initialLightOn = false;
+                TurnOffInitial();
     			break;
     
     		case TrialStates.WaitForWave:
@@ -276,10 +272,14 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 break;      
                 
             case TrialStates.EndWaving:
-                initialLight.activeMaterial = 0;
-                collisionInitial.SetActive(false);
-                initialLightOn = false;
+                TurnOffInitial();
                 break;
 		}
-	}
+    }
+
+    public void TurnOffInitial(){
+        initialLight.activeMaterial = 0;
+        collisionInitial.SetActive(false);
+        initialLightOn = false;
+    }
 }

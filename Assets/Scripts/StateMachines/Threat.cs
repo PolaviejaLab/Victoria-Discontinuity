@@ -28,13 +28,13 @@ public enum ThreatEvent {
 
 public class Threat: StateMachine<ThreatState, ThreatEvent> 
 {
-	public GameObject threat;
+    public GameObject threat;
 	public Transform targetTransform;
 
 	private float threatSpeed;
 	private float gravity = 9.81f;
     
-    public float followingTimeout = 10.0f;
+    public float followingTimeout;
     
     public bool hideOnStopped = false;
 
@@ -43,8 +43,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 	Quaternion savedRotation;
 
 	
-	void Start()
-    {
+	void Start() {
         // Store the initial transformation of the knife
         //  this way we can reset it later
         initialThreatPosition = threat.transform.position;
@@ -52,18 +51,18 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 
         if(hideOnStopped)
             threat.SetActive(false);
+
+        followingTimeout = 3.0f;
 	}
 	
     
-    protected override void OnStart()
-    {
+    protected override void OnStart() {
         if(hideOnStopped)
             threat.SetActive(true);
     }
     
     
-    protected override void OnStop()
-    {
+    protected override void OnStop() {
         if(hideOnStopped)
             threat.SetActive(false);
     }
@@ -83,9 +82,9 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 threat.transform.position = targetTransform.position;               
                 threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
                 
-                if(GetTimeInState() > followingTimeout)
+                if(GetTimeInState() > followingTimeout){
                     StopMachine();
-                
+                }
                 break;            
         }
 	
@@ -95,8 +94,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
     }
 
 
-    public void HandleEvent(ThreatEvent ev)
-    {
+    public void HandleEvent(ThreatEvent ev) {
         switch(GetState()) {
             case ThreatState.Initial:
                 if(ev == ThreatEvent.ReleaseThreat)
@@ -107,12 +105,12 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 if(ev == ThreatEvent.TargetReached)
                     ChangeState(ThreatState.Following);
                 break;
+
         }
     }
 
 
-	protected override void OnEnter(ThreatState oldState)
-	{
+	protected override void OnEnter(ThreatState oldState){
         switch(GetState()) {
             case ThreatState.Falling:
                 threatSpeed = 0.0f;
@@ -125,8 +123,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 	}    
 
 
-	protected override void OnExit(ThreatState newState)
-	{
+	protected override void OnExit(ThreatState newState) {
         switch(GetState()) {
             // Reset initial position and rotation when following is complete
             case ThreatState.Following:
@@ -140,8 +137,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
     /**
      * Advances the threat position such that is falls on the target
      */
-	private void FallOnTarget() 
-    {
+	private void FallOnTarget() {
 		threatSpeed += gravity * Time.deltaTime;
 		        
 		threat.transform.position = Vector3.MoveTowards(

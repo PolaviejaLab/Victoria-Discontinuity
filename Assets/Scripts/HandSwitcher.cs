@@ -16,16 +16,18 @@ public class HandSwitcher : MonoBehaviour {
 	private bool oldUseMale;
 
 	public bool showLeftHand = true;
-	public bool showRightHand = true;
+    public bool showRightHand = true;
 
-    public float noiseLevelLeft = 0.0f;
-    public float noiseLevelRight = 0.0f;
+    public float noiseLevelLeft;
+    public float noiseLevelRight;
 
-	private bool oldRight, oldLeft;
+    private bool oldRight, oldLeft;
+    private float oldNoiseRight, oldNoiseLeft;
 
 	// Use this for initialization
 	void Start () {
 		UpdateModels();
+        UpdateNoiseLevels();
 	}
 	
 	void Update() {
@@ -33,7 +35,8 @@ public class HandSwitcher : MonoBehaviour {
 			selected = 0;		
 						
         if (selected != previous || useMale != oldUseMale || 
-            showLeftHand != oldLeft || showRightHand != oldRight) {
+            showLeftHand != oldLeft || showRightHand != oldRight || 
+            noiseLevelLeft != oldNoiseLeft || noiseLevelRight != oldNoiseRight) {
             UpdateModels();
             UpdateNoiseLevels();
         }
@@ -43,6 +46,9 @@ public class HandSwitcher : MonoBehaviour {
 		oldUseMale = useMale;
 		oldLeft = showLeftHand;
 		oldRight = showRightHand;
+        oldNoiseRight = noiseLevelRight;
+        oldNoiseLeft = noiseLevelLeft;
+
 	}
 	
 	protected void UpdateModels () {
@@ -60,12 +66,23 @@ public class HandSwitcher : MonoBehaviour {
     protected void UpdateNoiseLevels() {
         for(int i = 0; i < leftGraphicsModelMale.Length; i++) {
             RiggedHand hand = leftGraphicsModelMale[i].GetComponent<RiggedHand>();
-            hand.enableNoise = noiseLevelLeft > 0.5f;
+//            if (noiseLevelLeft == 0.0f) {
+//                hand.enableNoise = false;
+//            } else {
+//                hand.enableNoise = true;
+//            }
+             hand.enableNoise = noiseLevelLeft > 0.5f;
         }
 
         for(int i = 0; i <  rightGraphicsModelMale.Length; i++) {
             RiggedHand hand = rightGraphicsModelMale[i].GetComponent<RiggedHand>();
+//            if (noiseLevelRight == 0.0f) {
+//                hand.enableNoise = false;
+//            } else {
+//                hand.enableNoise = true;
+//            }
             hand.enableNoise = noiseLevelLeft > 0.5f;
+
         }
 
         for(int i = 0; i < leftGraphicsModelFemale.Length; i++) {

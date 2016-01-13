@@ -42,8 +42,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public int trialCounter;
 
 
-	public void Start() 
-    {
+	public void Start() {
 		logger.OpenLog(GetLogFilename());
 
 		// If the path is relative, add current directory
@@ -65,8 +64,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 	
 	
-	public void HandleEvent(ExperimentEvents ev) 
-    {
+	public void HandleEvent(ExperimentEvents ev) {
 		WriteLog("Event " + ev.ToString());
 
 		if(!IsStarted())
@@ -82,15 +80,13 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 	
     
-	public void Update() 
-    {
+	public void Update() {
 		if(!IsStarted())
 			return;
 	}
 	
     
-	protected override void OnEnter(ExperimentStates oldState)
-    {
+	protected override void OnEnter(ExperimentStates oldState) {
 		switch(GetState()) {
     		case ExperimentStates.Trial:
     			if(trialList.HasMore()) {
@@ -110,8 +106,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 
 
-	protected override void OnExit(ExperimentStates newState) 
-    {
+	protected override void OnExit(ExperimentStates newState) {
 		switch(GetState()) {
     		case ExperimentStates.Trial:
    				break;                
@@ -153,6 +148,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
             float noiseLevel;
             float.TryParse(trial["NoiseLevel"], out noiseLevel);
             trialController.noiseLevel = noiseLevel;
+            WriteLog("NoiseLevel: " + noiseLevel);
         } else {
             trialController.noiseLevel = 0;
         }
