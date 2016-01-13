@@ -36,13 +36,31 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	private TrialList trialList;
 	public string protocolFile;
 
-	public string outputDirectory = "Results";
-	public string participantName = "Anonymous";
+    private int participantNumber;
+    private string outputDirectory;
+    private string participantName;
 
 	public int trialCounter;
 
 
 	public void Start() {
+        string[] dir = Directory.GetDirectories("Results");
+
+        participantNumber = 1;
+        participantName = "Participant";
+
+        for (int i = 0; i < dir.Length; i++){
+            outputDirectory = "Results/Participant" + participantNumber.ToString();
+            if (!Directory.Exists(outputDirectory)){
+                Directory.CreateDirectory(outputDirectory);
+                break;
+            } else {
+                participantNumber = participantNumber + 1;
+                Debug.Log("part" + participantNumber);
+            }
+        }
+
+
 		logger.OpenLog(GetLogFilename());
 
 		// If the path is relative, add current directory
@@ -59,6 +77,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         trialController.Stopped += 
             (sender, e) => 
                 { HandleEvent(ExperimentEvents.TrialFinished); };
+
+
+
 
 		this.StartMachine();
 	}
