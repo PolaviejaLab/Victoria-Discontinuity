@@ -36,11 +36,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	private TrialList trialList;
 	public string protocolFile;
 
-    private int participantNumber;
     private string outputDirectory;
+
+    private int participantNumber;
     private string participantName;
 
 	public int trialCounter;
+
+    public int randomProtocol;
 
 
 	public void Start() {
@@ -50,7 +53,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         participantName = "Participant";
 
         for (int i = 0; i < dir.Length; i++){
-            outputDirectory = "Results/TestingKnifeOffset" + participantNumber.ToString();
+            outputDirectory = "Results/RandomProtocolTesting" + participantNumber.ToString();
             if (!Directory.Exists(outputDirectory)){
                 Directory.CreateDirectory(outputDirectory);
                 break;
@@ -62,11 +65,16 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		logger.OpenLog(GetLogFilename());
 
-		// If the path is relative, add current directory
-		if(!Path.IsPathRooted(protocolFile)) {
-            // The default location is the current directory
-            protocolFile = Path.GetFullPath(protocolFile);
-		}
+        string[] dirProtocol = Directory.GetFiles("Protocol/Parkinson");
+
+        randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
+        protocolFile = dirProtocol [randomProtocol]; 
+
+//		// If the path is relative, add current directory
+//		if(!Path.IsPathRooted(protocolFile)) {
+//            // The default location is the current directory
+//            protocolFile = Path.GetFullPath(protocolFile);
+//		}
 
         // Load protocol
 		trialList = new TrialList(protocolFile);
