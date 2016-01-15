@@ -51,6 +51,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	public int wavesRequired;
     public float noiseLevel;
     public bool knifePresent;
+    public Vector3 knifeOffset;
 
 	// Keep track of required number of waves
 	public int waveCounter;
@@ -142,6 +143,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 		handSwitcher.selected = hand;
         handSwitcher.noiseLevelLeft = noiseLevel;
         handSwitcher.noiseLevelRight = noiseLevel;
+        threatController.knifeOffset = knifeOffset;
 
 		// Clear counters
 		waveCounter = 0;

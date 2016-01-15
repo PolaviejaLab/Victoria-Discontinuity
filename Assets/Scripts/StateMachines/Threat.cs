@@ -8,7 +8,7 @@ using System.Collections;
 
 
 /**
- * States the threat (knife) can be in
+ * States the threat can be in
  */
 public enum ThreatState {
 	Initial,    // Idle state
@@ -21,7 +21,7 @@ public enum ThreatState {
  * Events handled by the threat state machine.
  */
 public enum ThreatEvent {
-    ReleaseThreat,  // Drop the knife
+    ReleaseThreat,  // Drop the threat
 	TargetReached     // Target reached
 };
 
@@ -33,7 +33,9 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 
 	private float threatSpeed;
 	private float gravity = 9.81f;
-    
+
+    public Vector3 knifeOffset;
+
     public float followingTimeout;
     
     public bool hideOnStopped = false;
@@ -44,7 +46,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 
 	
 	void Start() {
-        // Store the initial transformation of the knife
+        // Store the initial transformation of the threat
         //  this way we can reset it later
         initialThreatPosition = threat.transform.position;
 		initialThreatRotation = threat.transform.rotation;
@@ -141,8 +143,8 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 		threatSpeed += gravity * Time.deltaTime;
 		        
 		threat.transform.position = Vector3.MoveTowards(
-			threat.transform.position, 
-			targetTransform.position, 
+            threat.transform.position, 
+            targetTransform.position + knifeOffset/60, // find the right proportion
 			threatSpeed * Time.deltaTime);
 	}
 }

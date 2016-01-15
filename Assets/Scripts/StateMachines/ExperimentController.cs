@@ -50,13 +50,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         participantName = "Participant";
 
         for (int i = 0; i < dir.Length; i++){
-            outputDirectory = "Results/Participant" + participantNumber.ToString();
+            outputDirectory = "Results/TestingKnifeOffset" + participantNumber.ToString();
             if (!Directory.Exists(outputDirectory)){
                 Directory.CreateDirectory(outputDirectory);
                 break;
             } else {
                 participantNumber = participantNumber + 1;
-                Debug.Log("part" + participantNumber);
             }
         }
 
@@ -77,8 +76,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         trialController.Stopped += 
             (sender, e) => 
                 { HandleEvent(ExperimentEvents.TrialFinished); };
-
-
 
 
 		this.StartMachine();
@@ -175,13 +172,24 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         }
         
         // Knife
-        if(trial.ContainsKey("KnifePresent")) {
-            if(trial["KnifePresent"].ToLower() == "true")
+        if (trial.ContainsKey("KnifePresent"))
+        {
+            if (trial ["KnifePresent"].ToLower() == "true")
                 trialController.knifePresent = true;
-            else if(trial["KnifePresent"].ToLower() == "false")
+            else if (trial ["KnifePresent"].ToLower() == "false")
                 trialController.knifePresent = false;
             else
                 throw new Exception("Invalid value in trial list for field KnifePresent");
+        }
+
+        // Knife Offset
+        if(trial.ContainsKey("KnifeOffset")){
+            float knifeOffset;
+            float.TryParse(trial["KnifeOffset"], out knifeOffset);
+            Vector3 knifeVector = new Vector3(0, 0, knifeOffset);
+            trialController.knifeOffset = knifeVector;
+
+            WriteLog("Knife Offset: " + knifeVector);
         }
     }    
 
