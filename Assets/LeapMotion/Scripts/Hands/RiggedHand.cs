@@ -20,6 +20,7 @@ public class RiggedHand: HandModel
 	public Transform arm;
 	public Transform foreArm;
 	public Transform palm;
+    public Transform wrist;
 
 	public bool hasArm = true;
 
@@ -37,6 +38,7 @@ public class RiggedHand: HandModel
 	private Vector3 noise;
 
 	private Vector3 oldPosition;
+    private Quaternion oldRotation;
 
 	public void Awake()
 	{
@@ -53,7 +55,7 @@ public class RiggedHand: HandModel
 		
 		// Assign arm, forearm, and palm if not assigned
 		if(palm == null)
-			palm = transform;
+			palm = this.transform;
 		
 		if(foreArm == null)
 			foreArm = palm.parent;
@@ -64,7 +66,12 @@ public class RiggedHand: HandModel
 
 
 	public void Start()
-	{			
+	{		
+        if (wrist != null)
+        {
+            oldRotation = wrist.transform.localRotation;
+        }
+
 		if(detectDirections) {
 			foreach(FingerModel finger in fingers) {
 				if(!finger is RiggedFinger)
@@ -127,19 +134,7 @@ public class RiggedHand: HandModel
 			if(!partOfAvatar) {
 				Vector3 position = GetPalmPosition();
 			
-				// Add some noise to the position of the hand
-				if(enableNoise)
-				{
-                    float amplitude = Mathf.Min(d, 1.0f);
 
-                    Quaternion noise = Quaternion.Euler(
-						amplitude * NormalRandom.NextGaussianFloat(random),
-						amplitude * NormalRandom.NextGaussianFloat(random),
-						amplitude * NormalRandom.NextGaussianFloat(random));		
-
-                    palm.rotation *= noise;
-                    foreArm.rotation *= Quaternion.Inverse(noise);
-				}
                 palm.position = position;
 			}
 		}
@@ -157,5 +152,22 @@ public class RiggedHand: HandModel
 				riggedFinger.AddNoise(Mathf.Min(d, 1.0f));
 			}
 		}
+
+        if (wrist != null)
+        {
+            // Add some noise to the position of the hand
+            if(enableNoise)
+            {
+                float amplitude = Mathf.Min(d, 1.0f);
+                
+                Quaternion noise = Quaternion.Euler(
+                    amplitude * NormalRandom.NextGaussianFloat(random),
+                    amplitude * NormalRandom.NextGaussianFloat(random),
+                    amplitude * NormalRandom.NextGaussianFloat(random));                       
+                
+                wrist.transform.localRotation = oldRotation * noise;
+                
+            }
+        }
 	}
 }
