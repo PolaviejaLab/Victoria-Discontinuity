@@ -101,7 +101,7 @@ public class RiggedHand: HandModel
 		if(enableNoise) {
 			float distance = Vector3.Distance(palm.position, oldPosition);
 			oldPosition = palm.position;
-
+        
 			d = 0.0025f * 1.0f / distance;
 		}
 		
@@ -122,29 +122,26 @@ public class RiggedHand: HandModel
 		}
 
 		if (palm != null) {
+            palm.rotation = GetPalmRotation() * Reorientation();
+
 			if(!partOfAvatar) {
 				Vector3 position = GetPalmPosition();
 			
 				// Add some noise to the position of the hand
 				if(enableNoise)
 				{
-					float A = 0.0025f * d;
-					Vector3 bias = 0.2f * -noise;
-					
-					Vector3 randomness = bias + A * new Vector3(
-						NormalRandom.NextGaussianFloat(random),
-						NormalRandom.NextGaussianFloat(random),
-						NormalRandom.NextGaussianFloat(random));		
-								
-					noise += randomness;
-				} else {
-					noise = new Vector3(0, 0, 0);
-				}
-				
-				palm.position = position + noise;
-			}
+                    float amplitude = Mathf.Min(d, 1.0f);
 
-			palm.rotation = GetPalmRotation() * Reorientation();						
+                    Quaternion noise = Quaternion.Euler(
+						amplitude * NormalRandom.NextGaussianFloat(random),
+						amplitude * NormalRandom.NextGaussianFloat(random),
+						amplitude * NormalRandom.NextGaussianFloat(random));		
+
+                    palm.rotation *= noise;
+                    foreArm.rotation *= Quaternion.Inverse(noise);
+				}
+                palm.position = position;
+			}
 		}
 
 		// Update fingers
