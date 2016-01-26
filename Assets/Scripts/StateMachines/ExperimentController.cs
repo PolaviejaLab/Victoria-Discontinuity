@@ -46,14 +46,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
     public int randomProtocol;
 
 
-	public void Start() {
+    public void Start() {
         string[] dir = Directory.GetDirectories("Results");
 
         participantNumber = 1;
         participantName = "Participant";
 
         for (int i = 0; i < dir.Length; i++){
-            outputDirectory = "Results/RandomProtocolTesting" + participantNumber.ToString();
+            outputDirectory = "Results/TestKnifeOffset" + participantNumber.ToString();
             if (!Directory.Exists(outputDirectory)){
                 Directory.CreateDirectory(outputDirectory);
                 break;

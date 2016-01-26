@@ -81,7 +81,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 break;            
         
             case ThreatState.Following:
-                threat.transform.position = targetTransform.position;               
+                threat.transform.position = targetTransform.position + knifeOffset/60;               
                 threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
                 
                 if(GetTimeInState() > followingTimeout){
@@ -91,7 +91,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
         }
 	
         // If threat is close to target, emit TargetReached event
-		if(Vector3.Distance(threat.transform.position, targetTransform.position) < 0.001)
+        if (Vector3.Distance(threat.transform.position, targetTransform.position + knifeOffset/60) < 0.001)
             HandleEvent(ThreatEvent.TargetReached);
     }
 
@@ -105,6 +105,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 
             case ThreatState.Falling:
                 if(ev == ThreatEvent.TargetReached)
+                    Debug.Log("miaw, target reached");
                     ChangeState(ThreatState.Following);
                 break;
 
