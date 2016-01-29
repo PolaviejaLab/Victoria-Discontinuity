@@ -135,6 +135,7 @@ MonoBehaviour:
   wavesRequired: 50
   noiseLevel: 0
   knifePresent: 0
+  knifeOffset: {x: 0, y: 0, z: 0}
   waveCounter: 0
   lateWaves: 0
   correctWaves: 0
@@ -182,6 +183,8 @@ MonoBehaviour:
   useMale: 1
   showLeftHand: 1
   showRightHand: 1
+  noiseLevelLeft: 0
+  noiseLevelRight: 0
 --- !u!114 &31432809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,9 +205,8 @@ MonoBehaviour:
   trialController: {fileID: 31432806}
   tableLights: {fileID: 2096310268}
   protocolFile: Protocol/Parkinson/Test01.csv
-  outputDirectory: Results
-  participantName: Test
   trialCounter: 0
+  randomProtocol: 0
 --- !u!114 &31432810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,6 +569,10 @@ Prefab:
       propertyPath: detectType
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: c71966c97cd79448bb78426d92c4166a, type: 2}
+      propertyPath: wrist
+      value: 
+      objectReference: {fileID: 663804272}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c71966c97cd79448bb78426d92c4166a, type: 2}
   m_IsPrefabParent: 0
@@ -1086,19 +1092,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400038, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
       propertyPath: m_LocalRotation.x
-      value: -.603143394
+      value: -.603143334
       objectReference: {fileID: 0}
     - target: {fileID: 400038, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
       propertyPath: m_LocalRotation.y
-      value: .501787961
+      value: .501787901
       objectReference: {fileID: 0}
     - target: {fileID: 400038, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
       propertyPath: m_LocalRotation.z
-      value: .149101943
+      value: .149101928
       objectReference: {fileID: 0}
     - target: {fileID: 400038, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
       propertyPath: m_LocalRotation.w
-      value: .601826966
+      value: .601826906
       objectReference: {fileID: 0}
     - target: {fileID: 100046, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
       propertyPath: m_IsActive
@@ -1174,6 +1180,10 @@ Transform:
   - {fileID: 412453446}
   m_Father: {fileID: 506454827}
   m_RootOrder: 1
+--- !u!4 &663804272 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 400056, guid: c71966c97cd79448bb78426d92c4166a, type: 2}
+  m_PrefabInternal: {fileID: 294690383}
 --- !u!1001 &700101713
 Prefab:
   m_ObjectHideFlags: 0
@@ -1373,11 +1383,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 6fed16632f5be3f45a154e17156918b6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6fed16632f5be3f45a154e17156918b6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 1.47500002
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6fed16632f5be3f45a154e17156918b6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1405,15 +1415,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6fed16632f5be3f45a154e17156918b6, type: 3}
       propertyPath: m_LocalScale.x
-      value: .300000012
+      value: .349999994
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6fed16632f5be3f45a154e17156918b6, type: 3}
       propertyPath: m_LocalScale.y
-      value: .300000012
+      value: .349999994
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6fed16632f5be3f45a154e17156918b6, type: 3}
       propertyPath: m_LocalScale.z
-      value: .300000012
+      value: .349999994
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 6fed16632f5be3f45a154e17156918b6, type: 3}
       propertyPath: m_Name
@@ -1747,6 +1757,9 @@ MonoBehaviour:
   StartOnStopMachine: 0
   threat: {fileID: 924765750}
   targetTransform: {fileID: 1535472345}
+  knifeOffset: {x: 0, y: 0, z: 0}
+  followingTimeout: 5
+  hideOnStopped: 1
 --- !u!1 &941264205 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100034, guid: c71966c97cd79448bb78426d92c4166a, type: 2}
@@ -2509,6 +2522,10 @@ Prefab:
       propertyPath: detectType
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400008, guid: e52d7ac5daec443ebb309c944ad3c825, type: 2}
+      propertyPath: enableNoise
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e52d7ac5daec443ebb309c944ad3c825, type: 2}
   m_IsPrefabParent: 0
@@ -2632,7 +2649,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400010, guid: b4189dbf66def4c9799dad49101582e9, type: 2}
       propertyPath: enableNoise
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b4189dbf66def4c9799dad49101582e9, type: 2}
@@ -3253,6 +3270,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   foreArm: {fileID: 0}
   palm: {fileID: 0}
+  wrist: {fileID: 0}
   hasArm: 1
   detectDirections: 0
   modelFingerPointing: {x: 1, y: 0, z: 0}
