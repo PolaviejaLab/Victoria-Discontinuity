@@ -15,12 +15,16 @@ using System.Collections.Generic;
 
 
 public enum ExperimentEvents {
+    ProtocolLoaded,
 	TrialFinished,
+    ExperimentFinished, 
 };
 
 
 public enum ExperimentStates {
-	Trial,
+    WaitingForFeedback,
+    Start,
+    Trial,
 	Finished,
 };
 
@@ -47,44 +51,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 
     public void Start() {
-        string[] dir = Directory.GetDirectories("Results");
-
-        participantNumber = 1;
-        participantName = "Participant";
-
-        for (int i = 0; i < dir.Length; i++){
-            outputDirectory = "Results/TestKnifeOffset" + participantNumber.ToString();
-            if (!Directory.Exists(outputDirectory)){
-                Directory.CreateDirectory(outputDirectory);
-                break;
-            } else {
-                participantNumber = participantNumber + 1;
-            }
-        }
-
-
-		logger.OpenLog(GetLogFilename());
-
-        string[] dirProtocol = Directory.GetFiles("Protocol/Parkinson");
-
-        randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
-        protocolFile = dirProtocol [randomProtocol]; 
-
-//		// If the path is relative, add current directory
-//		if(!Path.IsPathRooted(protocolFile)) {
-//            // The default location is the current directory
-//            protocolFile = Path.GetFullPath(protocolFile);
-//		}
-
-        // Load protocol
-		trialList = new TrialList(protocolFile);
-		WriteLog("Loaded " + trialList.Count () + " trials");
-
         // When the trial controller is stopped, invoke an event
         trialController.Stopped += 
             (sender, e) => 
                 { HandleEvent(ExperimentEvents.TrialFinished); };
-
 
 		this.StartMachine();
 	}
@@ -97,11 +67,15 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			return;
 		
 		switch(GetState()) {
-
-		case ExperimentStates.Trial:
-			if (ev == ExperimentEvents.TrialFinished)
-				ChangeState(ExperimentStates.Trial);
-			break;
+            case ExperimentStates.Start:
+                if (ev == ExperimentEvents.ProtocolLoaded)
+                    ChangeState(ExperimentStates.Trial);
+                    break;
+		
+            case ExperimentStates.Trial:
+                if (ev == ExperimentEvents.TrialFinished)
+                    ChangeState(ExperimentStates.Trial);
+                break;
 		}
 	}
 	
@@ -109,17 +83,65 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public void Update() {
 		if(!IsStarted())
 			return;
+
+        switch (GetState()){
+            case ExperimentStates.WaitingForFeedback:
+                if (Input.GetKeyDown(KeyCode.Return)){
+                    ChangeState(ExperimentStates.Start);
+                }
+               else if (Input.GetKeyDown(KeyCode.Escape)){
+                    ChangeState(ExperimentStates.Finished);
+                }
+                break;
+        }
 	}
 	
     
 	protected override void OnEnter(ExperimentStates oldState) {
 		switch(GetState()) {
+            case ExperimentStates.WaitingForFeedback:
+                break;
+
+            case ExperimentStates.Start:
+                string[] dir = Directory.GetDirectories("Results");
+                
+                participantNumber = 1;
+                participantName = "Participant";
+
+                trialCounter = 0;
+
+                for (int i = 0; i < dir.Length; i++){
+                    outputDirectory = "Results/TestFolderNumeration" + participantNumber.ToString();
+                    if (!Directory.Exists(outputDirectory)){
+                        Directory.CreateDirectory(outputDirectory);
+                        break;
+                    } else {
+                        participantNumber = participantNumber + 1;
+                    }
+                }
+                
+                
+                logger.OpenLog(GetLogFilename());
+                
+                string[] dirProtocol = Directory.GetFiles("Protocol/Parkinson");
+                
+                randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
+                protocolFile = dirProtocol [randomProtocol]; 
+                
+                // Load protocol
+                trialList = new TrialList(protocolFile);
+                WriteLog("Loaded " + trialList.Count () + " trials");
+
+                HandleEvent(ExperimentEvents.ProtocolLoaded);
+
+                break;
+
     		case ExperimentStates.Trial:
     			if(trialList.HasMore()) {
                     trialCounter++;
                     StartTrial();
                 } else {    			
-                    ChangeState(ExperimentStates.Finished);
+                    ChangeState(ExperimentStates.WaitingForFeedback);
                 }
     			break;
     
@@ -227,20 +249,17 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	}
 
 
-	private string GetLEAPFilename(int trial)
-    {
+	private string GetLEAPFilename(int trial){
 		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".csv";
 	}
 
 
-	private string GetLogFilename()
-    {
+	private string GetLogFilename(){
 		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".log";
 	}
 
 
-	private string GetResultsFilename()
-	{
+	private string GetResultsFilename() {
 		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".csv";
 	}
 
