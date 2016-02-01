@@ -194,7 +194,7 @@ public class HandController: MonoBehaviour
 		Frame frame = leap_controller_.Frame();
 		bool gotHand = false;
 
-		streamWriter.Write(DateTime.UtcNow.ToString("o") + ", ");
+        streamWriter.Write(DateTime.UtcNow.ToString("o") + ", ");
 
 		int num_hands = frame.Hands.Count;
 		for (int h = 0; h < num_hands; ++h) {

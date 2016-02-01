@@ -46,7 +46,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
     private string participantName;
 
 	public int trialCounter;
-
     public int randomProtocol;
 
 
@@ -111,7 +110,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++){
-                    outputDirectory = "Results/TestFolderNumeration" + participantNumber.ToString();
+                    outputDirectory = "Results/TestingMatlab" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory)){
                         Directory.CreateDirectory(outputDirectory);
                         break;
@@ -202,8 +201,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         }
         
         // Knife
-        if (trial.ContainsKey("KnifePresent"))
-        {
+        if (trial.ContainsKey("KnifePresent")){
             if (trial ["KnifePresent"].ToLower() == "true")
                 trialController.knifePresent = true;
             else if (trial ["KnifePresent"].ToLower() == "false")
