@@ -120,8 +120,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                     }
                 }
                 
-                
                 logger.OpenLog(GetLogFilename());
+                
+                // Record participant number to log-file
+                WriteLog("Participant" + participantNumber.ToString());
                 
                 string[] dirProtocol = Directory.GetFiles("Protocol/Parkinson");
                 
