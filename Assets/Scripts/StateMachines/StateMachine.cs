@@ -60,8 +60,8 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 			state = initialState;	
 			timeAtStateChange = Time.time;
 
-			// WriteLog("Started");
-			// WriteLog("Entering state " + state.ToString());
+			 WriteLog("Started");
+			 WriteLog("Entering state " + state.ToString());
 
 			OnEnter(state);
 		}

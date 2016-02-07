@@ -67,10 +67,16 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			return;
 		
 		switch(GetState()) {
+
+            case ExperimentStates.WaitingForFeedback:
+
+                break;
+
             case ExperimentStates.Start:
                 if (ev == ExperimentEvents.ProtocolLoaded)
                     ChangeState(ExperimentStates.Trial);
-                    break;
+                break;
+
 		
             case ExperimentStates.Trial:
                 if (ev == ExperimentEvents.TrialFinished)
@@ -84,12 +90,20 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		if(!IsStarted())
 			return;
 
+        // Change the gender of the hand
+        if (Input.GetKey(KeyCode.F)){
+            handSwitcher.useMale = false;
+        }
+        else if (Input.GetKey(KeyCode.M)){
+            handSwitcher.useMale = true;
+        }
+
         switch (GetState()){
             case ExperimentStates.WaitingForFeedback:
                 if (Input.GetKeyDown(KeyCode.Return)){
                     ChangeState(ExperimentStates.Start);
                 }
-               else if (Input.GetKeyDown(KeyCode.Escape)){
+                else if (Input.GetKeyDown(KeyCode.Escape)){
                     ChangeState(ExperimentStates.Finished);
                 }
                 break;
