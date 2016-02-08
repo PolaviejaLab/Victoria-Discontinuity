@@ -168,17 +168,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftGraphicsModelMale:
-  - {fileID: 1639780979}
   - {fileID: 348039796}
+  - {fileID: 1639780979}
   rightGraphicsModelMale:
-  - {fileID: 791492127}
   - {fileID: 941264205}
+  - {fileID: 791492127}
   leftGraphicsModelFemale:
-  - {fileID: 1320411787}
   - {fileID: 495259210}
+  - {fileID: 1320411787}
   rightGraphicsModelFemale:
-  - {fileID: 1495711316}
   - {fileID: 1346678691}
+  - {fileID: 1495711316}
   selected: 0
   useMale: 1
   showLeftHand: 1
