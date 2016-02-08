@@ -68,10 +68,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		if(!IsStarted())
 			return;
 		
-		switch(GetState()) {
-
+	switch(GetState()) {
             case ExperimentStates.WaitingForFeedback:
-
                 break;
 
             case ExperimentStates.Start:
@@ -94,11 +92,17 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 			return;
 
         // Change the gender of the hand
-        if (Input.GetKey(KeyCode.F)){
+        if (Input.GetKeyDown(KeyCode.F)){
             handSwitcher.useMale = false;
+            WriteLog("Gender changed to female");
         }
-        else if (Input.GetKey(KeyCode.M)){
+        else if (Input.GetKeyDown(KeyCode.M)){
             handSwitcher.useMale = true;
+            WriteLog("Gender changed to male");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad0)){
+            WriteLog("Tracking Failed");
         }
 
         switch (GetState()){
@@ -128,7 +132,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++){
-                    outputDirectory = "Results/FixingRepeatedData" + participantNumber.ToString();
+                    outputDirectory = "Results/TrackingFails" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory)){
                         Directory.CreateDirectory(outputDirectory);
                         break;
@@ -175,7 +179,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	protected override void OnExit(ExperimentStates newState) {
 		switch(GetState()) {
     		case ExperimentStates.Trial:
-
    				break;                
 		}
 	}
@@ -231,10 +234,14 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         }
 
         // Knife Offset
-        if(trial.ContainsKey("KnifeOffset")){
-            float knifeOffset;
-            float.TryParse(trial["KnifeOffset"], out knifeOffset);
-            Vector3 knifeVector = new Vector3(0, 0, knifeOffset);
+        if (trial.ContainsKey("KnifeOffset")){
+            float knifeOffsetx; float knifeOffsety; float knifeOffsetz;
+            float.TryParse(trial ["OffsetX"], out knifeOffsetx);
+            float.TryParse(trial ["OffsetY"], out knifeOffsety);
+            float.TryParse(trial ["OffsetZ"], out knifeOffsetz);
+
+            Vector3 knifeVector = new Vector3(knifeOffsetx, knifeOffsety, knifeOffsetz);
+
             trialController.knifeOffset = knifeVector;
 
             WriteLog("Knife Offset: " + knifeVector);
