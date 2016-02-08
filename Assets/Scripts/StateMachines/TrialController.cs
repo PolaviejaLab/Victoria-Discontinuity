@@ -12,7 +12,7 @@ public enum TrialEvents {
 	Wave_1 = 1,
 	Wave_Initial,
 	Delay,
-    KnifeDone
+    KnifeDone,
 };
 
 

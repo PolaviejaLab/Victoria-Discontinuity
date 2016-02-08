@@ -105,7 +105,6 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 
             case ThreatState.Falling:
                 if(ev == ThreatEvent.TargetReached)
-                    Debug.Log("miaw, target reached");
                     ChangeState(ThreatState.Following);
                 break;
 

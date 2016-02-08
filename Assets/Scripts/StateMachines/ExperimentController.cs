@@ -120,12 +120,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 string[] dir = Directory.GetDirectories("Results");
                 
                 participantNumber = 1;
-                participantName = "Participant";
-
+                participantName = "PC1-Participant" + participantNumber.ToString();
+                
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++){
-                    outputDirectory = "Results/TestingMatlab" + participantNumber.ToString();
+                    outputDirectory = "Results/ProperSavingTrial" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory)){
                         Directory.CreateDirectory(outputDirectory);
                         break;
@@ -139,8 +139,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 // Record participant number to log-file
                 WriteLog("Participant" + participantNumber.ToString());
                 
-                string[] dirProtocol = Directory.GetFiles("Protocol/Parkinson");
-                
+                string[] dirProtocol = Directory.GetFiles("Protocol/TestParkinson");
+
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol [randomProtocol]; 
                 
@@ -161,10 +161,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 }
     			break;
     
-    		case ExperimentStates.Finished:
-    			SaveTrialResult();
+            case ExperimentStates.Finished:
     			StopMachine();
-    			WriteLog("No more trials, stopping machine");
+    			WriteLog("No more subjects, stopping machine");
     			break;
 		}
 	}
@@ -173,6 +172,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	protected override void OnExit(ExperimentStates newState) {
 		switch(GetState()) {
     		case ExperimentStates.Trial:
+                Debug.Log("Saving trial");
+                SaveTrialResult();
    				break;                
 		}
 	}
@@ -185,9 +186,9 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
     {
         // Determine which hand to use for given gapsize
         if(trial["GapStatus"] == "Inactive")
-            trialController.hand = 1;
-        else if(trial["GapStatus"] == "Active")
             trialController.hand = 0;
+        else if(trial["GapStatus"] == "Active")
+            trialController.hand = 1;
         else {
             WriteLog("Invalid GapSize in protocol");
             trialController.hand = -1;
@@ -284,8 +285,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	 */
 	private void SaveTrialResult() 
     {
-		handController.StopRecording();
-
 		StreamWriter writer = new StreamWriter(GetResultsFilename(), true);
 		
 		// Append result of trial to data file
@@ -293,12 +292,28 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		writer.Write(", ");
 		
 		if(trialController.hand == 0)
-			writer.Write("With gap, ");
+			writer.Write("Continuous Limb, ");
 		else if(trialController.hand == 1)
-			writer.Write("Without gap, ");
+			writer.Write("Discontinous Limb, ");
 		else
-			writer.Write("Unknown, ");
-				
+			writer.Write("Gap unknown, ");
+
+        if (trialController.knifePresent == true)
+            writer.Write("Threat active, ");
+        else if (trialController.knifePresent == false)
+            writer.Write("Threat inactive, ");
+        else
+            writer.Write("Threat unknown, ");
+
+        if (trialController.noiseLevel == 0)
+            writer.Write("Hand noise inactive, ");
+        else if (trialController.noiseLevel == 1)
+            writer.Write("Hand noise active, ");
+        else 
+            writer.Write("No information, ");
+
+        writer.Write(trialController.knifeOffset);
+        writer.Write(", ");		
 		writer.Write(trialController.offset);
 		writer.Write(", ");
 		writer.Write(trialController.waveCounter);
@@ -313,4 +328,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		
 		writer.Close();
 	}
+
+    private void SaveExperimentResult(){
+        handController.StopRecording();
+    }
 }
