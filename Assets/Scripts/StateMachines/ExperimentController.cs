@@ -49,6 +49,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public int trialCounter;
     public int randomProtocol;
 
+    private bool trialEmpty;
+
 
     public void Start() {
         // When the trial controller is stopped, invoke an event
@@ -80,6 +82,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		
             case ExperimentStates.Trial:
                 if (ev == ExperimentEvents.TrialFinished)
+                    SaveTrialResult();
                     ChangeState(ExperimentStates.Trial);
                 break;
 		}
@@ -125,7 +128,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++){
-                    outputDirectory = "Results/ProperSavingTrial" + participantNumber.ToString();
+                    outputDirectory = "Results/FixingRepeatedData" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory)){
                         Directory.CreateDirectory(outputDirectory);
                         break;
@@ -172,8 +175,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	protected override void OnExit(ExperimentStates newState) {
 		switch(GetState()) {
     		case ExperimentStates.Trial:
-                Debug.Log("Saving trial");
-                SaveTrialResult();
+
    				break;                
 		}
 	}
