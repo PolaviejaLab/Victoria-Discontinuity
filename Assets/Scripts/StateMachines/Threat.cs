@@ -47,7 +47,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 	
 	void Start() {
         // Store the initial transformation of the threat
-        //  this way we can reset it later
+        // this way we can reset it later
         initialThreatPosition = threat.transform.position;
 		initialThreatRotation = threat.transform.rotation;
 
@@ -81,7 +81,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 break;            
         
             case ThreatState.Following:
-                threat.transform.position = targetTransform.position + knifeOffset/60;               
+                threat.transform.position = targetTransform.position + knifeOffset/30;               
                 threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
                 
                 if(GetTimeInState() > followingTimeout){
@@ -91,7 +91,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
         }
 	
         // If threat is close to target, emit TargetReached event
-        if (Vector3.Distance(threat.transform.position, targetTransform.position + knifeOffset/60) < 0.001)
+        if (Vector3.Distance(threat.transform.position, targetTransform.position + knifeOffset/30) < 0.001)
             HandleEvent(ThreatEvent.TargetReached);
     }
 
@@ -116,6 +116,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 	protected override void OnEnter(ThreatState oldState){
         switch(GetState()) {
             case ThreatState.Falling:
+                threat.transform.position += knifeOffset;
                 threatSpeed = 0.0f;
                 break;
 
@@ -145,7 +146,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 		        
 		threat.transform.position = Vector3.MoveTowards(
             threat.transform.position, 
-            targetTransform.position + knifeOffset/60, // find the right proportion
+            targetTransform.position + knifeOffset/30, // find the right proportion
 			threatSpeed * Time.deltaTime);
 	}
 }
