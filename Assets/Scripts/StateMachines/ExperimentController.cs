@@ -145,6 +145,12 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 
                 // Record participant number to log-file
                 WriteLog("Participant" + participantNumber.ToString());
+                if (!handSwitcher.useMale){
+                    WriteLog("Hand model is female");
+                } else if (handSwitcher.useMale){
+                    WriteLog("Hand model is male");
+                }
+
                 
                 string[] dirProtocol = Directory.GetFiles("Protocol/TestParkinson");
 

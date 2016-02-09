@@ -115,7 +115,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 	protected override void OnEnter(ThreatState oldState){
         switch(GetState()) {
             case ThreatState.Falling:
-                threat.transform.position += knifeOffset;
+                threat.transform.position += knifeOffset/30;
                 threatSpeed = 0.0f;
                 break;
 
