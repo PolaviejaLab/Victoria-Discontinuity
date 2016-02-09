@@ -113,9 +113,9 @@ public class RiggedFinger :FingerModel
 				continue;
 
 			Quaternion rotationNoise = Quaternion.Euler(
-				amplitude * NormalRandom.NextGaussianFloat(new System.Random()),
-				amplitude * NormalRandom.NextGaussianFloat(new System.Random()),
-				amplitude * NormalRandom.NextGaussianFloat(new System.Random())
+				amplitude * (NormalRandom.NextGaussianFloat(new System.Random())/3),
+                amplitude * (NormalRandom.NextGaussianFloat(new System.Random())/3),
+                amplitude * (NormalRandom.NextGaussianFloat(new System.Random())/3)
 			);
 			
 			bones[i].rotation *= rotationNoise;
