@@ -107,7 +107,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
         switch (GetState()){
             case ExperimentStates.WaitingForFeedback:
-                if (Input.GetKeyDown(KeyCode.Return)){
+                if (Input.GetKeyDown(KeyCode.Tab)){
                     ChangeState(ExperimentStates.Start);
                 }
                 else if (Input.GetKeyDown(KeyCode.Escape)){
