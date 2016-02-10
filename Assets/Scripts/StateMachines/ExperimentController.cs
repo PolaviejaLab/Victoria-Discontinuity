@@ -132,7 +132,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++){
-                    outputDirectory = "Results/TrackingFails" + participantNumber.ToString();
+                    outputDirectory = "Results/ArEventTest" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory)){
                         Directory.CreateDirectory(outputDirectory);
                         break;
@@ -152,7 +152,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 }
 
                 
-                string[] dirProtocol = Directory.GetFiles("Protocol/TestParkinson");
+                string[] dirProtocol = Directory.GetFiles("Protocol/Parkinson");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol [randomProtocol]; 

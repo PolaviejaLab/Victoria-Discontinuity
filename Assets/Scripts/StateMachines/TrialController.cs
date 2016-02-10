@@ -84,7 +84,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 	public void HandleEvent(TrialEvents ev)
     {
-		Debug.Log ("Event " + ev.ToString ());
+		// Debug.Log ("Event " + ev.ToString ());
 	
 		if (!IsStarted())
 			return;
@@ -109,6 +109,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     
     				lights[currentLight].activeMaterial = 1;
     				collisionLights.SetActive (true);
+
     			} else if((int)ev == currentLight) {
     				WriteLog("Waved correctly");
     

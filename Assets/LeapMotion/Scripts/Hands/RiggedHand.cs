@@ -161,9 +161,9 @@ public class RiggedHand: HandModel
                 float amplitude = Mathf.Min(d, 1.0f);
                 
                 Quaternion noise = Quaternion.Euler(
-                    amplitude * (NormalRandom.NextGaussianFloat(random)/2),
-                    amplitude * (NormalRandom.NextGaussianFloat(random)/2),
-                    amplitude * (NormalRandom.NextGaussianFloat(random)/2)
+                    amplitude * (NormalRandom.NextGaussianFloat(random)/1.25f),
+                    amplitude * (NormalRandom.NextGaussianFloat(random)/1.25f),
+                    amplitude * (NormalRandom.NextGaussianFloat(random)/1.25f)
                     );                       
                 
                 wrist.transform.localRotation = oldRotation * noise;
