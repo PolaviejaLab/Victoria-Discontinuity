@@ -18,6 +18,7 @@ using System.Collections.Generic;
 public enum ExperimentEvents {
     ProtocolLoaded,
 	TrialFinished,
+    QuestionsFinished, 
     ExperimentFinished, 
 };
 
@@ -26,6 +27,7 @@ public enum ExperimentStates {
     WaitingForFeedback,
     Start,
     Trial,
+    Questionnaires,
 	Finished,
 };
 
@@ -35,6 +37,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 	public HandController handController;
 	public HandSwitcher handSwitcher;
 	public TrialController trialController;
+    public WaveController waveController;
 
 	public TableLights tableLights;
 	
@@ -217,7 +220,13 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         // Determine the number of waves per each trial
         int wavesRequired;
         int.TryParse(trial["WavesRequired"], out wavesRequired);
-        trialController.wavesRequired = wavesRequired;
+        waveController.wavesRequired = wavesRequired;
+
+        // Determine it it is required to measure PD
+
+        if (trial.ContainsKey("MeasureDrift")) {
+            // Do something that it measures the PD, otherwise not
+        }
         
         // Noise level
         if(trial.ContainsKey("NoiseLevel")) {
@@ -331,13 +340,13 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         writer.Write(", ");		
 		writer.Write(trialController.offset);
 		writer.Write(", ");
-		writer.Write(trialController.waveCounter);
+		writer.Write(waveController.waveCounter);
 		writer.Write(", ");
-		writer.Write(trialController.correctWaves);
+		writer.Write(waveController.correctWaves);
 		writer.Write(", ");
-		writer.Write(trialController.incorrectWaves);
+		writer.Write(waveController.incorrectWaves);
 		writer.Write(", ");
-		writer.Write(trialController.lateWaves);
+		writer.Write(waveController.lateWaves);
 		writer.Write(", ");
 		writer.WriteLine();
 		

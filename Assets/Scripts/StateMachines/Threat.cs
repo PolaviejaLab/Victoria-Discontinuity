@@ -22,7 +22,7 @@ public enum ThreatState {
  */
 public enum ThreatEvent {
     ReleaseThreat,  // Drop the threat
-	TargetReached     // Target reached
+	TargetReached   // Target reached
 };
 
 
@@ -54,7 +54,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
         if(hideOnStopped)
             threat.SetActive(false);
 
-        followingTimeout = 3.0f;
+        followingTimeout = 2.0f;
 	}
 	
     
@@ -84,7 +84,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 threat.transform.position = targetTransform.position + knifeOffset/30;               
                 threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
                 
-                if(GetTimeInState() > followingTimeout){
+                if(GetTimeInState() > followingTimeout) {
                     StopMachine();
                 }
                 break;            

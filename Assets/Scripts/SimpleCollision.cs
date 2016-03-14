@@ -3,8 +3,8 @@ using System.Collections;
 
 public class SimpleCollision : MonoBehaviour {
 
-	public TrialController trialController;
-	public TrialEvents triggerEvent;
+	public WaveController waveController;
+	public WaveEvents triggerEvent;
 	public GameObject[] objects;
 
 	public bool CompareByName = false;	
@@ -13,15 +13,15 @@ public class SimpleCollision : MonoBehaviour {
 	{		
 		if (col.name == "palm"){
 			if(objects.Length == 0) {
-				trialController.HandleEvent(triggerEvent);
+                waveController.HandleEvent(triggerEvent);
 			} else {
 				for(int i = 0; i < objects.Length; i++) {
 					if(CompareByName) {
 						if(col.gameObject.name == objects[i].name)
-							trialController.HandleEvent(triggerEvent);
+                            waveController.HandleEvent(triggerEvent);
 					} else {
 						if(col.gameObject == objects[i])
-							trialController.HandleEvent(triggerEvent);
+                            waveController.HandleEvent(triggerEvent);
 					}
 				}
 			}

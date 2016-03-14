@@ -3,17 +3,17 @@ using System.Collections;
 
 public class Debbuging : MonoBehaviour {
 
-	public TrialController trialController;
+    public WaveController waveController;
 
 	void Start () {
 	}
 	
 	void Update () {
-		if(Input.GetKeyDown (KeyCode.A))
-			trialController.HandleEvent(TrialEvents.Wave_0);
+		if (Input.GetKeyDown (KeyCode.A))
+            waveController.HandleEvent(WaveEvents.Wave_0);
 		if (Input.GetKeyDown (KeyCode.B))
-			trialController.HandleEvent(TrialEvents.Wave_1);
+            waveController.HandleEvent(WaveEvents.Wave_1);
 		if (Input.GetKeyDown (KeyCode.X))
-			trialController.HandleEvent(TrialEvents.Wave_Initial);
+            waveController.HandleEvent(WaveEvents.Wave_Initial);
 	}
 }
