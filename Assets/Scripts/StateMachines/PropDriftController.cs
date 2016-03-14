@@ -30,9 +30,7 @@ public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
 
     public Transform handTransform;
 
-    private float pointerx;
-    private float pointery;
-    private float pointerz;
+    private Vector3 pointerPosition;
 
     public Vector3 handPosition;
 
@@ -43,9 +41,9 @@ public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
 
         proprioceptiveDrift = 0;
 
-        pointerx = pointer.transform.localPosition.x;
-        pointery = pointer.transform.localPosition.y;
-        pointerz = pointer.transform.localPosition.z;
+        pointerPosition = new Vector3(pointer.transform.localPosition.x, 
+            pointer.transform.localPosition.y, 
+            pointer.transform.localPosition.z);
     }
 
 
@@ -129,7 +127,7 @@ public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
                 marker.SetActive(false);
 
                 // Restarts the pointer position to its original value (Start())
-                pointer.transform.localPosition = new Vector3(pointerx, pointery, pointerz); // this should be a random vector3
+                pointer.transform.localPosition = pointerPosition;
                 break;
         }
     }
