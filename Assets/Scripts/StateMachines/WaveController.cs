@@ -17,13 +17,12 @@ public enum WaveEvents {
 * States of the Wave State Machine
 */
 public enum WaveStates {
-    WaitForInitial,
-    WaitForWave, 
+    Initial,
+    Target, 
     Waved,
-    ToOrigin,
     TooLate,
-    EndWaving, 
-    WavesFinished, 
+    ToOrigin,
+    EndWaving,  
 };
 
 
@@ -65,8 +64,7 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
     }
 
 
-    protected override void OnStart()
-    {
+    protected override void OnStart() {
         // clear counters
         waveCounter = 0;
         lateWaves = 0;
@@ -82,18 +80,19 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
             return;
 
         switch (GetState()) {
-            case WaveStates.WaitForInitial:
+            case WaveStates.Initial:
                 if (ev == WaveEvents.Delay && initialLightOn) {
                     initialLight.activeMaterial = 1;
                     collisionInitial.SetActive(true);
                 } else if (ev == WaveEvents.Wave_Initial){
-                    ChangeState(WaveStates.WaitForWave);
+                    WriteLog("Initial Waved");
+
+                    ChangeState(WaveStates.Target);
                 }
                 break;
 
-            case WaveStates.WaitForWave:
-                if (ev == WaveEvents.Delay && targetLightOn)
-                {
+            case WaveStates.Target:
+                if (ev == WaveEvents.Delay && targetLightOn) {
                     // Turn on random target light
                     currentLight = UnityEngine.Random.Range(0, lights.Length);
 
@@ -117,19 +116,21 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
                 }
                 break;
 
-            case WaveStates.EndWaving:
-                // if (ev == WaveEvents.Wave_Initial)
-                // send an event to trial event that waving has finished   
-                break;
-
             case WaveStates.Waved:
                 break;
 
-            case WaveStates.TooLate:
+            case WaveStates.ToOrigin:
                 break;
 
-            case WaveStates.WavesFinished:
+            case WaveStates.TooLate:
+                ChangeState(WaveStates.Waved);
                 break;
+
+            case WaveStates.EndWaving:
+                if (ev == WaveEvents.Wave_Initial)
+                    trialController.HandleEvent(TrialEvents.WavingFinished);
+                break;
+
         }
     }
 
@@ -139,25 +140,32 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
             return;
 
         switch (GetState()) {
-            case WaveStates.WaitForInitial:
+            case WaveStates.Initial:
                 if (GetTimeInState() > 0.5f && !initialLightOn) {
                     initialLightOn = true;
                     HandleEvent(WaveEvents.Delay);
                 }
                 break;
 
-            case WaveStates.WaitForWave:
+            case WaveStates.Target:
                 // Wait between the lights turning on and off
                 if (GetTimeInState() > 0.5f && !targetLightOn) {
                     targetLightOn = true;
                     HandleEvent(WaveEvents.Delay);
+                }
+                if (GetTimeInState () > 6.0f && targetLightOn) {
+                    WriteLog("Waved Late");
+                    lateWaves++;
+                    
+                    ChangeState(WaveStates.TooLate);
+
                 }
                 break;
 
             case WaveStates.Waved:
                 if (GetTimeInState() > 1.0f) {
                     if (waveCounter < wavesRequired) {
-                        ChangeState(WaveStates.WaitForInitial);
+                        ChangeState(WaveStates.Initial);
                     } else {
                         ChangeState(WaveStates.ToOrigin);
                     }
@@ -172,18 +180,17 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
             case WaveStates.TooLate:
                 break;
 
-            case WaveStates.WavesFinished:
-                break;
         }
     }
 
 
     protected override void OnEnter(WaveStates oldState) {
+
         switch (GetState()) {
-            case WaveStates.WaitForInitial:
+            case WaveStates.Initial:
                 break;
 
-            case WaveStates.WaitForWave:
+            case WaveStates.Target:
                 waveCounter++;
                 break;
 
@@ -191,6 +198,7 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.ToOrigin:
+
                 break;
 
             case WaveStates.TooLate:
@@ -201,21 +209,17 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
                 initialLight.activeMaterial = 2;
                 collisionInitial.SetActive(true);
                 break;
-
-            case WaveStates.WavesFinished:
-                trialController.HandleEvent(TrialEvents.WavingFinished);
-                break;
         }
     }
 
 
     protected override void OnExit(WaveStates newState) {
         switch (GetState()) {
-            case WaveStates.WaitForInitial:
+            case WaveStates.Initial:
                 TurnOffInitial();
                 break;
 
-            case WaveStates.WaitForWave:
+            case WaveStates.Target:
                 TurnOffTarget();
                 break;
 
@@ -226,9 +230,6 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.ToOrigin:
-                break;
-
-            case WaveStates.WavesFinished:
                 break;
 
             case WaveStates.EndWaving:
