@@ -215,10 +215,8 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
                 TurnOffInitial();
                 break;
 
-            case WaveStates.WaitForWave: // also transform into a method.
-                collisionLights.SetActive(false);
-                lights[currentLight].activeMaterial = 0;
-                targetLightOn = false;
+            case WaveStates.WaitForWave:
+                TurnOffTarget();
                 break;
 
             case WaveStates.Waved:
@@ -248,6 +246,8 @@ public class WaveController : StateMachine<WaveStates, WaveEvents>
 
 
     public void TurnOffTarget() {
-        // use what is used to turn of Initial
+        collisionLights.SetActive(false);
+        lights[currentLight].activeMaterial = 0;
+        targetLightOn = false;
     }
 }
