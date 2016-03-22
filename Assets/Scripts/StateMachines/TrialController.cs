@@ -4,8 +4,6 @@ using System.Collections;
 
 /**
  * Events handles by the Trial statemachine
- * 
- * Initial must be last and wave_1 ... N must correspond to lights 1 .. N
  */
 public enum TrialEvents {
     WavingFinished,
@@ -37,6 +35,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 	// Scripts to manipulate the hand and offset according to condition
 	public HandSwitcher handSwitcher;
 	public OffsetSwitcher offsetSwitcher;
+
+    public GameObject testLights;
 
 	// Parameters of the current trial
 	public int hand;
@@ -100,7 +100,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 		switch (GetState ()) {  
     		case TrialStates.AccomodationTime:				
-    			if (Input.GetKey(KeyCode.Space))
+    			if (Input.GetKey(KeyCode.Q))
     				ChangeState(TrialStates.Wave);
     			break;
 
@@ -108,6 +108,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ProprioceptiveDrift:
+                if (GetTimeInState() > 3.0f)
+                    driftController.StartMachine();
                 break;
 
     		case TrialStates.Threat:
@@ -121,18 +123,17 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
 	protected override void OnEnter(TrialStates oldState){
 		switch (GetState ()) {
-    		case TrialStates.AccomodationTime:
+
+            case TrialStates.AccomodationTime:
     			handSwitcher.showRightHand = true;
     			break;
 
             case TrialStates.Wave:
                 waveController.StartMachine();
-                // HandleEvent para empezar
                 break;
 
             case TrialStates.ProprioceptiveDrift:
-                driftController.isStarted = true;
-                driftController.HandleEvent(DriftEvents.Started);
+                handSwitcher.showRightHand = false; 
                 break;
 
             case TrialStates.Threat:
@@ -156,6 +157,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
     			break;
 
             case TrialStates.Wave:
+                testLights.SetActive(false);
+                waveController.StopMachine();
                 break;
 
             case TrialStates.ProprioceptiveDrift:
