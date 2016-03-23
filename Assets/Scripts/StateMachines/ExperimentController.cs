@@ -83,10 +83,18 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 
 		
             case ExperimentStates.Trial:
-                if (ev == ExperimentEvents.TrialFinished)
+                if (ev == ExperimentEvents.TrialFinished) {
                     SaveTrialResult();
+                    ChangeState(ExperimentStates.Questionnaires);
+                }
+                break;
+
+            case ExperimentStates.Questionnaires:
+                if (ev == ExperimentEvents.QuestionsFinished)
                     ChangeState(ExperimentStates.Trial);
                 break;
+
+                
 		}
 	}
 	
@@ -117,6 +125,11 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 else if (Input.GetKeyDown(KeyCode.Escape)){
                     ChangeState(ExperimentStates.Finished);
                 }
+                break;
+
+            case ExperimentStates.Questionnaires:
+                if (Input.GetKeyDown(KeyCode.W))
+                    HandleEvent(ExperimentEvents.QuestionsFinished);
                 break;
         }
 	}
@@ -177,6 +190,10 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                     ChangeState(ExperimentStates.WaitingForFeedback);
                 }
     			break;
+
+            case ExperimentStates.Questionnaires:
+                handSwitcher.showRightHand = false;
+                break;
     
             case ExperimentStates.Finished:
     			StopMachine();
