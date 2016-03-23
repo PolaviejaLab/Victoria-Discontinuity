@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum DriftEvents {
-    Started, 
+    Start, 
     Stopped, 
 };
 
@@ -10,21 +10,24 @@ public enum DriftStates {
     Idle, 
     Moving, 
     Measured, 
+    Finished,
 };
 
 
-public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
-
+public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
     public ExperimentController experimentController;
-    public TrialController trialController; 
+    public TrialController trialController;
 
-    private GameObject marker;
-    private GameObject pointer;
+    public GameObject marker;
+    public GameObject pointer;
 
-    public bool isStarted;
+    public bool markerOn;
 
+    public bool pointerMove;
     public bool dirRight;
-    private float speed;
+    public bool isMeasured;
+
+    public float speed;
 
     public float proprioceptiveDrift;
 
@@ -35,79 +38,101 @@ public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
     public Vector3 handPosition;
 
 
-    void Start () {
+    new public void Start() {
         marker = GameObject.Find("Marker");
         pointer = GameObject.Find("Pointer");
 
-        proprioceptiveDrift = 0;
+        marker.SetActive(false);
 
-        pointerPosition = new Vector3(pointer.transform.localPosition.x, 
-            pointer.transform.localPosition.y, 
+        pointerPosition = new Vector3(pointer.transform.localPosition.x,
+            pointer.transform.localPosition.y,
             pointer.transform.localPosition.z);
     }
 
 
+    protected override void OnStart() {
+        proprioceptiveDrift = 0;
+        isMeasured = false;
+    }
+
     public void HandleEvent(DriftEvents ev) {
         Debug.Log("Event " + ev.ToString());
 
+        switch (GetState()) {
+            case DriftStates.Idle:
+                if (ev == DriftEvents.Start && markerOn) {
+                    ChangeState(DriftStates.Moving);
+                }
+                break;
+
+            case DriftStates.Moving:
+                if (ev == DriftEvents.Stopped) {
+                    MeasureProprioceptiveDrift();
+                    ChangeState(DriftStates.Measured);
+                }
+
+                   
+                break;
+
+            case DriftStates.Measured:
+                break;
+
+        }
+    }
+
+
+    public void Update() {
         if (!IsStarted())
             return;
 
         switch (GetState()) {
             case DriftStates.Idle:
-                if (ev == DriftEvents.Started)
-                    ChangeState(DriftStates.Moving);
+                if (GetTimeInState() > 3.0f) {
+                    marker.SetActive(true);
+                    HandleEvent(DriftEvents.Start);
+                }
                 break;
 
             case DriftStates.Moving:
-                if (ev == DriftEvents.Stopped)
-                    ChangeState(DriftStates.Measured);
+                if (Input.GetKeyDown(KeyCode.Space) && pointerMove) {
+                    Debug.Log("miaw, miaw");
+                    pointerMove = false;
+                    HandleEvent(DriftEvents.Stopped);
+                }
+                if (pointerMove) {
+                    StartMarker();
+                }
+                
                 break;
 
             case DriftStates.Measured:
-                if (GetTimeInState() > 1.0f) {
+                if (GetTimeInState() > 1.0f && !isMeasured) {
+                    pointer.transform.localPosition = pointerPosition;
                     trialController.HandleEvent(TrialEvents.DriftMeasured);
+                    isMeasured = true;
                 }
-                break;
-        }
-    }
-
-
-
-    void Update() {
-
-
-        switch (GetState()) {
-            case DriftStates.Idle:
-                break;
-
-            case DriftStates.Moving:
-                if (Input.GetKeyDown(KeyCode.Space) && isStarted) {
-                    MeasureProprioceptiveDrift();
-                }
-                break;
-
-            case DriftStates.Measured:
+                    
                 break;
 
         }
-
     }
 
 
     protected override void OnEnter(DriftStates oldState) {
+
         switch (GetState()) {
             case DriftStates.Idle:
+                
                 break;
 
             case DriftStates.Moving:
-                marker.SetActive(true);
                 speed = 0.04f;
-                isStarted = true;
-                StartMarker();
+                dirRight = true;
+                pointerMove = true;
                 break;
 
             case DriftStates.Measured:
+                marker.SetActive(false);
                 break;
 
         }
@@ -123,11 +148,6 @@ public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
                 break;
 
             case DriftStates.Measured:
-                isStarted = false;
-                marker.SetActive(false);
-
-                // Restarts the pointer position to its original value (Start())
-                pointer.transform.localPosition = pointerPosition;
                 break;
         }
     }
@@ -135,6 +155,7 @@ public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
 
     public void StartMarker() {
         Vector3 movement = new Vector3(0, 0, 1);
+
         // marker moving from left to right in the x axis
         if (dirRight) {
             pointer.transform.Translate(movement * speed * Time.deltaTime);
@@ -150,12 +171,12 @@ public class PropDriftController : StateMachine <DriftStates, DriftEvents> {
 
     // Method that will be called when proprioceptive drift needs to be measured
     public float MeasureProprioceptiveDrift() {
+        Debug.Log("miaw, entered measure method");
         speed = 0.0f;
-
+        Debug.Log("miaw, marker stopped, inside method");
         proprioceptiveDrift += pointer.transform.localPosition.z;
         handPosition = handTransform.position;
 
-        HandleEvent(DriftEvents.Stopped);
 
         return proprioceptiveDrift;
     }

@@ -60,9 +60,9 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 			state = initialState;	
 			timeAtStateChange = Time.time;
 
-			 WriteLog("Started");
+            WriteLog("Started");
 
-			OnEnter(state);
+            OnEnter(state);
 		}
 	}
 
@@ -70,10 +70,8 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	/**
 	 * Stop the state machine
 	 */
-	public void StopMachine()
-	{
-		if(started)
-		{
+	public void StopMachine() {
+        if (started) { 
 			OnExit(state);
 			timeAtStateChange = Time.time;
 			started = false;
@@ -92,8 +90,7 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	/**
 	 * Returns the time in seconds since entering the current state.
 	 */
-	public float GetTimeInState()
-	{
+	public float GetTimeInState() {
 		float time = Time.time;
 		return time - timeAtStateChange;
 	}

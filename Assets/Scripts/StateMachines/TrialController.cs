@@ -20,7 +20,7 @@ public enum TrialStates {
     Wave,                       // Reaching-like task
     ProprioceptiveDrift,        // Measure proprioceptive drift
     Threat,                     // Threat to the virtual hand
-    Finished,                   // End of the trial
+    TrialFinished,              // End of the trial
 };
 
 
@@ -74,10 +74,10 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
 
             case TrialStates.Threat:
                 if (ev == TrialEvents.ThreatDone)
-                    ChangeState(TrialStates.Finished);
+                    ChangeState(TrialStates.TrialFinished);
                 break;
 
-            case TrialStates.Finished:
+            case TrialStates.TrialFinished:
                 break;
 			
         }
@@ -108,14 +108,13 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ProprioceptiveDrift:
-                if (GetTimeInState() > 3.0f)
-                    driftController.StartMachine();
+
                 break;
 
     		case TrialStates.Threat:
     			break;
 
-            case TrialStates.Finished:
+            case TrialStates.TrialFinished:
                 break;
 		}
 	}
@@ -133,7 +132,10 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ProprioceptiveDrift:
-                handSwitcher.showRightHand = false; 
+                handSwitcher.showRightHand = false;
+                
+                driftController.StartMachine();
+                driftController.markerOn = true;
                 break;
 
             case TrialStates.Threat:
@@ -143,7 +145,7 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 }
                 break;
 
-            case TrialStates.Finished:
+            case TrialStates.TrialFinished:
                 break;
 
         }
@@ -162,12 +164,14 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ProprioceptiveDrift:
+                driftController.markerOn = false;
+                driftController.marker.SetActive(false);
                 break;
 
             case TrialStates.Threat:
                 break;
 
-            case TrialStates.Finished:
+            case TrialStates.TrialFinished:
                 break;
 
 		}
