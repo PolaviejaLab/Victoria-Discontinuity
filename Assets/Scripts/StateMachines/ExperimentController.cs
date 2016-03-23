@@ -34,10 +34,11 @@ public enum ExperimentStates {
 
 public class ExperimentController: StateMachine<ExperimentStates, ExperimentEvents> 
 {
-	public HandController handController;
-	public HandSwitcher handSwitcher;
-	public TrialController trialController;
+    public TrialController trialController;
     public WaveController waveController;
+
+    public HandController handController;
+	public HandSwitcher handSwitcher;
 
 	public TableLights tableLights;
 	
@@ -135,7 +136,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++){
-                    outputDirectory = "Results/ArEventTest" + participantNumber.ToString();
+                    outputDirectory = "Results/RedoingVRE" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory)){
                         Directory.CreateDirectory(outputDirectory);
                         break;
