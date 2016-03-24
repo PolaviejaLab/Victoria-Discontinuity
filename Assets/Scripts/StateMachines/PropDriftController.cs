@@ -95,7 +95,6 @@ public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
 
             case DriftStates.Moving:
                 if (Input.GetKeyDown(KeyCode.Space) && pointerMove) {
-                    Debug.Log("miaw, miaw");
                     pointerMove = false;
                     HandleEvent(DriftEvents.Stopped);
                 }
@@ -171,9 +170,7 @@ public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
 
     // Method that will be called when proprioceptive drift needs to be measured
     public float MeasureProprioceptiveDrift() {
-        Debug.Log("miaw, entered measure method");
         speed = 0.0f;
-        Debug.Log("miaw, marker stopped, inside method");
         proprioceptiveDrift += pointer.transform.localPosition.z;
         handPosition = handTransform.position;
 
