@@ -191,6 +191,7 @@ MonoBehaviour:
   StartOnStopMachine: 0
   trialController: {fileID: 31432806}
   waveController: {fileID: 31432812}
+  driftController: {fileID: 31432810}
   threatController: {fileID: 924765751}
   handController: {fileID: 745853846}
   handSwitcher: {fileID: 31432808}
@@ -1795,6 +1796,7 @@ MonoBehaviour:
   initialState: 0
   StartOnInstantiation: 0
   StartOnStopMachine: 0
+  handController: {fileID: 1455164875}
   threat: {fileID: 924765750}
   targetTransform: {fileID: 1535472345}
   knifeOffset: {x: 0, y: 0, z: 0}
