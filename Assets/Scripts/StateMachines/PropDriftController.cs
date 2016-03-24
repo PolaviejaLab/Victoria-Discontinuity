@@ -87,7 +87,7 @@ public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
 
         switch (GetState()) {
             case DriftStates.Idle:
-                if (GetTimeInState() > 3.0f) {
+                if (GetTimeInState() > 1.5f) {
                     marker.SetActive(true);
                     HandleEvent(DriftEvents.Start);
                 }
