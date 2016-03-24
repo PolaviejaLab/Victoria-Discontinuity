@@ -55,6 +55,7 @@ public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
         isMeasured = false;
     }
 
+
     public void HandleEvent(DriftEvents ev) {
         Debug.Log("Event " + ev.ToString());
 
@@ -70,8 +71,6 @@ public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
                     MeasureProprioceptiveDrift();
                     ChangeState(DriftStates.Measured);
                 }
-
-                   
                 break;
 
             case DriftStates.Measured:
@@ -173,7 +172,6 @@ public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
         speed = 0.0f;
         proprioceptiveDrift += pointer.transform.localPosition.z;
         handPosition = handTransform.position;
-
 
         return proprioceptiveDrift;
     }

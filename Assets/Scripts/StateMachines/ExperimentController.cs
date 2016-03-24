@@ -36,6 +36,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 {
     public TrialController trialController;
     public WaveController waveController;
+    public PropDriftController driftController;
+    public Threat threatController;
 
     public HandController handController;
 	public HandSwitcher handSwitcher;
@@ -169,7 +171,7 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
                 }
 
                 
-                string[] dirProtocol = Directory.GetFiles("Protocol/Parkinson");
+                string[] dirProtocol = Directory.GetFiles("Protocol/TestNewer");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol [randomProtocol]; 
@@ -240,11 +242,6 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         int.TryParse(trial["WavesRequired"], out wavesRequired);
         waveController.wavesRequired = wavesRequired;
 
-        // Determine it it is required to measure PD
-
-        if (trial.ContainsKey("MeasureDrift")) {
-            // Do something that it measures the PD, otherwise not
-        }
         
         // Noise level
         if(trial.ContainsKey("NoiseLevel")) {
@@ -269,15 +266,28 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
         // Knife Offset
         if (trial.ContainsKey("KnifeOffset")){
             float knifeOffsetx; float knifeOffsety; float knifeOffsetz;
-            float.TryParse(trial ["OffsetX"], out knifeOffsetx);
-            float.TryParse(trial ["OffsetY"], out knifeOffsety);
-            float.TryParse(trial ["OffsetZ"], out knifeOffsetz);
+            float.TryParse(trial["OffsetX"], out knifeOffsetx);
+            float.TryParse(trial["OffsetY"], out knifeOffsety);
+            float.TryParse(trial["OffsetZ"], out knifeOffsetz);
 
             Vector3 knifeVector = new Vector3(knifeOffsetx, knifeOffsety, knifeOffsetz);
 
             trialController.knifeOffset = knifeVector;
 
             WriteLog("Knife Offset: " + knifeVector);
+        }
+
+        // Knife
+        if (trial.ContainsKey("KnifeOnReal")) {
+            if (trial["KnifeOnReal"].ToLower() == "true") {
+                threatController.knifeOnReal = true;
+            }
+            else if (trial["KnifeOnReal"].ToLower() == "false") {
+                threatController.knifeOnReal = false;
+            }
+
+            else
+                throw new Exception("Invalid value in trial list for field KnifeOnReal");
         }
     }    
 
@@ -366,6 +376,8 @@ public class ExperimentController: StateMachine<ExperimentStates, ExperimentEven
 		writer.Write(", ");
 		writer.Write(waveController.lateWaves);
 		writer.Write(", ");
+        writer.Write(driftController.proprioceptiveDrift);
+        writer.Write(", ");
 		writer.WriteLine();
 		
 		writer.Close();
