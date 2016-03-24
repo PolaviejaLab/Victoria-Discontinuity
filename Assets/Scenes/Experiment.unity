@@ -93,12 +93,12 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 31432807}
-  - 114: {fileID: 31432806}
-  - 114: {fileID: 31432808}
-  - 114: {fileID: 31432809}
   - 114: {fileID: 31432811}
+  - 114: {fileID: 31432809}
+  - 114: {fileID: 31432806}
   - 114: {fileID: 31432812}
   - 114: {fileID: 31432810}
+  - 114: {fileID: 31432808}
   m_Layer: 0
   m_Name: ExperimentController
   m_TagString: Untagged
@@ -191,10 +191,11 @@ MonoBehaviour:
   StartOnStopMachine: 0
   trialController: {fileID: 31432806}
   waveController: {fileID: 31432812}
+  threatController: {fileID: 924765751}
   handController: {fileID: 745853846}
   handSwitcher: {fileID: 31432808}
   tableLights: {fileID: 2096310268}
-  protocolFile: Protocol/Parkinson/Test01.csv
+  protocolFile: Protocol/TestNewer
   trialCounter: 0
   randomProtocol: 0
 --- !u!114 &31432810
@@ -217,7 +218,10 @@ MonoBehaviour:
   marker: {fileID: 0}
   pointer: {fileID: 0}
   markerOn: 0
+  pointerMove: 0
   dirRight: 0
+  isMeasured: 0
+  speed: 0
   proprioceptiveDrift: 0
   handTransform: {fileID: 1272889715}
   handPosition: {x: 0, y: 0, z: 0}
@@ -1794,6 +1798,7 @@ MonoBehaviour:
   threat: {fileID: 924765750}
   targetTransform: {fileID: 1535472345}
   knifeOffset: {x: 0, y: 0, z: 0}
+  knifeOnReal: 0
   followingTimeout: 5
   hideOnStopped: 1
 --- !u!1 &941264205 stripped
