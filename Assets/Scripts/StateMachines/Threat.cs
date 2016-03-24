@@ -28,6 +28,8 @@ public enum ThreatEvent {
 
 public class Threat: StateMachine<ThreatState, ThreatEvent> 
 {
+    public RiggedHand handController;
+
     public GameObject threat;
 	public Transform targetTransform;
 
@@ -35,6 +37,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 	private float gravity = 9.81f;
 
     public Vector3 knifeOffset;
+    public bool knifeOnReal;
 
     public float followingTimeout;
     
@@ -77,22 +80,44 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
     
         switch(GetState()) {        
             case ThreatState.Falling:
-                FallOnTarget ();
+                if (!knifeOnReal) {
+                    FallOnTarget();
+                }
+                else if (knifeOnReal) {
+                    FallOnReal();
+                }
                 break;            
         
             case ThreatState.Following:
-                threat.transform.position = targetTransform.position + knifeOffset/30;               
-                threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
-                
-                if(GetTimeInState() > followingTimeout) {
+                if (!knifeOnReal) {
+                    threat.transform.position = targetTransform.position + knifeOffset / 30;
+                    threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
+                }
+
+                if (knifeOnReal) {
+                    threat.transform.position = handController.palm.transform.position;
+                    threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
+                }
+
+                if (GetTimeInState() > followingTimeout) {
                     StopMachine();
                 }
                 break;            
         }
-	
+
         // If threat is close to target, emit TargetReached event
-        if (Vector3.Distance(threat.transform.position, targetTransform.position + knifeOffset/30) < 0.001)
+        if (Vector3.Distance(threat.transform.position, targetTransform.position + knifeOffset / 30) < 0.001 && !knifeOnReal) {
             HandleEvent(ThreatEvent.TargetReached);
+            Debug.Log("miaw target reached");
+        }
+
+        if (Vector3.Distance(threat.transform.position, handController.palm.transform.position) < 0.001 && knifeOnReal) {
+            HandleEvent(ThreatEvent.TargetReached);
+            Debug.Log("miaw real reached");
+        }
+        
+
+        
     }
 
 
@@ -148,4 +173,15 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
             targetTransform.position + knifeOffset/30, // find the right proportion
 			threatSpeed * Time.deltaTime);
 	}
+
+    private void FallOnReal() {
+        threatSpeed += gravity * Time.deltaTime;
+
+        threat.transform.position = Vector3.MoveTowards(
+            threat.transform.position,
+            handController.palm.transform.position,       
+            threatSpeed * Time.deltaTime);
+
+        Debug.Log("maiw" + handController.palm.transform.position);
+    }
 }
