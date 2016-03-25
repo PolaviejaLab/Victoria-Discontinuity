@@ -1796,7 +1796,7 @@ MonoBehaviour:
   initialState: 0
   StartOnInstantiation: 0
   StartOnStopMachine: 0
-  handController: {fileID: 1455164875}
+  handController: {fileID: 0}
   threat: {fileID: 924765750}
   targetTransform: {fileID: 1535472345}
   knifeOffset: {x: 0, y: 0, z: 0}

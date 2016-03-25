@@ -5,6 +5,7 @@
  
 using UnityEngine;
 using System.Collections;
+using Leap;
 
 
 /**
@@ -28,7 +29,9 @@ public enum ThreatEvent {
 
 public class Threat: StateMachine<ThreatState, ThreatEvent> 
 {
-    public RiggedHand handController;
+    public HandController handController;
+
+    protected Controller leap_controller_;
 
     public GameObject threat;
 	public Transform targetTransform;
@@ -42,13 +45,13 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
     public float followingTimeout;
     
     public bool hideOnStopped = false;
+    public bool isHeadMounted = false;
 
     Vector3 initialThreatPosition;
 	Quaternion initialThreatRotation;
 	Quaternion savedRotation;
 
-	
-	void Start() {
+    void Start() {
         // Store the initial transformation of the threat
         // this way we can reset it later
         initialThreatPosition = threat.transform.position;
@@ -58,6 +61,8 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
             threat.SetActive(false);
 
         followingTimeout = 2.0f;
+
+        leap_controller_ = handController.GetLeapController();
 	}
 	
     
@@ -77,17 +82,21 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
     {
         if(!IsStarted())
             return;
-    
-        switch(GetState()) {        
+
+        Frame frame = leap_controller_.Frame();
+
+        Vector3 handPosition = new Vector3(frame.Hands[3].PalmPosition.x, frame.Hands[3].PalmPosition.y, frame.Hands[3].PalmPosition.z);
+
+        switch (GetState()) {        
             case ThreatState.Falling:
                 if (!knifeOnReal) {
                     FallOnTarget();
                 }
                 else if (knifeOnReal) {
-                    FallOnReal();
+                    FallOnReal(handPosition);
                 }
-                break;            
-        
+                break;
+
             case ThreatState.Following:
                 if (!knifeOnReal) {
                     threat.transform.position = targetTransform.position + knifeOffset / 30;
@@ -95,8 +104,10 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                 }
 
                 if (knifeOnReal) {
-                    threat.transform.position = handController.palm.transform.position;
-                    threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
+
+                    threat.transform.position = handPosition;
+
+//                    threat.transform.rotation = (handController.rightPhysicsModels[0].transform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
                 }
 
                 if (GetTimeInState() > followingTimeout) {
@@ -111,13 +122,14 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
             Debug.Log("miaw target reached");
         }
 
-        if (Vector3.Distance(threat.transform.position, handController.palm.transform.position) < 0.001 && knifeOnReal) {
+        if (Vector3.Distance(threat.transform.position, handPosition) < 0.001 && knifeOnReal) {
             HandleEvent(ThreatEvent.TargetReached);
             Debug.Log("miaw real reached");
         }
-        
 
         
+
+
     }
 
 
@@ -174,14 +186,13 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 			threatSpeed * Time.deltaTime);
 	}
 
-    private void FallOnReal() {
+    private void FallOnReal(Vector3 handPosition) {
         threatSpeed += gravity * Time.deltaTime;
 
         threat.transform.position = Vector3.MoveTowards(
             threat.transform.position,
-            handController.palm.transform.position,       
+            handPosition,
             threatSpeed * Time.deltaTime);
 
-        Debug.Log("maiw" + handController.palm.transform.position);
     }
 }
