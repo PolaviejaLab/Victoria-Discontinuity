@@ -99,6 +99,7 @@ GameObject:
   - 114: {fileID: 31432812}
   - 114: {fileID: 31432810}
   - 114: {fileID: 31432808}
+  - 114: {fileID: 31432813}
   m_Layer: 0
   m_Name: ExperimentController
   m_TagString: Untagged
@@ -266,6 +267,18 @@ MonoBehaviour:
   targetLightOn: 0
   collisionLights: {fileID: 0}
   collisionInitial: {fileID: 0}
+--- !u!114 &31432813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 31432805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6872b090348b0949b5b3309a9e515d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveController: {fileID: 31432812}
 --- !u!1 &40460576
 GameObject:
   m_ObjectHideFlags: 0
@@ -1796,13 +1809,14 @@ MonoBehaviour:
   initialState: 0
   StartOnInstantiation: 0
   StartOnStopMachine: 0
-  handController: {fileID: 0}
+  handController: {fileID: 745853846}
   threat: {fileID: 924765750}
   targetTransform: {fileID: 1535472345}
   knifeOffset: {x: 0, y: 0, z: 0}
   knifeOnReal: 0
   followingTimeout: 5
   hideOnStopped: 1
+  isHeadMounted: 0
 --- !u!1 &941264205 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100034, guid: c71966c97cd79448bb78426d92c4166a, type: 2}
