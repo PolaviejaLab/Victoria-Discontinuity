@@ -57,7 +57,8 @@ public class TrialController : StateMachine<TrialStates, TrialEvents>
         handSwitcher.selected = hand;
         handSwitcher.noiseLevelLeft = noiseLevel;
         handSwitcher.noiseLevelRight = noiseLevel;
-        threatController.knifeOffset = knifeOffset;
+        threatController.threatOffset = knifeOffset;
+        threatController.handOffset = new Vector3 (0, 0, offset);
 
         testLights.SetActive(true);
     }

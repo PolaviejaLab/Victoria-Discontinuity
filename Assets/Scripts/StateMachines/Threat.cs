@@ -31,21 +31,23 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 {
     public HandController handController;
 
-    protected Controller leap_controller_;
-
     public GameObject threat;
 	public Transform targetTransform;
 
 	private float threatSpeed;
 	private float gravity = 9.81f;
 
-    public Vector3 knifeOffset;
+    public Vector3 threatOffset;
+    public Vector3 handOffset;
+
     public bool knifeOnReal;
 
     public float followingTimeout;
     
     public bool hideOnStopped = false;
     public bool isHeadMounted = false;
+
+    Vector3 handPositionReWorld;
 
     Vector3 initialThreatPosition;
 	Quaternion initialThreatRotation;
@@ -61,8 +63,6 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
             threat.SetActive(false);
 
         followingTimeout = 2.0f;
-
-        leap_controller_ = handController.GetLeapController();
 	}
 	
     
@@ -80,12 +80,37 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
     
 	void Update () 
     {
-        if(!IsStarted())
+        // Get the latest frame
+        Frame frame = handController.GetFrame();        
+        
+        // Get hand position re world for first right hand in scene.
+        // If no hands are found, this results in handPositionReWorld being (0, 0, 0)!!!! We might want to fix this!
+        foreach (var hand in frame.Hands) {
+            // Together with the break; a very ugly way to make sure only one right hand position is processed
+            if (hand.IsLeft) continue;
+            if (!hand.IsValid) continue;
+
+            // I think there should be a function for this from LEAP, but I guess this works too.
+            /* Vector3 handPosition = new Vector3(
+                hand.PalmPosition.x,
+                hand.PalmPosition.y,
+                hand.PalmPosition.z); */
+                //hand.ScaleFactor
+            Vector3 handPosition = hand.PalmPosition.ToUnityScaled(handController.mirrorZAxis);
+
+            // This converts the local hand coordinates (relative to LEAP) to Unity world coordinates
+            handPositionReWorld = handController.transform.TransformPoint(handPosition);
+
+            Debug.Log(handPositionReWorld);
+            
+            Debug.Log(targetTransform.transform.position);
+            break;
+
+        
+        }
+
+        if (!IsStarted())
             return;
-
-        Frame frame = leap_controller_.Frame();
-
-        Vector3 handPosition = new Vector3(frame.Hands[3].PalmPosition.x, frame.Hands[3].PalmPosition.y, frame.Hands[3].PalmPosition.z);
 
         switch (GetState()) {        
             case ThreatState.Falling:
@@ -93,21 +118,19 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
                     FallOnTarget();
                 }
                 else if (knifeOnReal) {
-                    FallOnReal(handPosition);
+                    FallOnReal(handPositionReWorld);
                 }
                 break;
 
             case ThreatState.Following:
                 if (!knifeOnReal) {
-                    threat.transform.position = targetTransform.position + knifeOffset / 30;
+                    threat.transform.position = targetTransform.position + threatOffset / 30;
                     threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
                 }
 
                 if (knifeOnReal) {
-
-                    threat.transform.position = handPosition;
-
-//                    threat.transform.rotation = (handController.rightPhysicsModels[0].transform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
+                    threat.transform.position = handPositionReWorld + handOffset;
+                    threat.transform.rotation = (targetTransform.rotation * Quaternion.Inverse(savedRotation)) * initialThreatRotation;
                 }
 
                 if (GetTimeInState() > followingTimeout) {
@@ -117,17 +140,15 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
         }
 
         // If threat is close to target, emit TargetReached event
-        if (Vector3.Distance(threat.transform.position, targetTransform.position + knifeOffset / 30) < 0.001 && !knifeOnReal) {
+        if (Vector3.Distance(threat.transform.position, targetTransform.position + threatOffset / 30) < 0.001 && !knifeOnReal) {
             HandleEvent(ThreatEvent.TargetReached);
-            Debug.Log("miaw target reached");
         }
 
-        if (Vector3.Distance(threat.transform.position, handPosition) < 0.001 && knifeOnReal) {
+        if (Vector3.Distance(threat.transform.position, handPositionReWorld) < 0.001 && knifeOnReal) {
             HandleEvent(ThreatEvent.TargetReached);
-            Debug.Log("miaw real reached");
         }
 
-        
+
 
 
     }
@@ -152,7 +173,7 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 	protected override void OnEnter(ThreatState oldState){
         switch(GetState()) {
             case ThreatState.Falling:
-                threat.transform.position += knifeOffset/30;
+                threat.transform.position += threatOffset/30;
                 threatSpeed = 0.0f;
                 break;
 
@@ -182,16 +203,16 @@ public class Threat: StateMachine<ThreatState, ThreatEvent>
 		        
 		threat.transform.position = Vector3.MoveTowards(
             threat.transform.position, 
-            targetTransform.position + knifeOffset/30, // find the right proportion
+            targetTransform.position + threatOffset/30, // find the right proportion
 			threatSpeed * Time.deltaTime);
 	}
 
-    private void FallOnReal(Vector3 handPosition) {
+    private void FallOnReal(Vector3 handPositionReWorld) {
         threatSpeed += gravity * Time.deltaTime;
 
         threat.transform.position = Vector3.MoveTowards(
             threat.transform.position,
-            handPosition,
+            handPositionReWorld + handOffset,
             threatSpeed * Time.deltaTime);
 
     }
