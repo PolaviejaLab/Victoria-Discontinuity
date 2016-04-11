@@ -44,7 +44,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
 
 	public TableLights tableLights;
 	
-	private TrialList trialList;
+	private ICTrialList trialList;
 	public string protocolFile;
 
     private string outputDirectory;
@@ -177,7 +177,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
                 protocolFile = dirProtocol [randomProtocol]; 
                 
                 // Load protocol
-                trialList = new TrialList(protocolFile);
+                trialList = new ICTrialList(protocolFile);
                 WriteLog("Loaded " + trialList.Count () + " trials");
 
                 HandleEvent(ExperimentEvents.ProtocolLoaded);
