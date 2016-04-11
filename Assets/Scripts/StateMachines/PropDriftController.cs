@@ -14,7 +14,7 @@ public enum DriftStates {
 };
 
 
-public class PropDriftController : StateMachine<DriftStates, DriftEvents> {
+public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
     public ExperimentController experimentController;
     public TrialController trialController;
 

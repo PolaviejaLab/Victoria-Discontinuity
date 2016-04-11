@@ -24,7 +24,7 @@ public enum TrialStates {
 };
 
 
-public class TrialController : StateMachine<TrialStates, TrialEvents>
+public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 {
 	// Reference to the experiment controller
 	public ExperimentController experimentController;

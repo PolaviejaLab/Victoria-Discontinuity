@@ -11,16 +11,24 @@ public delegate void StoppedEventHandler(object sender, EventArgs e);
 /**
  * Generic state machine for use in experiments
  */
-public abstract class StateMachine<States, Events> :MonoBehaviour
+public abstract class ICStateMachine<States, Events> :MonoBehaviour
 {
 	private States state;	
-	private float timeAtStateChange;	
+	private float timeAtStateChange;
 	private bool started;
 
     public event StoppedEventHandler Stopped;
 
-	public Logger logger = null;
-	
+    /**
+     * Output log messages to Unity console.
+     */
+    public bool logToConsole = true;
+
+    /**
+     * Instance of logging component to write log entries to.
+     */
+    public ICLogger logger = null;
+
 	/**
 	 * Initial state
 	 */
@@ -41,10 +49,11 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	 * Write and entry to the log
 	 */
 	protected void WriteLog(string message)
-	{    
-		Debug.Log(message);
+	{ 
+        if(logToConsole)
+            Debug.Log(message);
         if(logger != null)
-		    logger.Write(this.GetType().ToString() + "\t" + message);
+            logger.Write(this.GetType().ToString() + "\t" + message);
 	}
 
 
@@ -62,7 +71,7 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 
             WriteLog("Started");
 
-            OnEnter(state);
+			OnEnter(state);
 		}
 	}
 
@@ -70,8 +79,10 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	/**
 	 * Stop the state machine
 	 */
-	public void StopMachine() {
-        if (started) { 
+	public void StopMachine()
+	{
+		if(started)
+		{
 			OnExit(state);
 			timeAtStateChange = Time.time;
 			started = false;
@@ -90,7 +101,8 @@ public abstract class StateMachine<States, Events> :MonoBehaviour
 	/**
 	 * Returns the time in seconds since entering the current state.
 	 */
-	public float GetTimeInState() {
+	public float GetTimeInState()
+	{
 		float time = Time.time;
 		return time - timeAtStateChange;
 	}

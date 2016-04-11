@@ -27,7 +27,7 @@ public enum ThreatEvent {
 };
 
 
-public class Threat: StateMachine<ThreatState, ThreatEvent> 
+public class Threat: ICStateMachine<ThreatState, ThreatEvent> 
 {
     public HandController handController;
 

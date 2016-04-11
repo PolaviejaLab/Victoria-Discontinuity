@@ -32,7 +32,7 @@ public enum ExperimentStates {
 };
 
 
-public class ExperimentController: StateMachine<ExperimentStates, ExperimentEvents> 
+public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEvents> 
 {
     public TrialController trialController;
     public WaveController waveController;

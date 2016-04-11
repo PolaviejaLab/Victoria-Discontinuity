@@ -26,7 +26,7 @@ public enum WaveStates {
 };
 
 
-public class WaveController : StateMachine<WaveStates, WaveEvents>
+public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 {
     // Reference to other classes
     public TrialController trialController;

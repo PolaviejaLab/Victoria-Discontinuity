@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using NUnit.Framework;
 
-
 enum StateMachineTestStates
 {
-    Initial
+    Initial,
+    State
 }
 
 
@@ -13,7 +13,7 @@ enum StateMachineTestEvents
 }
 
 
-class TestStateMachine: StateMachine<StateMachineTestStates, StateMachineTestEvents>
+class TestStateMachine: ICStateMachine<StateMachineTestStates, StateMachineTestEvents>
 {
     override protected void OnEnter(StateMachineTestStates state) 
     {
@@ -24,8 +24,8 @@ class TestStateMachine: StateMachine<StateMachineTestStates, StateMachineTestEve
     }
 }
 
-
-public class StateMachineTest
+[TestFixture]
+public class ICStateMachineTest
 {
     /**
      * Makes sure starting and stoppping of the state machine works correctly.
@@ -86,5 +86,24 @@ public class StateMachineTest
         Assert.That(stateMachine.GetState(), Is.EqualTo(StateMachineTestStates.Initial));
         Assert.That(stateMachine.IsStarted(), Is.EqualTo(true));     
     
-    }    
+    }
+
+
+    /**
+     * Makes sure we can change state and that the state is reset
+     * when the state machine restarts.
+     */
+    [Test]
+    public void ChangeState()
+    {
+        TestStateMachine stateMachine = new TestStateMachine();
+        stateMachine.Start();
+        stateMachine.StartMachine();
+        Assert.That(stateMachine.GetState(), Is.EqualTo(StateMachineTestStates.Initial));
+        stateMachine.ChangeState(StateMachineTestStates.State);
+        Assert.That(stateMachine.GetState(), Is.EqualTo(StateMachineTestStates.State));
+        stateMachine.StopMachine();
+        stateMachine.StartMachine();
+        Assert.That(stateMachine.GetState(), Is.EqualTo(StateMachineTestStates.Initial));
+    }
 }
