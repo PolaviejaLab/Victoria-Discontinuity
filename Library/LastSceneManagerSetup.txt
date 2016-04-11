@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Experiment.unity
+- path: Assets/Experiments/Discontinuity/Scenes/Discontinuity.unity
   isLoaded: 1
   isActive: 1
