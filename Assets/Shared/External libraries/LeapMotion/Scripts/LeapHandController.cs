@@ -134,9 +134,5 @@ namespace Leap.Unity {
         toBeDeleted.Finish();
       }
     }
-
-        public void StartRecording(string filename) { }
-        public void StopRecording() { }
-
   }
 }

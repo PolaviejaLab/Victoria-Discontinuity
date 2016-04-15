@@ -41,7 +41,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
     public PropDriftController driftController;
     public Threat threatController;
 
-    public LeapHandController handController;
+    public HandController handController;
 	public HandSwitcher handSwitcher;
 
 	public TableLights tableLights;
