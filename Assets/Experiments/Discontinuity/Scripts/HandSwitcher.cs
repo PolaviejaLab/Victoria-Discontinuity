@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Leap.Unity;
 
 public class HandSwitcher : MonoBehaviour {
 	

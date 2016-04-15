@@ -8,117 +8,37 @@ using UnityEngine;
 using System.Collections;
 using Leap;
 
+namespace Leap.Unity {
+  /**
+* Manages the orientation of the bones in a model rigged for skeletal animation.
+* 
+* The class expects that the graphics model bones corresponding to bones in the Leap Motion 
+* hand model are in the same order in the bones array.
+*/
+  public class RiggedFinger : FingerModel {
 
-public class RiggedFinger :FingerModel 
-{
-	public bool detectType = true;
+    /** Allows the mesh to be stretched to align with finger joint positions
+     * Only set to true when mesh is not visible
+     */
+    public bool deformPosition = false;
 
-	public Transform[] bones = new Transform[NUM_BONES];
+    public Vector3 modelFingerPointing = Vector3.forward;
+    public Vector3 modelPalmFacing = -Vector3.up;
 
-	public bool detectDirections = false;
+    public Quaternion Reorientation() {
+      return Quaternion.Inverse(Quaternion.LookRotation(modelFingerPointing, -modelPalmFacing));
+    }
 
-	public Vector3 modelFingerPointing = Vector3.forward;
-	public Vector3 modelPalmFacing = -Vector3.up;
-
-
-	private void GuessDirectionFromBones()
-	{
-		Transform first = bones[0];
-		Transform last = bones[bones.Length - 1];
-		
-		modelFingerPointing = Vector3.Normalize(last.localPosition - first.localPosition);
-		
-		Debug.Log(name + " points in direction " + modelFingerPointing);
-	}
-
-
-	private Finger.FingerType GuessType(string name)
-	{
-		if(name.ToLower().Contains("index"))
-			return Finger.FingerType.TYPE_INDEX;
-		if(name.ToLower().Contains("thumb"))
-			return Finger.FingerType.TYPE_THUMB;
-		if(name.ToLower().Contains("ring"))
-			return Finger.FingerType.TYPE_RING;
-		if(name.ToLower().Contains("pinky"))
-			return Finger.FingerType.TYPE_PINKY;
-		if(name.ToLower().Contains("middle"))
-			return Finger.FingerType.TYPE_MIDDLE;
-			
-		Debug.Log("Could not identify type of finger " + name);
-
-		return fingerType;
-	}
-
-
-	/**
-	 * This will attempt to set the finger type and
-	 * assign all currently unassigned bones.
-	 */
-	public void Awake()
-	{
-		// Figure out finger type
-		if(detectType)
-			fingerType = GuessType(name);
-			
-		// Assign bones
-		Transform current = this.transform;
-	
-		for(int i = 1; i < bones.Length; i++) 
-		{
-			if(bones[i] != null)
-				continue;
-
-			Debug.Log("Assigning " + current.gameObject.name + " to bone " + i);
-			bones[i] = current;
-
-			if(current.childCount == 0)
-				continue;
-
-			current = current.GetChild(0);
-		}
-		
-		// Use bones to detect finger direction
-		if(detectDirections) 
-			GuessDirectionFromBones();
-	}
-
-    
-	public Quaternion Reorientation() 
-	{
-		return Quaternion.Inverse(Quaternion.LookRotation(modelFingerPointing, -modelPalmFacing));
-	}
-
-
-	public override void InitFinger() 
-	{
-		UpdateFinger();
-	}
-
-
-	public override void UpdateFinger() 
-	{
-		for (int i = 0; i < bones.Length; i++) {
-			if (bones[i] == null)
-				continue;
-				
-			bones[i].rotation = GetBoneRotation(i) * Reorientation();		
-		}
-	}
-	
-	public void AddNoise(float amplitude)
-	{
-		for(int i = 0; i < bones.Length; i++) {
-			if(bones[i] == null)
-				continue;
-
-			Quaternion rotationNoise = Quaternion.Euler(
-				amplitude * (NormalRandom.NextGaussianFloat(new System.Random())/2.2f),
-                amplitude * (NormalRandom.NextGaussianFloat(new System.Random())/2.2f),
-                amplitude * (NormalRandom.NextGaussianFloat(new System.Random())/2.2f)
-			);
-			
-			bones[i].rotation *= rotationNoise;
-		}
-	}	
+    /** Updates the bone rotations. */
+    public override void UpdateFinger() {
+      for (int i = 0; i < bones.Length; ++i) {
+        if (bones[i] != null) {
+          bones[i].rotation = GetBoneRotation(i) * Reorientation();
+          if (deformPosition) {
+            bones[i].position = GetBoneCenter(i);
+          }
+        }
+      }
+    }
+  } 
 }

@@ -14,6 +14,8 @@ using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 
+using Leap;
+using Leap.Unity;
 
 public enum ExperimentEvents {
     ProtocolLoaded,
@@ -39,7 +41,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
     public PropDriftController driftController;
     public Threat threatController;
 
-    public HandController handController;
+    public LeapHandController handController;
 	public HandSwitcher handSwitcher;
 
 	public TableLights tableLights;
