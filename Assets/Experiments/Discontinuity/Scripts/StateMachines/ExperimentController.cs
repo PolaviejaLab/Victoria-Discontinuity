@@ -8,6 +8,7 @@
  *  trial state machine.
  */
 using UnityEngine;
+using Leap.Unity;
 using System;
 using System.IO;
 using System.Net;
@@ -39,7 +40,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
     public PropDriftController driftController;
     public Threat threatController;
 
-    public HandController handController;
+    public LeapHandController handController;
 	public HandSwitcher handSwitcher;
 
 	public TableLights tableLights;

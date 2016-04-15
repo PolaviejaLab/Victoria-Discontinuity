@@ -69,10 +69,11 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+    m_RotationOrder: 4
   waitFrames: 10
   embeddedReplacementImage: {fileID: 2800000, guid: ebc61a8ce70eb495494d1209ae9dbf43,
     type: 3}
-  onColor: {r: .544117689, g: .544117689, b: .544117689, a: 1}
+  onColor: {r: 0.5441177, g: 0.5441177, b: 0.5441177, a: 1}
 --- !u!131 &13100000
 GUITexture:
   m_ObjectHideFlags: 1

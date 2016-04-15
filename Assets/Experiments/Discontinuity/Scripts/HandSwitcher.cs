@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Leap;
+using Leap.Unity;
 using System.Collections;
 
 public class HandSwitcher : MonoBehaviour {
@@ -65,7 +67,7 @@ public class HandSwitcher : MonoBehaviour {
 
     protected void UpdateNoiseLevels() {
         for(int i = 0; i < leftGraphicsModelMale.Length; i++) {
-            RiggedHand hand = leftGraphicsModelMale[i].GetComponent<RiggedHand>();
+            NoisyRiggedHand hand = leftGraphicsModelMale[i].GetComponent<NoisyRiggedHand>();
 //            if (noiseLevelLeft == 0.0f) {
 //                hand.enableNoise = false;
 //            } else {
@@ -75,7 +77,7 @@ public class HandSwitcher : MonoBehaviour {
         }
 
         for(int i = 0; i <  rightGraphicsModelMale.Length; i++) {
-            RiggedHand hand = rightGraphicsModelMale[i].GetComponent<RiggedHand>();
+            NoisyRiggedHand hand = rightGraphicsModelMale[i].GetComponent<NoisyRiggedHand>();
 //            if (noiseLevelRight == 0.0f) {
 //                hand.enableNoise = false;
 //            } else {
@@ -86,12 +88,12 @@ public class HandSwitcher : MonoBehaviour {
         }
 
         for(int i = 0; i < leftGraphicsModelFemale.Length; i++) {
-            RiggedHand hand = leftGraphicsModelFemale[i].GetComponent<RiggedHand>();
+            NoisyRiggedHand hand = leftGraphicsModelFemale[i].GetComponent<NoisyRiggedHand>();
             hand.enableNoise = noiseLevelLeft > 0.5f;
         }
         
         for(int i = 0; i <  rightGraphicsModelFemale.Length; i++) {
-            RiggedHand hand = rightGraphicsModelFemale[i].GetComponent<RiggedHand>();
+            NoisyRiggedHand hand = rightGraphicsModelFemale[i].GetComponent<NoisyRiggedHand>();
             hand.enableNoise = noiseLevelLeft > 0.5f;
         }
 

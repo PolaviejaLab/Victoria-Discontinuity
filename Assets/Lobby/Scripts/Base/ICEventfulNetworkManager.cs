@@ -13,8 +13,8 @@ using System.Collections.Generic;
 [Serializable] public class ClientNotReadyEvent: UnityEvent<NetworkConnection> { }
 [Serializable] public class ClientSceneChangedEvent: UnityEvent<NetworkConnection> { }
 
-[Serializable] public class MatchCreateEvent: UnityEvent<CreateMatchResponse> { }
-[Serializable] public class MatchListEvent: UnityEvent<ListMatchResponse> { }
+//[Serializable] public class MatchCreateEvent: UnityEvent<CreateMatchResponse> { }
+//[Serializable] public class MatchListEvent: UnityEvent<ListMatchResponse> { }
 
 [Serializable] public class ServerConnectEvent: UnityEvent<NetworkConnection> { }
 [Serializable] public class ServerDisconnectEvent: UnityEvent<NetworkConnection> { }
@@ -40,10 +40,10 @@ public class ICEventfulNetworkManager : NetworkManager
 
 
     // This is invoked when a match has been created.
-    [SerializeField] public MatchCreateEvent MatchCreate = new MatchCreateEvent();
+    //[SerializeField] public MatchCreateEvent MatchCreate = new MatchCreateEvent();
 
     // This is invoked when a list of matches is returned from ListMatches().
-    [SerializeField] public MatchListEvent MatchList = new MatchListEvent();
+    //[SerializeField] public MatchListEvent MatchList = new MatchListEvent();
 
 
     // Called on the server when a new client connects.
@@ -93,7 +93,7 @@ public class ICEventfulNetworkManager : NetworkManager
     }
 
 
-    public override void OnMatchCreate(CreateMatchResponse matchInfo)
+    /*public override void OnMatchCreate(CreateMatchResponse matchInfo)
     {
         base.OnMatchCreate(matchInfo);
         MatchCreate.Invoke(matchInfo);
@@ -104,7 +104,7 @@ public class ICEventfulNetworkManager : NetworkManager
     {
         base.OnMatchList(matchList);
         MatchList.Invoke(matchList);
-    }
+    }*/
 
 
     public override void OnServerConnect(NetworkConnection conn)

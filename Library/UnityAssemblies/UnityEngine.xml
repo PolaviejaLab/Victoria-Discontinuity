@@ -3653,7 +3653,7 @@ Default is false.</para>
       </summary>
       <param name="delegateMethod">Delegate method.</param>
       <returns>
-        <para>In case of error returns false and the delegate method will not be invoked.</para>
+        <para>Platforms that don't support Advertising Identifier return value is false and the delegate method is not invoked.</para>
       </returns>
     </member>
     <member name="M:UnityEngine.Application.RequestUserAuthorization(UnityEngine.UserAuthorization)">
@@ -4387,6 +4387,7 @@ See Also: WWW.assetBundle, WWW.LoadFromCacheOrDownload.</param>
       </summary>
       <param name="path">Path of the file on disk.</param>
       <param name="crc">An optional CRC-32 checksum of the uncompressed content. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match.</param>
+      <param name="offset">An optional byte offset. This value specifies where to start reading the AssetBundle from.</param>
       <returns>
         <para>Loaded AssetBundle object or null if failed.</para>
       </returns>
@@ -4397,6 +4398,7 @@ See Also: WWW.assetBundle, WWW.LoadFromCacheOrDownload.</param>
       </summary>
       <param name="path">Path of the file on disk.</param>
       <param name="crc">An optional CRC-32 checksum of the uncompressed content. If this is non-zero, then the content will be compared against the checksum before loading it, and give an error if it does not match.</param>
+      <param name="offset">An optional byte offset. This value specifies where to start reading the AssetBundle from.</param>
       <returns>
         <para>Asynchronous create request for an AssetBundle. Use AssetBundleCreateRequest.assetBundle property to get an AssetBundle once it is loaded.</para>
       </returns>
@@ -7183,6 +7185,11 @@ For this reason, we also provide the read-only property actualRenderingPath whic
         <para>Used to scale the entire canvas, while still making it fit the screen. Only applies with renderMode is Screen Space.</para>
       </summary>
     </member>
+    <member name="P:UnityEngine.Canvas.sortingGridNormalizedSize">
+      <summary>
+        <para>The normalized grid size that the canvas will split the renderable area into.</para>
+      </summary>
+    </member>
     <member name="P:UnityEngine.Canvas.sortingLayerID">
       <summary>
         <para>Unique ID of the Canvas' sorting layer.</para>
@@ -8930,7 +8937,6 @@ See Also: CanvasRenderer.SetMaterialCount, CanvasRenderer.SetTexture.</para>
         <para>Returns the component of Type type in the GameObject or any of its children using depth first search.</para>
       </summary>
       <param name="t">The type of Component to retrieve.</param>
-      <param name="includeInactive"></param>
       <returns>
         <para>A component of the matching type, if found.</para>
       </returns>
@@ -13853,7 +13859,6 @@ If a string, the string will be converted to raw bytes via &lt;a href="http:msdn
         <para>Returns the component of Type type in the GameObject or any of its children using depth first search.</para>
       </summary>
       <param name="type">The type of Component to retrieve.</param>
-      <param name="includeInactive"></param>
       <returns>
         <para>A component of the matching type, if found.</para>
       </returns>
@@ -33523,6 +33528,11 @@ Note that IgnoreLayerCollision will reset the trigger state of affected collider
         <para>Indicates whether cached data is available for this ProceduralMaterial's textures (only relevant for Cache and DoNothingAndCache loading behaviors).</para>
       </summary>
     </member>
+    <member name="P:UnityEngine.ProceduralMaterial.isFrozen">
+      <summary>
+        <para>Returns true if FreezeAndReleaseSourceData was called on this ProceduralMaterial.</para>
+      </summary>
+    </member>
     <member name="P:UnityEngine.ProceduralMaterial.isLoadTimeGenerated">
       <summary>
         <para>Should the ProceduralMaterial be generated at load time?</para>
@@ -33568,6 +33578,11 @@ Note that IgnoreLayerCollision will reset the trigger state of affected collider
     <member name="M:UnityEngine.ProceduralMaterial.ClearCache">
       <summary>
         <para>Clear the Procedural cache.</para>
+      </summary>
+    </member>
+    <member name="M:UnityEngine.ProceduralMaterial.FreezeAndReleaseSourceData">
+      <summary>
+        <para>Render a ProceduralMaterial immutable and release the underlying data to decrease the memory footprint.</para>
       </summary>
     </member>
     <member name="M:UnityEngine.ProceduralMaterial.GetGeneratedTexture(System.String)">

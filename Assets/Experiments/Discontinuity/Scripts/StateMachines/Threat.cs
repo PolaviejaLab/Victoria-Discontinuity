@@ -6,6 +6,7 @@
 using UnityEngine;
 using System.Collections;
 using Leap;
+using Leap.Unity;
 
 
 /**
@@ -29,7 +30,7 @@ public enum ThreatEvent {
 
 public class Threat: ICStateMachine<ThreatState, ThreatEvent> 
 {
-    public HandController handController;
+    public LeapHandController handController;
 
     public GameObject threat;
 	public Transform targetTransform;
@@ -81,22 +82,22 @@ public class Threat: ICStateMachine<ThreatState, ThreatEvent>
 	void Update () 
     {
         // Get the latest frame
-        Frame frame = handController.GetFrame();        
+        Frame frame = handController.Provider.CurrentFrame;
         
         // Get hand position re world for first right hand in scene.
         // If no hands are found, this results in handPositionReWorld being (0, 0, 0)!!!! We might want to fix this!
         foreach (var hand in frame.Hands) {
             // Together with the break; a very ugly way to make sure only one right hand position is processed
             if (hand.IsLeft) continue;
-            if (!hand.IsValid) continue;
+            //if (!hand.IsValid) continue;
 
             // I think there should be a function for this from LEAP, but I guess this works too.
             /* Vector3 handPosition = new Vector3(
                 hand.PalmPosition.x,
                 hand.PalmPosition.y,
                 hand.PalmPosition.z); */
-                //hand.ScaleFactor
-            Vector3 handPosition = hand.PalmPosition.ToUnityScaled(handController.mirrorZAxis);
+            //hand.ScaleFactor
+            Vector3 handPosition = hand.PalmPosition.ToVector3();
 
             // This converts the local hand coordinates (relative to LEAP) to Unity world coordinates
             handPositionReWorld = handController.transform.TransformPoint(handPosition);
