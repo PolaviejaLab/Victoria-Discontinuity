@@ -100,9 +100,9 @@ public class Threat: ICStateMachine<ThreatState, ThreatEvent>
             Vector3 handPosition = hand.PalmPosition.ToVector3();
 
             // This converts the local hand coordinates (relative to LEAP) to Unity world coordinates
-            handPositionReWorld = handController.transform.TransformPoint(handPosition);
-
-            Debug.Log(handPositionReWorld);
+            //handPositionReWorld = handController.transform.TransformPoint(handPosition);
+            handPositionReWorld = handPosition;
+            //Debug.Log(handPositionReWorld);
             
             Debug.Log(targetTransform.transform.position);
             break;

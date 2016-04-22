@@ -153,7 +153,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++){
-                    outputDirectory = "Results/RedoingVRE" + participantNumber.ToString();
+                    outputDirectory = "Results/GABBAtesting" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory)){
                         Directory.CreateDirectory(outputDirectory);
                         break;
@@ -172,7 +172,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
                     WriteLog("Hand model is male");
                 }
                 
-                string[] dirProtocol = Directory.GetFiles("Protocol/TestNewer");
+                string[] dirProtocol = Directory.GetFiles("Protocol/GABBAtest");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol [randomProtocol]; 

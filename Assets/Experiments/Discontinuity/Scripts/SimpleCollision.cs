@@ -10,8 +10,10 @@ public class SimpleCollision : MonoBehaviour {
 	public bool CompareByName = false;	
 
 	void OnTriggerStay(Collider col)
-	{		
-		if (col.name == "palm"){
+	{
+        Debug.Log(col.name);
+        if (col.name == "HandContainer"){
+            Debug.Log("Hello");
 			if(objects.Length == 0) {
                 waveController.HandleEvent(triggerEvent);
 			} else {
