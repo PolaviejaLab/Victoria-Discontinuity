@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorkflowBuilder Version="2.2.0">
+  <Workflow xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:q1="clr-namespace:Bonsai.Bitalino;assembly=Bonsai.Bitalino" xmlns:q2="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision" xmlns:q3="clr-namespace:Bonsai.IO;assembly=Bonsai.System" xmlns:q4="clr-namespace:Bonsai.Video;assembly=Bonsai.Video" xmlns:q5="clr-namespace:Bonsai.Windows.Input;assembly=Bonsai.Windows.Input" xmlns:q6="clr-namespace:Bonsai.Dsp;assembly=Bonsai.Dsp" xmlns="https://horizongir.org/bonsai">
+    <Nodes>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Source.Analog</Selector>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q1:Bitalino">
+          <q1:Address>COM4</q1:Address>
+          <q1:BatteryThreshold>10</q1:BatteryThreshold>
+          <q1:SamplingRate>1000</q1:SamplingRate>
+          <q1:BufferLength>100</q1:BufferLength>
+          <q1:Channels>
+            <q1:int>1</q1:int>
+          </q1:Channels>
+          <q1:Simulated>false</q1:Simulated>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:VideoWriter">
+          <q2:FileName>handrecording.avi</q2:FileName>
+          <q2:Suffix>FileCount</q2:Suffix>
+          <q2:Buffered>true</q2:Buffered>
+          <q2:Overwrite>false</q2:Overwrite>
+          <q2:FourCC>FMP4</q2:FourCC>
+          <q2:FrameRate>30</q2:FrameRate>
+          <q2:FrameSize>
+            <q2:Width>0</q2:Width>
+            <q2:Height>0</q2:Height>
+          </q2:FrameSize>
+          <q2:ResizeInterpolation>NearestNeighbor</q2:ResizeInterpolation>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Timestamp" />
+      </Expression>
+      <Expression xsi:type="q3:CsvWriter">
+        <q3:FileName>frame.csv</q3:FileName>
+        <q3:Append>false</q3:Append>
+        <q3:Overwrite>false</q3:Overwrite>
+        <q3:Suffix>FileCount</q3:Suffix>
+        <q3:IncludeHeader>false</q3:IncludeHeader>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q4:ScreenCaptureStream">
+          <q4:HideCursor>false</q4:HideCursor>
+          <q4:CaptureRegion>
+            <q4:X>0</q4:X>
+            <q4:Y>0</q4:Y>
+            <q4:Width>0</q4:Width>
+            <q4:Height>0</q4:Height>
+          </q4:CaptureRegion>
+          <q4:FrameInterval>0</q4:FrameInterval>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:VideoWriter">
+          <q2:FileName>screenrecording.avi</q2:FileName>
+          <q2:Suffix>FileCount</q2:Suffix>
+          <q2:Buffered>true</q2:Buffered>
+          <q2:Overwrite>false</q2:Overwrite>
+          <q2:FourCC>FMP4</q2:FourCC>
+          <q2:FrameRate>30</q2:FrameRate>
+          <q2:FrameSize>
+            <q2:Width>0</q2:Width>
+            <q2:Height>0</q2:Height>
+          </q2:FrameSize>
+          <q2:ResizeInterpolation>NearestNeighbor</q2:ResizeInterpolation>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q5:KeyDown">
+          <q5:Filter>Tab</q5:Filter>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Timestamp" />
+      </Expression>
+      <Expression xsi:type="q3:CsvWriter">
+        <q3:FileName>newsubject.csv</q3:FileName>
+        <q3:Append>false</q3:Append>
+        <q3:Overwrite>false</q3:Overwrite>
+        <q3:Suffix>FileCount</q3:Suffix>
+        <q3:IncludeHeader>false</q3:IncludeHeader>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Timestamp" />
+      </Expression>
+      <Expression xsi:type="q3:CsvWriter">
+        <q3:FileName>framescreen.csv</q3:FileName>
+        <q3:Append>false</q3:Append>
+        <q3:Overwrite>false</q3:Overwrite>
+        <q3:Suffix>FileCount</q3:Suffix>
+        <q3:IncludeHeader>false</q3:IncludeHeader>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q6:MatrixWriter">
+          <q6:Path>bitalinoMat.bin</q6:Path>
+          <q6:Suffix>FileCount</q6:Suffix>
+          <q6:Overwrite>false</q6:Overwrite>
+          <q6:Layout>ColumnMajor</q6:Layout>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="Timestamp" />
+      </Expression>
+      <Expression xsi:type="q3:CsvWriter">
+        <q3:FileName>bitalinoTS.csv</q3:FileName>
+        <q3:Append>false</q3:Append>
+        <q3:Overwrite>false</q3:Overwrite>
+        <q3:Suffix>FileCount</q3:Suffix>
+        <q3:IncludeHeader>false</q3:IncludeHeader>
+        <q3:Selector>Source.Timestamp</q3:Selector>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Source.Channels</Selector>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="q2:CameraCapture">
+          <q2:Index>0</q2:Index>
+          <q2:CaptureProperties />
+        </Combinator>
+      </Expression>
+    </Nodes>
+    <Edges>
+      <Edge>
+        <From>0</From>
+        <To>12</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>0</From>
+        <To>13</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>1</From>
+        <To>0</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>3</From>
+        <To>4</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>5</From>
+        <To>6</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>5</From>
+        <To>10</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>7</From>
+        <To>8</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>8</From>
+        <To>9</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>10</From>
+        <To>11</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>13</From>
+        <To>14</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>15</From>
+        <To>3</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>16</From>
+        <To>2</To>
+        <Label>Source1</Label>
+      </Edge>
+      <Edge>
+        <From>16</From>
+        <To>15</To>
+        <Label>Source1</Label>
+      </Edge>
+    </Edges>
+  </Workflow>
+  <ExtensionTypes>
+    <Type>Bonsai.Bitalino.Bitalino, Bonsai.Bitalino, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.VideoWriter, Bonsai.Vision, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Reactive.Timestamp, Bonsai.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.IO.CsvWriter, Bonsai.System, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Video.ScreenCaptureStream, Bonsai.Video, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Windows.Input.KeyDown, Bonsai.Windows.Input, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Dsp.MatrixWriter, Bonsai.Dsp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null</Type>
+    <Type>Bonsai.Vision.CameraCapture, Bonsai.Vision, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null</Type>
+  </ExtensionTypes>
+</WorkflowBuilder>

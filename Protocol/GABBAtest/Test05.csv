@@ -1,0 +1,4 @@
+GapStatus, Offset, WavesRequired, KnifePresent, NoiseLevel, KnifeOnReal, KnifeOffset, OffsetX, OffsetY, OffsetZ
+Inactive, 15, 20, True, 0, True, 0,  0.0, 0.0, 0.0
+Active, 0, 20, True, 0, False, 0, 0.0, 0.0, 0.0
+Inactive, 0, 20, True, 0, False, 0, 0.0, 0.0, 0.0
