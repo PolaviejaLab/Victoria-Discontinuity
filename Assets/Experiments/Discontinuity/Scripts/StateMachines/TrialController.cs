@@ -17,8 +17,9 @@ public enum TrialEvents {
  */
 public enum TrialStates {
 	AccomodationTime,           // Get used to the environment
-    Wave,                       // Reaching-like task
+    ExperimentWave,             // Reaching-like task
     ProprioceptiveDrift,        // Measure proprioceptive drift
+    ExtraWaves,                 // Waves before the threat
     Threat,                     // Threat to the virtual hand
     TrialFinished,              // End of the trial
 };
@@ -74,7 +75,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
             case TrialStates.AccomodationTime:
                 break;
 
-            case TrialStates.Wave:
+            case TrialStates.ExperimentWave:
                 if (ev == TrialEvents.WavingFinished){
                     ChangeState(TrialStates.ProprioceptiveDrift);
                 }
@@ -82,7 +83,13 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.ProprioceptiveDrift:
                 if (ev == TrialEvents.DriftMeasured)
+                    ChangeState(TrialStates.ExtraWaves);
+                break;
+
+            case TrialStates.ExtraWaves:
+                if (ev == TrialEvents.WavingFinished) {
                     ChangeState(TrialStates.Threat);
+                }
                 break;
 
             case TrialStates.Threat:
@@ -106,10 +113,10 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 		switch (GetState ()) {  
     		case TrialStates.AccomodationTime:				
     			if (Input.GetKey(KeyCode.Q))
-    				ChangeState(TrialStates.Wave);
+    				ChangeState(TrialStates.ExperimentWave);
     			break;
 
-            case TrialStates.Wave:
+            case TrialStates.ExperimentWave:
                 break;
 
             case TrialStates.ProprioceptiveDrift:
@@ -132,13 +139,20 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
     			handSwitcher.showRightHand = true;
     			break;
 
-            case TrialStates.Wave:
+            case TrialStates.ExperimentWave:
                 waveController.StartMachine();
                 break;
 
             case TrialStates.ProprioceptiveDrift:
                 driftController.StartMachine();
                 driftController.markerOn = true;
+                break;
+
+            case TrialStates.ExtraWaves:
+                waveController.wavesRequired = 4;
+                handSwitcher.showRightHand = true;
+                testLights.SetActive(true);
+                waveController.StartMachine();
                 break;
 
             case TrialStates.Threat:
@@ -164,7 +178,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
     			handSwitcher.showLeftHand = false;
     			break;
 
-            case TrialStates.Wave:
+            case TrialStates.ExperimentWave:
                 testLights.SetActive(false);
                 handSwitcher.showRightHand = false;
                 waveController.StopMachine();
@@ -174,6 +188,12 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 driftController.markerOn = false;
                 driftController.marker.SetActive(false);
                 driftController.StopMachine();
+                break;
+
+            case TrialStates.ExtraWaves:
+                testLights.SetActive(false);
+                handSwitcher.showRightHand = false;
+                waveController.StopMachine();
                 break;
 
             case TrialStates.Threat:
