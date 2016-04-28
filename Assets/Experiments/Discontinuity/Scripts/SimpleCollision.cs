@@ -13,7 +13,6 @@ public class SimpleCollision : MonoBehaviour {
 	{
         Debug.Log(col.name);
         if (col.name == "HandContainer"){
-            Debug.Log("Hello");
 			if(objects.Length == 0) {
                 waveController.HandleEvent(triggerEvent);
 			} else {
