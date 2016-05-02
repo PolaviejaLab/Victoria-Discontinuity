@@ -568,7 +568,7 @@ Transform:
   m_LocalRotation: {x: -0.079235874, y: 0.08529627, z: -0.0019634997, w: 0.9931981}
   m_LocalPosition: {x: -0.079285026, y: 0.00091492414, z: 0.0261621}
   m_LocalScale: {x: 0.9999997, y: 1.0000004, z: 1.0000012}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -9.0363, y: 9.8969, z: -1.0106}
   m_Children:
   - {fileID: 400022}
   m_Father: {fileID: 400040}
@@ -596,7 +596,7 @@ Transform:
   m_LocalRotation: {x: 0.07896059, y: -0.06745707, z: -0.015264276, w: 0.99447566}
   m_LocalPosition: {x: -0.07751628, y: -0.0014885855, z: -0.013413772}
   m_LocalScale: {x: 1.000001, y: 0.9999993, z: 1.0000002}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.9162, y: -7.9466, z: -2.3792999}
   m_Children:
   - {fileID: 400014}
   m_Father: {fileID: 400040}
@@ -730,17 +730,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 100014}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82da28a4ce55440adb4ba89c7a662446, type: 3}
+  m_Script: {fileID: 11500000, guid: cdd8af42c42bef64485dd25ee9c360de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fingerType: 3
+  fingerType: 1
   bones:
   - {fileID: 0}
-  - {fileID: 400032}
-  - {fileID: 400014}
-  - {fileID: 400016}
-  modelFingerPointing: {x: -1, y: 0, z: 0}
-  modelPalmFacing: {x: -0, y: 1, z: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  joints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  deformPosition: 0
+  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -768,17 +773,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 100030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82da28a4ce55440adb4ba89c7a662446, type: 3}
+  m_Script: {fileID: 11500000, guid: cdd8af42c42bef64485dd25ee9c360de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fingerType: 1
   bones:
   - {fileID: 0}
-  - {fileID: 400028}
-  - {fileID: 400022}
-  - {fileID: 400024}
-  modelFingerPointing: {x: -1, y: 0, z: 0}
-  modelPalmFacing: {x: -0, y: 1, z: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  joints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  deformPosition: 0
+  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
