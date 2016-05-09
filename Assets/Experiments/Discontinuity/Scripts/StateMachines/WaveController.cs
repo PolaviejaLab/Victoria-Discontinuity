@@ -19,6 +19,8 @@ public enum WaveEvents {
 public enum WaveStates {
     Initial,
     Target, 
+    CorrectWave,
+    IncorrectWave, 
     Waved,
     TooLate,
     ToOrigin,
@@ -56,6 +58,9 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     // Colliders on/off
     public GameObject collisionLights;
     public GameObject collisionInitial;
+
+    // varialbes
+    private bool wavedCorrectly = false;
 
 
     public void Start () {
@@ -100,19 +105,16 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
                     lights[currentLight].activeMaterial = 1;
                     collisionLights.SetActive(true);
-                }
-                else if ((int)ev == currentLight)
-                {
+                } else if ((int)ev == currentLight) {
                     WriteLog("Waved correctly");
-
+                    
                     correctWaves++;
-                    ChangeState(WaveStates.Waved);
-                }
-                else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial) {
+                    ChangeState(WaveStates.CorrectWave);
+                } else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial) {
                     WriteLog("Waved incorrectly");
-
+                   
                     incorrectWaves++;
-                    ChangeState(WaveStates.Waved);
+                    ChangeState(WaveStates.IncorrectWave);
                 }
                 break;
 
@@ -162,8 +164,19 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 }
                 break;
 
-            case WaveStates.Waved:
-                if (GetTimeInState() > 1.0f) {
+
+            case WaveStates.CorrectWave:
+                if (GetTimeInState() > 0.5f)
+                    ChangeState(WaveStates.Waved);
+                break;
+
+            case WaveStates.IncorrectWave:
+                if (GetTimeInState() > 0.5f)
+                    ChangeState(WaveStates.Waved);
+                break;
+
+            case WaveStates.Waved: 
+                if (GetTimeInState() > 1.5f) {
                     if (waveCounter < wavesRequired) {
                         ChangeState(WaveStates.Initial);
                     } else {
@@ -194,15 +207,24 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 waveCounter++;
                 break;
 
+            case WaveStates.CorrectWave:
+                lights[currentLight].activeMaterial = 2;
+                break;
+
+            case WaveStates.IncorrectWave:
+                lights[currentLight].activeMaterial = 3;
+                break;
+
+
             case WaveStates.Waved:
+                TurnOffTarget();
                 break;
 
             case WaveStates.ToOrigin:
-
                 break;
 
             case WaveStates.TooLate:
-                ChangeState(WaveStates.Waved);
+                ChangeState(WaveStates.IncorrectWave);
                 break;
 
             case WaveStates.EndWaving:
