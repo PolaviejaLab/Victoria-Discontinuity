@@ -554,7 +554,7 @@ Transform:
   m_LocalRotation: {x: 0.19159514, y: -0.17929319, z: -0.05268529, w: 0.96351933}
   m_LocalPosition: {x: -0.07049664, y: 0.0010049534, z: -0.029412594}
   m_LocalScale: {x: 1.0000006, y: 1.0000001, z: 0.99999994}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20.5068, y: -22.9816, z: -10.4716}
   m_Children:
   - {fileID: 400010}
   m_Father: {fileID: 400040}
@@ -582,7 +582,7 @@ Transform:
   m_LocalRotation: {x: 0.031184714, y: 0.009318702, z: -0.01120758, w: 0.99940735}
   m_LocalPosition: {x: -0.07956622, y: -0.0025554346, z: 0.0040060994}
   m_LocalScale: {x: 0.99999994, y: 0.99999917, z: 1.0000001}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 3.5856998, y: 1.0292, z: -1.2528}
   m_Children:
   - {fileID: 400018}
   m_Father: {fileID: 400040}
@@ -638,7 +638,7 @@ Transform:
   m_LocalRotation: {x: -0.5551163, y: 0.49593735, z: 0.12636063, w: 0.6556867}
   m_LocalPosition: {x: -0.02674184, y: 0.018697552, z: 0.024697274}
   m_LocalScale: {x: 0.9999998, y: 1.0000014, z: 1.0000008}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -58.5723, y: 101.978195, z: -47.576}
   m_Children:
   - {fileID: 400034}
   m_Father: {fileID: 400040}
@@ -711,17 +711,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 100006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82da28a4ce55440adb4ba89c7a662446, type: 3}
+  m_Script: {fileID: 11500000, guid: cdd8af42c42bef64485dd25ee9c360de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fingerType: 4
+  fingerType: 1
   bones:
   - {fileID: 0}
-  - {fileID: 400026}
-  - {fileID: 400010}
-  - {fileID: 400012}
-  modelFingerPointing: {x: -1, y: 0, z: 0}
-  modelPalmFacing: {x: -0, y: 1, z: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  joints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  deformPosition: 0
+  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -754,17 +759,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 100022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82da28a4ce55440adb4ba89c7a662446, type: 3}
+  m_Script: {fileID: 11500000, guid: cdd8af42c42bef64485dd25ee9c360de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fingerType: 2
+  fingerType: 1
   bones:
   - {fileID: 0}
-  - {fileID: 400030}
-  - {fileID: 400018}
-  - {fileID: 400020}
-  modelFingerPointing: {x: -1, y: 0, z: 0}
-  modelPalmFacing: {x: -0, y: 1, z: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  joints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  deformPosition: 0
+  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -797,17 +807,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 100038}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82da28a4ce55440adb4ba89c7a662446, type: 3}
+  m_Script: {fileID: 11500000, guid: cdd8af42c42bef64485dd25ee9c360de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fingerType: 0
+  fingerType: 1
   bones:
   - {fileID: 0}
-  - {fileID: 400038}
-  - {fileID: 400034}
-  - {fileID: 400036}
-  modelFingerPointing: {x: -1, y: 0, z: 0}
-  modelPalmFacing: {x: -0, y: 1, z: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  joints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  deformPosition: 0
+  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!114 &11400010
 MonoBehaviour:
   m_ObjectHideFlags: 1
