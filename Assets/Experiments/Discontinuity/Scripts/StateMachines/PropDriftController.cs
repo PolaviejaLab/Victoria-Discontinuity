@@ -3,6 +3,7 @@ using System.Collections;
 
 public enum DriftEvents {
     Start, 
+    ButtonPressed,
     Stopped, 
 };
 
@@ -67,7 +68,7 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
                 break;
 
             case DriftStates.Moving:
-                if (ev == DriftEvents.Stopped) {
+                if (ev == DriftEvents.ButtonPressed) {
                     MeasureProprioceptiveDrift();
                     ChangeState(DriftStates.Measured);
                 }
@@ -93,10 +94,6 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
                 break;
 
             case DriftStates.Moving:
-                if (Input.GetKeyDown(KeyCode.Space) && pointerMove) {
-                    pointerMove = false;
-                    HandleEvent(DriftEvents.Stopped);
-                }
                 if (pointerMove) {
                     StartMarker();
                 }

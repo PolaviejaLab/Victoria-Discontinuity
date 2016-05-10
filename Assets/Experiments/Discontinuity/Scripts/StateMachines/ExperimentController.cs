@@ -172,7 +172,7 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
                     WriteLog("Hand model is male");
                 }
                 
-                string[] dirProtocol = Directory.GetFiles("Protocol/GABBAtest");
+                string[] dirProtocol = Directory.GetFiles("Protocol/buttontest");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol [randomProtocol]; 
