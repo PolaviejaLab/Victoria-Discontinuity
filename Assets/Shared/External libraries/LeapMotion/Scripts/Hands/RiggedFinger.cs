@@ -40,5 +40,27 @@ namespace Leap.Unity {
         }
       }
     }
-  } 
+
+
+
+        public void AddNoise(float amplitude)
+        {
+            for (int i = 0; i < bones.Length; i++)
+            {
+                if (bones[i] == null)
+                    continue;
+
+                Quaternion rotationNoise = Quaternion.Euler(
+                    amplitude * (NormalRandom.NextGaussianFloat(new System.Random()) / 2.2f),
+                    amplitude * (NormalRandom.NextGaussianFloat(new System.Random()) / 2.2f),
+                    amplitude * (NormalRandom.NextGaussianFloat(new System.Random()) / 2.2f)
+                );
+
+                bones[i].rotation *= rotationNoise;
+            }
+        }
+    } 
+
+
+
 }
