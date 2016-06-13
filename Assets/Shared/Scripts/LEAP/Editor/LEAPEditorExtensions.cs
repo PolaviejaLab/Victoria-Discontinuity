@@ -27,9 +27,8 @@ public static class LEAPEditorExtensions
     private static Vector3 GuessDirectionFromBones(RiggedFinger finger)
     {
         Transform first = finger.bones[1];
-        Transform last = finger.bones[finger.bones.Length - 1];
-
-        return Vector3.Normalize(last.localPosition - first.localPosition);
+        
+        return Vector3.Normalize(first.localPosition);
     }
 
 
@@ -79,7 +78,6 @@ public static class LEAPEditorExtensions
         }
         else {
             Debug.LogError("Finger already exists");
-            return;
         }
 
 
@@ -106,50 +104,63 @@ public static class LEAPEditorExtensions
     }
 
 
+    static RiggedFinger FindChildFinger(GameObject handObject, Finger.FingerType type)
+    {
+        foreach (Transform child in handObject.transform)
+        {
+            RiggedFinger finger = child.GetComponent<RiggedFinger>();
+            if (finger != null && finger.fingerType == type)
+                return finger;
+        }
+
+        return null;
+    }
+
+    
+
     /**
-     * Adds a RiggedHand to the specified object and
+     * Adds a RiggedHandAndArm to the specified object and
      *  initializes it.
      */
-    static void AddRiggedHandToObject(GameObject handObject)
+    static T AddHandModelToObject<T>(GameObject handObject) where T : HandModel
     {
-        RiggedHand hand = handObject.GetComponent<RiggedHand>();
+        T hand = handObject.GetComponent<T>();
 
         // Create RiggedHand if it doesn't already exist
-        if (hand == null)
-        {
-            hand = handObject.AddComponent<RiggedHand>();
+        if (hand == null) {
+            hand = handObject.AddComponent<T>();
+        } else {
+            Debug.LogWarning("Hand already exists");
         }
-        else {
-            Debug.LogError("Hand already exists");
-            return;
-        }
-
 
         // Assign palm, forearm, and arm if not already assigned
         if (hand.palm == null)
             hand.palm = handObject.transform;
 
-        /*if (hand.foreArm == null)
-            hand.foreArm = hand.palm.parent;
-
-        if (hand.arm == null)
-            hand.arm = hand.foreArm.parent;*/
-
+        if (hand.forearm == null)
+            hand.forearm = hand.palm.parent;
 
         // Add fingers to hand object
         int index = 0;
-        foreach (Transform child in handObject.transform)
-        {
+        foreach (Transform child in handObject.transform) {
             AddRiggedFingerToObject(child.gameObject, index);
-
-            if (hand.fingers[index] == null)
-                hand.fingers[index] = child.gameObject.GetComponent<RiggedFinger>();
-
-            index++;
         }
 
+        hand.fingers[0] = FindChildFinger(handObject, Finger.FingerType.TYPE_THUMB);
+        hand.fingers[1] = FindChildFinger(handObject, Finger.FingerType.TYPE_INDEX);
+        hand.fingers[2] = FindChildFinger(handObject, Finger.FingerType.TYPE_MIDDLE);
+        hand.fingers[3] = FindChildFinger(handObject, Finger.FingerType.TYPE_RING);
+        hand.fingers[4] = FindChildFinger(handObject, Finger.FingerType.TYPE_PINKY);
 
-        // Find index finger
+        return hand;
+    }    
+
+
+    static void AddRiggedHandToObject(GameObject handModel)
+    {
+        RiggedHand hand = AddHandModelToObject<RiggedHand>(handModel);
+
+        // Find index finger and update hand pointing direction
         foreach (RiggedFinger finger in hand.fingers)
         {
             if (finger.fingerType == Finger.FingerType.TYPE_INDEX)
@@ -158,10 +169,39 @@ public static class LEAPEditorExtensions
     }
 
 
+    static void AddRiggedHandAndArmToObject(GameObject handModel)
+    {
+        RiggedHandAndArm hand = AddHandModelToObject<RiggedHandAndArm>(handModel);
+
+        // Find index finger and update hand pointing direction
+        foreach (RiggedFinger finger in hand.fingers)
+        {
+            if (finger.fingerType == Finger.FingerType.TYPE_INDEX)
+                hand.modelFingerPointing = finger.modelFingerPointing;
+        }
+
+        if (hand.arm == null)
+        {
+            hand.arm = hand.forearm.parent;
+            hand.hasArm = true;
+            hand.partOfAvatar = true;
+        }
+    }
+
+
+
+
     [MenuItem("GameObject/LEAP/Add rigged hand", false, 0)]
     static void AddRiggedHand()
     {
         AddRiggedHandToObject(Selection.activeGameObject);
+    }
+
+
+    [MenuItem("GameObject/LEAP/Add rigged hand (with arm)", false, 0)]
+    static void AddRiggedHandAndArm()
+    {
+        AddRiggedHandAndArmToObject(Selection.activeGameObject);
     }
 
 
