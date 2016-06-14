@@ -67,23 +67,16 @@ public class HandSwitcher : MonoBehaviour {
     protected void UpdateNoiseLevels() {
         for(int i = 0; i < leftGraphicsModelMale.Length; i++) {
             RiggedHand hand = leftGraphicsModelMale[i].GetComponent<RiggedHand>();
-//            if (noiseLevelLeft == 0.0f) {
-//                hand.enableNoise = false;
-//            } else {
-//                hand.enableNoise = true;
-//            }
-             hand.enableNoise = noiseLevelLeft > 0.5f;
+
+            if (hand == null) continue;
+            hand.enableNoise = noiseLevelLeft > 0.5f;
         }
 
         for(int i = 0; i <  rightGraphicsModelMale.Length; i++) {
             RiggedHand hand = rightGraphicsModelMale[i].GetComponent<RiggedHand>();
-//            if (noiseLevelRight == 0.0f) {
-//                hand.enableNoise = false;
-//            } else {
-//                hand.enableNoise = true;
-//            }
-            hand.enableNoise = noiseLevelLeft > 0.5f;
 
+            if (hand == null) continue;
+            hand.enableNoise = noiseLevelLeft > 0.5f;
         }
 
         for(int i = 0; i < leftGraphicsModelFemale.Length; i++) {
