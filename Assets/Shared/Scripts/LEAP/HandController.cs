@@ -25,6 +25,7 @@ public class HandController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if (!Application.isPlaying) return;
         if (!handController) return;
 
         UpdateRecorder();

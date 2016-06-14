@@ -24,6 +24,7 @@ namespace Leap.Unity
         public bool partOfAvatar;
 
         public NoiseType noiseType;
+        public float noiseLevel = 0.01f;
 
         public override ModelType HandModelType
         {
@@ -56,10 +57,10 @@ namespace Leap.Unity
         {
             Vector3 actualPosition = hand_.PalmPosition.ToVector3();
             Vector3 mean = new Vector3(0, 0, 0);
-            Vector3 std = new Vector3(0.005f, 0.005f, 0.005f);
+            Vector3 std = new Vector3(noiseLevel, noiseLevel, noiseLevel);
 
             if (noiseType == NoiseType.NormalAroundPalm) {
-                //return actualPosition + NormalRandom.Random(mean, std);
+                return actualPosition + NormalRandom.Random(mean, std);
             }
 
             return hand_.PalmPosition.ToVector3();
@@ -73,7 +74,8 @@ namespace Leap.Unity
         {
             if(arm != null)
             {
-                arm.LookAt(this.GetElbowPosition(), Vector3.up);
+                if(partOfAvatar)
+                    arm.LookAt(this.GetElbowPosition(), Vector3.up);
                 arm.rotation *= Reorientation();
             }
 
