@@ -167,7 +167,7 @@ public static class LEAPEditorExtensions
      * Adds a RiggedHandAndArm to the specified object and
      *  initializes it.
      */
-    static T AddHandModelToObject<T>(GameObject handObject) where T : HandModel
+    static T AddHandModelToObject<T>(GameObject handObject, bool addFingers = true) where T : HandModel
     {
         T hand = handObject.GetComponent<T>();
 
@@ -186,9 +186,13 @@ public static class LEAPEditorExtensions
             hand.forearm = hand.palm.parent;
 
         // Add fingers to hand object
-        int index = 0;
-        foreach (Transform child in handObject.transform) {
-            AddRiggedFingerToObject(child.gameObject, index);
+        if (addFingers) {
+            int index = 0;
+            foreach (Transform child in handObject.transform)
+            {
+                AddRiggedFingerToObject(child.gameObject, index);
+                index++;
+            }
         }
 
         // Detect hand chirality, the field is private so we use a dirty trick
@@ -197,11 +201,13 @@ public static class LEAPEditorExtensions
             handednessFI.SetValue(hand, GuessHandChirality(hand.gameObject));
 
         // Add fingers
-        hand.fingers[0] = FindChildFinger(handObject, Finger.FingerType.TYPE_THUMB);
-        hand.fingers[1] = FindChildFinger(handObject, Finger.FingerType.TYPE_INDEX);
-        hand.fingers[2] = FindChildFinger(handObject, Finger.FingerType.TYPE_MIDDLE);
-        hand.fingers[3] = FindChildFinger(handObject, Finger.FingerType.TYPE_RING);
-        hand.fingers[4] = FindChildFinger(handObject, Finger.FingerType.TYPE_PINKY);
+        if (addFingers) {
+            hand.fingers[0] = FindChildFinger(handObject, Finger.FingerType.TYPE_THUMB);
+            hand.fingers[1] = FindChildFinger(handObject, Finger.FingerType.TYPE_INDEX);
+            hand.fingers[2] = FindChildFinger(handObject, Finger.FingerType.TYPE_MIDDLE);
+            hand.fingers[3] = FindChildFinger(handObject, Finger.FingerType.TYPE_RING);
+            hand.fingers[4] = FindChildFinger(handObject, Finger.FingerType.TYPE_PINKY);
+        }
 
         // Add model to hand controller
         AddHandModelToController(hand);
@@ -228,10 +234,12 @@ public static class LEAPEditorExtensions
         RiggedHandEx hand = AddHandModelToObject<RiggedHandEx>(handModel);
 
         // Find index finger and update hand pointing direction
-        foreach (RiggedFinger finger in hand.fingers)
-        {
-            if (finger.fingerType == Finger.FingerType.TYPE_INDEX)
+        foreach (RiggedFinger finger in hand.fingers) {
+            if (finger == null) continue;
+
+            if(finger.fingerType == Finger.FingerType.TYPE_INDEX) {
                 hand.modelFingerPointing = finger.modelFingerPointing;
+            }
         }
 
         if (hand.arm == null)
@@ -253,6 +261,28 @@ public static class LEAPEditorExtensions
     static void AddRiggedHandEx()
     {
         AddRiggedHandExToObject(Selection.activeGameObject);
+    }
+
+
+    [MenuItem("GameObject/LEAP/Add rigged finger", false, 0)]
+    static void AddRiggedFinger()
+    {
+        AddRiggedFingerToObject(Selection.activeGameObject, 0);
+    }
+
+
+    [MenuItem("GameObject/LEAP/Add rigged fingers", false, 0)]
+    static void AddRiggedFingers()
+    {
+        GameObject handObject = Selection.activeGameObject;
+
+        // Add fingers to hand object
+        int index = 0;
+        foreach (Transform child in handObject.transform)
+        {
+            AddRiggedFingerToObject(child.gameObject, index);
+            index++;
+        }
     }
 
 
