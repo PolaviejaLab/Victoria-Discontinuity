@@ -11,12 +11,10 @@ using Leap;
 namespace Leap.Unity
 {
     // Class to setup a rigged hand based on a model.
-    public class RiggedHandAndArm : HandModel
+    public class RiggedHandEx : HandModel
     {
         public Transform arm;
-        public bool hasArm;
         public bool partOfAvatar;
-
 
         public override ModelType HandModelType
         {
@@ -36,6 +34,11 @@ namespace Leap.Unity
         public Quaternion Reorientation()
         {
             return Quaternion.Inverse(Quaternion.LookRotation(modelFingerPointing, -modelPalmFacing));
+        }
+
+        public new virtual Vector3 GetPalmPosition()
+        {
+            return hand_.PalmPosition.ToVector3();
         }
 
         public override void UpdateHand()
@@ -72,7 +75,5 @@ namespace Leap.Unity
                 }
             }
         }
-
-
     }
 }
