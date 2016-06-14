@@ -14,6 +14,7 @@ namespace Leap.Unity
     {
         NoNoise,
         NormalAroundPalm,
+        NormalRandomWalk
     }
 
 
@@ -23,8 +24,15 @@ namespace Leap.Unity
         public Transform arm;
         public bool partOfAvatar;
 
+        public bool firstUpdate = true;
+
         public NoiseType noiseType;
         public float noiseLevel = 0.01f;
+
+        public float lambda = 0.5f;
+
+        private Vector3 prevActualPosition;
+        private Vector3 prevVirtualPosition;
 
         public override ModelType HandModelType
         {
@@ -59,8 +67,23 @@ namespace Leap.Unity
             Vector3 mean = new Vector3(0, 0, 0);
             Vector3 std = new Vector3(noiseLevel, noiseLevel, noiseLevel);
 
+            if(firstUpdate) {
+                prevActualPosition = actualPosition;
+                prevVirtualPosition = actualPosition;
+                firstUpdate = false;
+            }
+
+            // Compute difference in position
+            Vector3 velocity = actualPosition - prevActualPosition;
+            prevActualPosition = actualPosition;
+
             if (noiseType == NoiseType.NormalAroundPalm) {
                 return actualPosition + NormalRandom.Random(mean, std);
+            } else if (noiseType == NoiseType.NormalRandomWalk) {
+                Vector3 update = prevVirtualPosition + velocity + NormalRandom.Random(mean, std);
+                prevVirtualPosition = lambda * actualPosition + (1 - lambda) * update;
+
+                return prevVirtualPosition;
             }
 
             return hand_.PalmPosition.ToVector3();
