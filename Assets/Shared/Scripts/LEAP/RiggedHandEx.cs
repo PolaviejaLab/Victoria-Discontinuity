@@ -10,11 +10,20 @@ using Leap;
 
 namespace Leap.Unity
 {
+    public enum NoiseType
+    {
+        NoNoise,
+        NormalAroundPalm,
+    }
+
+
     // Class to setup a rigged hand based on a model.
     public class RiggedHandEx : HandModel
     {
         public Transform arm;
         public bool partOfAvatar;
+
+        public NoiseType noiseType;
 
         public override ModelType HandModelType
         {
@@ -23,24 +32,43 @@ namespace Leap.Unity
                 return ModelType.Graphics;
             }
         }
+
         public Vector3 modelFingerPointing = Vector3.forward;
         public Vector3 modelPalmFacing = -Vector3.up;
+
 
         public override void InitHand()
         {
             UpdateHand();
         }
 
+
         public Quaternion Reorientation()
         {
             return Quaternion.Inverse(Quaternion.LookRotation(modelFingerPointing, -modelPalmFacing));
         }
 
+
+        /**
+         * Returns the position of the palm. Noise is added in this function.
+         */
         public new virtual Vector3 GetPalmPosition()
         {
+            Vector3 actualPosition = hand_.PalmPosition.ToVector3();
+            Vector3 mean = new Vector3(0, 0, 0);
+            Vector3 std = new Vector3(0.005f, 0.005f, 0.005f);
+
+            if (noiseType == NoiseType.NormalAroundPalm) {
+                //return actualPosition + NormalRandom.Random(mean, std);
+            }
+
             return hand_.PalmPosition.ToVector3();
         }
 
+
+        /**
+         * Update location and orientation of arm, forearm, palm, and fingers
+         */
         public override void UpdateHand()
         {
             if(arm != null)
