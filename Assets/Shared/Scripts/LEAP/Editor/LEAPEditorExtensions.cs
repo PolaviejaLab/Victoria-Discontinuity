@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEditor;
 using Leap;
 using Leap.Unity;
+using System.Reflection;
 
 /**
  * Adds two items to the context menu:
@@ -33,6 +34,58 @@ public static class LEAPEditorExtensions
 
 
     /**
+     * Guess chirality of hand based on the name
+     */
+    private static Chirality GuessHandChirality(GameObject obj)
+    {
+        string name = obj.name.ToLower();
+
+        if(name.Contains("left"))
+            return Chirality.Left;
+        else if(name.Contains("right"))
+            return Chirality.Right;
+        return Chirality.Either;
+    }
+
+
+    /**
+     * Returns an instance of the HandController.
+     */
+    private static HandController GetHandController()
+    {
+        return Object.FindObjectOfType<HandController>();
+    }
+
+
+    private static void AddHandModelToController(IHandModel model)
+    {
+        HandController handController = GetHandController();
+        if (!handController) return;
+
+        int N = handController.models.Length;
+
+        // Check if model already exists
+        foreach(IHandModel m in handController.models) {
+            if (model == m) return;
+        }
+
+        // Check if there is an empty spot to add it in
+        for(int i = 0; i < N; i++) {
+            if(handController.models[i] == null) {
+                handController.models[i] = model;
+                return;
+            }
+        }
+
+        // Otherwise create a new one
+        IHandModel[] temp = new IHandModel[N + 1];
+        handController.models.CopyTo(temp, 0);
+        temp[N] = model;
+        handController.models = temp;
+    }
+
+
+    /**
      * Guesses the type of the finger based on the name and index (order in which it
      *  appears in the scene graph).
      */
@@ -51,8 +104,7 @@ public static class LEAPEditorExtensions
         if (name.Contains("middle"))
             return Finger.FingerType.TYPE_MIDDLE;
 
-        switch (index)
-        {
+        switch (index) {
             case 0: return Finger.FingerType.TYPE_THUMB;
             case 1: return Finger.FingerType.TYPE_INDEX;
             case 2: return Finger.FingerType.TYPE_MIDDLE;
@@ -72,20 +124,16 @@ public static class LEAPEditorExtensions
         // Create RiggedFinger is it doens't already exist
         RiggedFinger finger = fingerObject.GetComponent<RiggedFinger>();
 
-        if (finger == null)
-        {
+        if (finger == null) {
             finger = fingerObject.AddComponent<RiggedFinger>();
-        }
-        else {
+        } else {
             Debug.LogError("Finger already exists");
         }
-
 
         // Assign the bones to the finger
         Transform current = fingerObject.transform;
 
-        for (int i = 1; i < finger.bones.Length; i++)
-        {
+        for (int i = 1; i < finger.bones.Length; i++) {
             finger.bones[i] = current;
 
             if (current.childCount == 0)
@@ -93,7 +141,6 @@ public static class LEAPEditorExtensions
 
             current = current.GetChild(0);
         }
-
 
         // Guess type and finger direction
         finger.fingerType =
@@ -106,8 +153,7 @@ public static class LEAPEditorExtensions
 
     static RiggedFinger FindChildFinger(GameObject handObject, Finger.FingerType type)
     {
-        foreach (Transform child in handObject.transform)
-        {
+        foreach (Transform child in handObject.transform) {
             RiggedFinger finger = child.GetComponent<RiggedFinger>();
             if (finger != null && finger.fingerType == type)
                 return finger;
@@ -117,7 +163,6 @@ public static class LEAPEditorExtensions
     }
 
     
-
     /**
      * Adds a RiggedHandAndArm to the specified object and
      *  initializes it.
@@ -146,11 +191,20 @@ public static class LEAPEditorExtensions
             AddRiggedFingerToObject(child.gameObject, index);
         }
 
+        // Detect hand chirality, the field is private so we use a dirty trick
+        FieldInfo handednessFI = typeof(HandModel).GetField("handedness", BindingFlags.Instance | BindingFlags.NonPublic);
+        if(handednessFI != null)
+            handednessFI.SetValue(hand, GuessHandChirality(hand.gameObject));
+
+        // Add fingers
         hand.fingers[0] = FindChildFinger(handObject, Finger.FingerType.TYPE_THUMB);
         hand.fingers[1] = FindChildFinger(handObject, Finger.FingerType.TYPE_INDEX);
         hand.fingers[2] = FindChildFinger(handObject, Finger.FingerType.TYPE_MIDDLE);
         hand.fingers[3] = FindChildFinger(handObject, Finger.FingerType.TYPE_RING);
         hand.fingers[4] = FindChildFinger(handObject, Finger.FingerType.TYPE_PINKY);
+
+        // Add model to hand controller
+        AddHandModelToController(hand);
 
         return hand;
     }    
@@ -169,9 +223,9 @@ public static class LEAPEditorExtensions
     }
 
 
-    static void AddRiggedHandAndArmToObject(GameObject handModel)
+    static void AddRiggedHandExToObject(GameObject handModel)
     {
-        RiggedHandAndArm hand = AddHandModelToObject<RiggedHandAndArm>(handModel);
+        RiggedHandEx hand = AddHandModelToObject<RiggedHandEx>(handModel);
 
         // Find index finger and update hand pointing direction
         foreach (RiggedFinger finger in hand.fingers)
@@ -183,12 +237,9 @@ public static class LEAPEditorExtensions
         if (hand.arm == null)
         {
             hand.arm = hand.forearm.parent;
-            hand.hasArm = true;
             hand.partOfAvatar = true;
         }
     }
-
-
 
 
     [MenuItem("GameObject/LEAP/Add rigged hand", false, 0)]
@@ -198,10 +249,10 @@ public static class LEAPEditorExtensions
     }
 
 
-    [MenuItem("GameObject/LEAP/Add rigged hand (with arm)", false, 0)]
-    static void AddRiggedHandAndArm()
+    [MenuItem("GameObject/LEAP/Add rigged hand (extended)", false, 0)]
+    static void AddRiggedHandEx()
     {
-        AddRiggedHandAndArmToObject(Selection.activeGameObject);
+        AddRiggedHandExToObject(Selection.activeGameObject);
     }
 
 
@@ -215,14 +266,13 @@ public static class LEAPEditorExtensions
     private static void RecursiveRemove(GameObject obj)
     {
         RiggedHand hand = obj.GetComponent<RiggedHand>();
+        if (hand) Object.DestroyImmediate(hand);
 
-        if (hand)
-            Object.DestroyImmediate(hand);
+        RiggedHandEx handEx = obj.GetComponent<RiggedHandEx>();
+        if (handEx) Object.DestroyImmediate(handEx);
 
         RiggedFinger finger = obj.GetComponent<RiggedFinger>();
-
-        if (finger)
-            Object.DestroyImmediate(finger);
+        if (finger) Object.DestroyImmediate(finger);
 
         foreach (Transform child in obj.transform)
             RecursiveRemove(child.gameObject);
@@ -236,3 +286,4 @@ public static class LEAPEditorExtensions
         RecursiveRemove(obj);
     }
 }
+
