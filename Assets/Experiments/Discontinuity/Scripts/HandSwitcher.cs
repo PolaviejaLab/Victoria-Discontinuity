@@ -64,29 +64,41 @@ public class HandSwitcher : MonoBehaviour {
 			rightGraphicsModelFemale[i].SetActive(i == selected && !useMale && showRightHand);
 	}
 
+
+    /**
+     * 
+     */
     protected void UpdateNoiseLevels() {
         for(int i = 0; i < leftGraphicsModelMale.Length; i++) {
-            RiggedHand hand = leftGraphicsModelMale[i].GetComponent<RiggedHand>();
+            RiggedHandEx hand = leftGraphicsModelMale[i].GetComponent<RiggedHandEx>();
 
             if (hand == null) continue;
-            hand.enableNoise = noiseLevelLeft > 0.5f;
+
+            hand.noiseType = (noiseLevelLeft == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
+            hand.noiseLevel = noiseLevelLeft;
         }
 
         for(int i = 0; i <  rightGraphicsModelMale.Length; i++) {
-            RiggedHand hand = rightGraphicsModelMale[i].GetComponent<RiggedHand>();
+            RiggedHandEx hand = rightGraphicsModelMale[i].GetComponent<RiggedHandEx>();
 
             if (hand == null) continue;
-            hand.enableNoise = noiseLevelLeft > 0.5f;
+
+            hand.noiseType = (noiseLevelRight == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
+            hand.noiseLevel = noiseLevelRight;
         }
 
         for(int i = 0; i < leftGraphicsModelFemale.Length; i++) {
-            RiggedHand hand = leftGraphicsModelFemale[i].GetComponent<RiggedHand>();
-            hand.enableNoise = noiseLevelLeft > 0.5f;
+            RiggedHandEx hand = leftGraphicsModelFemale[i].GetComponent<RiggedHandEx>();
+
+            hand.noiseType = (noiseLevelLeft == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
+            hand.noiseLevel = noiseLevelLeft;
         }
         
         for(int i = 0; i <  rightGraphicsModelFemale.Length; i++) {
-            RiggedHand hand = rightGraphicsModelFemale[i].GetComponent<RiggedHand>();
-            hand.enableNoise = noiseLevelLeft > 0.5f;
+            RiggedHandEx hand = rightGraphicsModelFemale[i].GetComponent<RiggedHandEx>();
+
+            hand.noiseType = (noiseLevelRight == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
+            hand.noiseLevel = noiseLevelRight;
         }
 
     }

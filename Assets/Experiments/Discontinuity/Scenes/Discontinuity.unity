@@ -271,48 +271,14 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 31432807}
-  - 114: {fileID: 31432811}
-  - 114: {fileID: 31432809}
-  - 114: {fileID: 31432806}
-  - 114: {fileID: 31432812}
-  - 114: {fileID: 31432810}
   - 114: {fileID: 31432808}
-  - 114: {fileID: 31432813}
   m_Layer: 0
-  m_Name: ExperimentController
+  m_Name: Hand switcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &31432806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 31432805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 761a3fb0c8b01264d90f31409b808283, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logToConsole: 1
-  logger: {fileID: 31432811}
-  initialState: 0
-  StartOnInstantiation: 0
-  StartOnStopMachine: 0
-  experimentController: {fileID: 31432809}
-  waveController: {fileID: 31432812}
-  driftController: {fileID: 31432810}
-  threatController: {fileID: 924765751}
-  handSwitcher: {fileID: 31432808}
-  offsetSwitcher: {fileID: 1138750169}
-  testLights: {fileID: 2096310266}
-  hand: 0
-  offset: 0
-  noiseLevel: 0
-  knifePresent: 0
-  knifeOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &31432807
 Transform:
   m_ObjectHideFlags: 0
@@ -320,12 +286,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 31432805}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.28, y: 3.12, z: 5.97}
+  m_LocalPosition: {x: 6.7543654, y: 1.3212938, z: 5.855162}
   m_LocalScale: {x: 0.5, y: 0.25, z: 0.5}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 741473816}
+  m_RootOrder: 2
 --- !u!114 &31432808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -355,116 +321,6 @@ MonoBehaviour:
   showRightHand: 1
   noiseLevelLeft: 0
   noiseLevelRight: 0
---- !u!114 &31432809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 31432805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edcaca1b907598249b04d140aea5c599, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logToConsole: 1
-  logger: {fileID: 31432811}
-  initialState: 0
-  StartOnInstantiation: 1
-  StartOnStopMachine: 0
-  trialController: {fileID: 31432806}
-  waveController: {fileID: 31432812}
-  driftController: {fileID: 31432810}
-  threatController: {fileID: 924765751}
-  handController: {fileID: 1138750165}
-  handSwitcher: {fileID: 31432808}
-  tableLights: {fileID: 2096310268}
-  protocolFile: Protocol/TestNewer
-  trialCounter: 0
-  randomProtocol: 0
---- !u!114 &31432810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 31432805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8079b7d6177fe1a41b97f36de309f9a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logToConsole: 1
-  logger: {fileID: 31432811}
-  initialState: 0
-  StartOnInstantiation: 0
-  StartOnStopMachine: 0
-  experimentController: {fileID: 31432809}
-  trialController: {fileID: 31432806}
-  marker: {fileID: 0}
-  pointer: {fileID: 0}
-  markerOn: 0
-  pointerMove: 0
-  dirRight: 0
-  isMeasured: 0
-  speed: 0
-  proprioceptiveDrift: 0
-  handTransform: {fileID: 1272889715}
-  handPosition: {x: 0, y: 0, z: 0}
---- !u!114 &31432811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 31432805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dff8cabe554573f409cdccd92c8c1ac2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useOSC: 0
-  oscAddress: 127.0.0.1
-  oscPort: 4567
---- !u!114 &31432812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 31432805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ff50617be5dd7041bf478bac68011aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logToConsole: 1
-  logger: {fileID: 31432811}
-  initialState: 0
-  StartOnInstantiation: 0
-  StartOnStopMachine: 0
-  trialController: {fileID: 31432806}
-  initialLight: {fileID: 243545321}
-  lights:
-  - {fileID: 357780511}
-  - {fileID: 1167995612}
-  wavesRequired: 0
-  waveCounter: 0
-  lateWaves: 0
-  correctWaves: 0
-  incorrectWaves: 0
-  initialLightOn: 0
-  targetLightOn: 0
-  collisionLights: {fileID: 0}
-  collisionInitial: {fileID: 0}
---- !u!114 &31432813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 31432805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6872b090348b0949b5b3309a9e515d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waveController: {fileID: 31432812}
 --- !u!1 &39094133
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,14 +375,14 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
   m_Children:
+  - {fileID: 1455164874}
   - {fileID: 1358293401}
   - {fileID: 621582319}
   - {fileID: 294690384}
-  - {fileID: 1455164874}
   - {fileID: 2084997512}
-  - {fileID: 190680513}
   - {fileID: 428585837}
   - {fileID: 1186839113}
+  - {fileID: 190680513}
   m_Father: {fileID: 0}
   m_RootOrder: 2
 --- !u!1 &45877723
@@ -1118,14 +974,14 @@ Transform:
   m_GameObject: {fileID: 1346678691}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1209450346}
   - {fileID: 1748066601}
   - {fileID: 1364757705}
   m_Father: {fileID: 40460577}
-  m_RootOrder: 5
+  m_RootOrder: 7
 --- !u!1 &203049906
 GameObject:
   m_ObjectHideFlags: 0
@@ -1878,7 +1734,7 @@ Transform:
   - {fileID: 937574628}
   - {fileID: 1535472345}
   m_Father: {fileID: 40460577}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &295145412
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,7 +1772,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 307777198}
   m_Layer: 0
-  m_Name: Tracking Camera
+  m_Name: Head Tracking Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2882,14 +2738,55 @@ Transform:
   m_GameObject: {fileID: 495259210}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1986006106}
   - {fileID: 323072553}
   - {fileID: 1272889715}
   m_Father: {fileID: 40460577}
-  m_RootOrder: 6
+  m_RootOrder: 5
+--- !u!1 &434807540
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 434807541}
+  - 114: {fileID: 434807542}
+  m_Layer: 0
+  m_Name: Debugging script
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &434807541
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 434807540}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 741473816}
+  m_RootOrder: 3
+--- !u!114 &434807542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 434807540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6872b090348b0949b5b3309a9e515d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveController: {fileID: 770215072}
 --- !u!1 &437938764
 GameObject:
   m_ObjectHideFlags: 0
@@ -3108,12 +3005,9 @@ MonoBehaviour:
   - {fileID: 473743850}
   - {fileID: 595838412}
   - {fileID: 1632877328}
-  joints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  joints: []
   deformPosition: 0
-  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelFingerPointing: {x: 1, y: 0, z: 0}
   modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!1 &479803947
 GameObject:
@@ -3173,6 +3067,38 @@ Transform:
   m_Children:
   - {fileID: 118363877}
   m_Father: {fileID: 2084085823}
+  m_RootOrder: 0
+--- !u!1 &494966287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 494966288}
+  m_Layer: 0
+  m_Name: State-machines
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &494966288
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 494966287}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 685971308}
+  - {fileID: 1118483235}
+  - {fileID: 770215073}
+  - {fileID: 2011203179}
+  m_Father: {fileID: 741473816}
   m_RootOrder: 0
 --- !u!1 &495259210
 GameObject:
@@ -3905,7 +3831,7 @@ Transform:
   - {fileID: 227761622}
   - {fileID: 1080233150}
   m_Father: {fileID: 40460577}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &623364298
 GameObject:
   m_ObjectHideFlags: 0
@@ -4067,7 +3993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5197fff98499704e884ba57f4b06d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  driftController: {fileID: 31432810}
+  driftController: {fileID: 2011203178}
   aux: 1
 --- !u!1 &663754701
 GameObject:
@@ -4174,6 +4100,61 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.15, y: 0.03, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &685971306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 685971308}
+  - 114: {fileID: 685971307}
+  m_Layer: 0
+  m_Name: Experiment state-machine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &685971307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 685971306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edcaca1b907598249b04d140aea5c599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logToConsole: 1
+  logger: {fileID: 1590201058}
+  initialState: 0
+  StartOnInstantiation: 1
+  StartOnStopMachine: 0
+  trialController: {fileID: 1118483234}
+  waveController: {fileID: 770215072}
+  driftController: {fileID: 2011203178}
+  threatController: {fileID: 924765751}
+  handController: {fileID: 1138750165}
+  handSwitcher: {fileID: 31432808}
+  tableLights: {fileID: 2096310268}
+  protocolFile: Protocol/TestNewer
+  trialCounter: 0
+  randomProtocol: 0
+--- !u!4 &685971308
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 685971306}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 494966288}
+  m_RootOrder: 0
 --- !u!1 &690498064
 GameObject:
   m_ObjectHideFlags: 0
@@ -4359,7 +4340,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100174, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
       propertyPath: m_IsActive
@@ -4724,6 +4705,38 @@ MonoBehaviour:
   deformPosition: 0
   modelFingerPointing: {x: 1, y: 0, z: 0}
   modelPalmFacing: {x: -0, y: -1, z: -0}
+--- !u!1 &741473815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 741473816}
+  m_Layer: 0
+  m_Name: Non-visual components
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &741473816
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 741473815}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.4743652, y: 1.798706, z: 0.11483765}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 494966288}
+  - {fileID: 1590201059}
+  - {fileID: 31432807}
+  - {fileID: 434807541}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
 --- !u!1 &749414190
 GameObject:
   m_ObjectHideFlags: 0
@@ -4976,6 +4989,65 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
   m_PrefabInternal: {fileID: 763879432}
+--- !u!1 &770215071
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 770215073}
+  - 114: {fileID: 770215072}
+  m_Layer: 0
+  m_Name: Wave state-machine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &770215072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 770215071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff50617be5dd7041bf478bac68011aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logToConsole: 1
+  logger: {fileID: 1590201058}
+  initialState: 0
+  StartOnInstantiation: 0
+  StartOnStopMachine: 0
+  trialController: {fileID: 1118483234}
+  initialLight: {fileID: 243545321}
+  lights:
+  - {fileID: 357780511}
+  - {fileID: 1167995612}
+  wavesRequired: 0
+  waveCounter: 0
+  lateWaves: 0
+  correctWaves: 0
+  incorrectWaves: 0
+  initialLightOn: 0
+  targetLightOn: 0
+  collisionLights: {fileID: 0}
+  collisionInitial: {fileID: 0}
+--- !u!4 &770215073
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 770215071}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 494966288}
+  m_RootOrder: 2
 --- !u!1 &773643588
 GameObject:
   m_ObjectHideFlags: 0
@@ -5705,7 +5777,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logToConsole: 1
-  logger: {fileID: 31432811}
+  logger: {fileID: 1590201058}
   initialState: 0
   StartOnInstantiation: 0
   StartOnStopMachine: 0
@@ -5990,7 +6062,7 @@ MonoBehaviour:
   - {fileID: 251476837}
   joints: []
   deformPosition: 0
-  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelFingerPointing: {x: 1, y: 0, z: 0}
   modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!1 &992991442
 GameObject:
@@ -6064,7 +6136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd652bbb5cb062748a6f90ac59685cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveController: {fileID: 31432812}
+  waveController: {fileID: 0}
   triggerEvent: 2
   objects: []
   CompareByName: 1
@@ -6670,6 +6742,63 @@ Transform:
   - {fileID: 1664939244}
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!1 &1118483233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1118483235}
+  - 114: {fileID: 1118483234}
+  m_Layer: 0
+  m_Name: Trial state-machine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1118483234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1118483233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 761a3fb0c8b01264d90f31409b808283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logToConsole: 1
+  logger: {fileID: 1590201058}
+  initialState: 0
+  StartOnInstantiation: 0
+  StartOnStopMachine: 0
+  experimentController: {fileID: 685971307}
+  waveController: {fileID: 770215072}
+  driftController: {fileID: 2011203178}
+  threatController: {fileID: 924765751}
+  handSwitcher: {fileID: 31432808}
+  offsetSwitcher: {fileID: 1138750169}
+  testLights: {fileID: 2096310266}
+  hand: 0
+  offset: 0
+  noiseLevel: 0
+  knifePresent: 0
+  knifeOffset: {x: 0, y: 0, z: 0}
+--- !u!4 &1118483235
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1118483233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 494966288}
+  m_RootOrder: 1
 --- !u!1 &1123046462 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100056, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
@@ -6747,14 +6876,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handController: {fileID: 1138750167}
   models:
+  - {fileID: 1639780980}
   - {fileID: 348039797}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 791492128}
+  - {fileID: 941264206}
+  - {fileID: 1320411788}
+  - {fileID: 495259211}
+  - {fileID: 1495711317}
+  - {fileID: 1346678692}
   - {fileID: 1003156600}
   - {fileID: 1848368616}
 --- !u!114 &1138750167 stripped
@@ -7090,13 +7219,13 @@ Transform:
   m_GameObject: {fileID: 1495711316}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1087417807}
   - {fileID: 683273807}
   m_Father: {fileID: 40460577}
-  m_RootOrder: 7
+  m_RootOrder: 6
 --- !u!1 &1187810027
 GameObject:
   m_ObjectHideFlags: 0
@@ -7416,12 +7545,9 @@ MonoBehaviour:
   - {fileID: 1215895179}
   - {fileID: 842050221}
   - {fileID: 262183695}
-  joints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  joints: []
   deformPosition: 0
-  modelFingerPointing: {x: 0, y: 0, z: 1}
+  modelFingerPointing: {x: 1, y: 0, z: 0}
   modelPalmFacing: {x: -0, y: -1, z: -0}
 --- !u!1 &1220758242
 GameObject:
@@ -7445,7 +7571,7 @@ Transform:
   m_PrefabParentObject: {fileID: 400038, guid: 84793ae866bd7489ebb054c1b4bcfb58, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1220758242}
-  m_LocalRotation: {x: -0.6031434, y: 0.50178796, z: 0.14910194, w: 0.60182697}
+  m_LocalRotation: {x: -0.60314333, y: 0.5017879, z: 0.14910193, w: 0.6018269}
   m_LocalPosition: {x: -0.027367866, y: 0.020160303, z: 0.027376166}
   m_LocalScale: {x: 0.9999997, y: 1.0000013, z: 1.0000006}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8115,7 +8241,7 @@ Transform:
   - {fileID: 508113519}
   - {fileID: 359073078}
   m_Father: {fileID: 40460577}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!1 &1362501493
 GameObject:
   m_ObjectHideFlags: 0
@@ -8424,7 +8550,7 @@ Transform:
   - {fileID: 1832417740}
   - {fileID: 1686719897}
   m_Father: {fileID: 40460577}
-  m_RootOrder: 3
+  m_RootOrder: 0
 --- !u!1 &1459152684
 GameObject:
   m_ObjectHideFlags: 0
@@ -8986,6 +9112,49 @@ Transform:
   m_Children: []
   m_Father: {fileID: 437938765}
   m_RootOrder: 0
+--- !u!1 &1590201057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1590201059}
+  - 114: {fileID: 1590201058}
+  m_Layer: 0
+  m_Name: Logging component
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1590201058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1590201057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dff8cabe554573f409cdccd92c8c1ac2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useOSC: 0
+  oscAddress: 127.0.0.1
+  oscPort: 4567
+--- !u!4 &1590201059
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1590201057}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 741473816}
+  m_RootOrder: 1
 --- !u!1 &1591455453
 GameObject:
   m_ObjectHideFlags: 0
@@ -10227,7 +10396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd652bbb5cb062748a6f90ac59685cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveController: {fileID: 31432812}
+  waveController: {fileID: 0}
   triggerEvent: 0
   objects: []
   CompareByName: 0
@@ -10265,34 +10434,6 @@ Transform:
   - {fileID: 773643589}
   m_Father: {fileID: 1113242578}
   m_RootOrder: 0
---- !u!1 &1818671215
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1818671216}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1818671216
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1818671215}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.6804624, y: 1.5173888, z: 0.27259195}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
 --- !u!1 &1824233393
 GameObject:
   m_ObjectHideFlags: 0
@@ -10836,7 +10977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd652bbb5cb062748a6f90ac59685cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveController: {fileID: 31432812}
+  waveController: {fileID: 0}
   triggerEvent: 1
   objects: []
   CompareByName: 0
@@ -11154,6 +11295,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1963172162}
   m_RootOrder: 0
+--- !u!1 &2011203177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2011203179}
+  - 114: {fileID: 2011203178}
+  m_Layer: 0
+  m_Name: Proprioceptive-drift state-machine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2011203178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2011203177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8079b7d6177fe1a41b97f36de309f9a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logToConsole: 1
+  logger: {fileID: 1590201058}
+  initialState: 0
+  StartOnInstantiation: 0
+  StartOnStopMachine: 0
+  experimentController: {fileID: 685971307}
+  trialController: {fileID: 1118483234}
+  marker: {fileID: 646571018}
+  pointer: {fileID: 412453441}
+  markerOn: 0
+  pointerMove: 0
+  dirRight: 0
+  isMeasured: 0
+  speed: 0
+  proprioceptiveDrift: 0
+  handTransform: {fileID: 1272889715}
+  handPosition: {x: 0, y: 0, z: 0}
+--- !u!4 &2011203179
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2011203177}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 494966288}
+  m_RootOrder: 3
 --- !u!1 &2030185547
 GameObject:
   m_ObjectHideFlags: 0
@@ -11324,7 +11522,7 @@ Transform:
   m_GameObject: {fileID: 1320411787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 109328631}
