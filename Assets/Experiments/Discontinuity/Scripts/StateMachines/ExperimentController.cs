@@ -17,24 +17,26 @@ using System.Collections.Generic;
 using Leap;
 using Leap.Unity;
 
-public enum ExperimentEvents {
+public enum ExperimentEvents
+{
     ProtocolLoaded,
-	TrialFinished,
-    QuestionsFinished, 
-    ExperimentFinished, 
+    TrialFinished,
+    QuestionsFinished,
+    ExperimentFinished,
 };
 
 
-public enum ExperimentStates {
+public enum ExperimentStates
+{
     WaitingForFeedback,
     Start,
     Trial,
     Questionnaires,
-	Finished,
+    Finished,
 };
 
 
-public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEvents> 
+public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentEvents>
 {
     public TrialController trialController;
     public WaveController waveController;
@@ -42,41 +44,44 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
     public Threat threatController;
 
     public HandController handController;
-	public HandSwitcher handSwitcher;
+    public HandSwitcher handSwitcher;
 
-	public TableLights tableLights;
-	
-	private ICTrialList trialList;
-	public string protocolFile;
+    public TableLights tableLights;
+
+    private ICTrialList trialList;
+    public string protocolFile;
 
     private string outputDirectory;
 
     private int participantNumber;
     private string participantName;
 
-	public int trialCounter;
+    public int trialCounter;
     public int randomProtocol;
 
     private bool trialEmpty;
 
 
-    public void Start() {
+    public void Start()
+    {
         // When the trial controller is stopped, invoke an event
-        trialController.Stopped += 
-            (sender, e) => 
+        trialController.Stopped +=
+            (sender, e) =>
                 { HandleEvent(ExperimentEvents.TrialFinished); };
 
-		this.StartMachine();
-	}
-	
-	
-	public void HandleEvent(ExperimentEvents ev) {
-		WriteLog("Event " + ev.ToString());
+        this.StartMachine();
+    }
 
-		if(!IsStarted())
-			return;
-		
-	switch(GetState()) {
+
+    public void HandleEvent(ExperimentEvents ev)
+    {
+        WriteLog("Event " + ev.ToString());
+
+        if (!IsStarted())
+            return;
+
+        switch (GetState())
+        {
             case ExperimentStates.WaitingForFeedback:
                 break;
 
@@ -85,9 +90,10 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
                     ChangeState(ExperimentStates.Trial);
                 break;
 
-		
+
             case ExperimentStates.Trial:
-                if (ev == ExperimentEvents.TrialFinished) {
+                if (ev == ExperimentEvents.TrialFinished)
+                {
                     SaveTrialResult();
                     ChangeState(ExperimentStates.Questionnaires);
                 }
@@ -98,35 +104,42 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
                     ChangeState(ExperimentStates.Trial);
                 break;
 
-                
-		}
-	}
-	
-    
-	public void Update() {
-		if(!IsStarted())
-			return;
+
+        }
+    }
+
+
+    public void Update()
+    {
+        if (!IsStarted())
+            return;
 
         // Change the gender of the hand
-        if (Input.GetKeyDown(KeyCode.F)){
+        if (Input.GetKeyDown(KeyCode.F))
+        {
             handSwitcher.useMale = false;
             WriteLog("Gender changed to female");
         }
-        else if (Input.GetKeyDown(KeyCode.M)){
+        else if (Input.GetKeyDown(KeyCode.M))
+        {
             handSwitcher.useMale = true;
             WriteLog("Gender changed to male");
         }
 
-        if (Input.GetKeyDown(KeyCode.Keypad0)){
+        if (Input.GetKeyDown(KeyCode.Keypad0))
+        {
             WriteLog("Tracking Failed");
         }
 
-        switch (GetState()){
+        switch (GetState())
+        {
             case ExperimentStates.WaitingForFeedback:
-                if (Input.GetKeyDown(KeyCode.Tab)){
+                if (Input.GetKeyDown(KeyCode.Tab))
+                {
                     ChangeState(ExperimentStates.Start);
                 }
-                else if (Input.GetKeyDown(KeyCode.Escape)){
+                else if (Input.GetKeyDown(KeyCode.Escape))
+                {
                     ChangeState(ExperimentStates.Finished);
                 }
                 break;
@@ -136,82 +149,94 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
                     HandleEvent(ExperimentEvents.QuestionsFinished);
                 break;
         }
-	}
-	
-    
-	protected override void OnEnter(ExperimentStates oldState) {
-		switch(GetState()) {
+    }
+
+
+    protected override void OnEnter(ExperimentStates oldState)
+    {
+        switch (GetState())
+        {
             case ExperimentStates.WaitingForFeedback:
                 break;
 
             case ExperimentStates.Start:
                 string[] dir = Directory.GetDirectories("Results");
-                
+
                 participantNumber = 1;
                 participantName = "PC1-Participant" + participantNumber.ToString();
-                
+
                 trialCounter = 0;
 
-                for (int i = 0; i < dir.Length; i++){
+                for (int i = 0; i < dir.Length; i++)
+                {
                     outputDirectory = "Results/GABBAtesting" + participantNumber.ToString();
-                    if (!Directory.Exists(outputDirectory)){
+                    if (!Directory.Exists(outputDirectory))
+                    {
                         Directory.CreateDirectory(outputDirectory);
                         break;
-                    } else {
+                    }
+                    else {
                         participantNumber = participantNumber + 1;
                     }
                 }
-                
+
                 logger.OpenLog(GetLogFilename());
-                
+
                 // Record participant number to log-file
                 WriteLog("Participant" + participantNumber.ToString());
-                if (!handSwitcher.useMale){
+                if (!handSwitcher.useMale)
+                {
                     WriteLog("Hand model is female");
-                } else if (handSwitcher.useMale){
+                }
+                else if (handSwitcher.useMale)
+                {
                     WriteLog("Hand model is male");
                 }
-                
+
                 string[] dirProtocol = Directory.GetFiles("Protocol/buttontest");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
-                protocolFile = dirProtocol [randomProtocol]; 
-                
+                protocolFile = dirProtocol[randomProtocol];
+
                 // Load protocol
                 trialList = new ICTrialList(protocolFile);
-                WriteLog("Loaded " + trialList.Count () + " trials");
+                WriteLog("Loaded " + trialList.Count() + " trials");
 
                 HandleEvent(ExperimentEvents.ProtocolLoaded);
 
                 break;
 
-    		case ExperimentStates.Trial:
-    			if(trialList.HasMore()) {
+            case ExperimentStates.Trial:
+                if (trialList.HasMore())
+                {
                     trialCounter++;
                     StartTrial();
-                } else {    			
+                }
+                else {
                     ChangeState(ExperimentStates.WaitingForFeedback);
                 }
-    			break;
+                break;
 
             case ExperimentStates.Questionnaires:
                 handSwitcher.showRightHand = false;
                 break;
-    
+
             case ExperimentStates.Finished:
-    			StopMachine();
-    			WriteLog("No more subjects, stopping machine");
-    			break;
-		}
-	}
+                StopMachine();
+                WriteLog("No more subjects, stopping machine");
+                break;
+        }
+    }
 
 
-	protected override void OnExit(ExperimentStates newState) {
-		switch(GetState()) {
-    		case ExperimentStates.Trial:
-   				break;                
-		}
-	}
+    protected override void OnExit(ExperimentStates newState)
+    {
+        switch (GetState())
+        {
+            case ExperimentStates.Trial:
+                break;
+        }
+    }
 
 
     /**
@@ -220,52 +245,56 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
     private void PrepareTrial(Dictionary<string, string> trial, TrialController trialController)
     {
         // Determine which hand to use for given gapsize
-        if(trial["GapStatus"] == "Inactive")
+        if (trial["GapStatus"] == "Inactive")
             trialController.hand = 0;
-        else if(trial["GapStatus"] == "Active")
+        else if (trial["GapStatus"] == "Active")
             trialController.hand = 1;
         else {
             WriteLog("Invalid GapSize in protocol");
             trialController.hand = -1;
         }
-        
+
         WriteLog("Gap: " + trial["GapStatus"]);
-        
+
         // Get offset
         float offset;
         float.TryParse(trial["Offset"], out offset);
         trialController.offset = offset / 100.0f;
-        
+
         WriteLog("Offset: " + offset);
-        
+
         // Determine the number of waves per each trial
         int wavesRequired;
         int.TryParse(trial["WavesRequired"], out wavesRequired);
         waveController.wavesRequired = wavesRequired;
 
-        
+
         // Noise level
-        if(trial.ContainsKey("NoiseLevel")) {
+        if (trial.ContainsKey("NoiseLevel"))
+        {
             float noiseLevel;
             float.TryParse(trial["NoiseLevel"], out noiseLevel);
             trialController.noiseLevel = noiseLevel;
             WriteLog("NoiseLevel: " + noiseLevel);
-        } else {
+        }
+        else {
             trialController.noiseLevel = 0;
         }
-        
+
         // Knife
-        if (trial.ContainsKey("KnifePresent")){
-            if (trial ["KnifePresent"].ToLower() == "true")
+        if (trial.ContainsKey("KnifePresent"))
+        {
+            if (trial["KnifePresent"].ToLower() == "true")
                 trialController.knifePresent = true;
-            else if (trial ["KnifePresent"].ToLower() == "false")
+            else if (trial["KnifePresent"].ToLower() == "false")
                 trialController.knifePresent = false;
             else
                 throw new Exception("Invalid value in trial list for field KnifePresent");
         }
 
         // Knife Offset
-        if (trial.ContainsKey("KnifeOffset")){
+        if (trial.ContainsKey("KnifeOffset"))
+        {
             float knifeOffsetx; float knifeOffsety; float knifeOffsetz;
             float.TryParse(trial["OffsetX"], out knifeOffsetx);
             float.TryParse(trial["OffsetY"], out knifeOffsety);
@@ -279,77 +308,83 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
         }
 
         // Knife
-        if (trial.ContainsKey("KnifeOnReal")) {
-            if (trial["KnifeOnReal"].ToLower() == "true") {
+        if (trial.ContainsKey("KnifeOnReal"))
+        {
+            if (trial["KnifeOnReal"].ToLower() == "true")
+            {
                 threatController.knifeOnReal = true;
             }
-            else if (trial["KnifeOnReal"].ToLower() == "false") {
+            else if (trial["KnifeOnReal"].ToLower() == "false")
+            {
                 threatController.knifeOnReal = false;
             }
 
             else
                 throw new Exception("Invalid value in trial list for field KnifeOnReal");
         }
-    }    
+    }
 
 
-	/**
+    /**
 	 * Start the next trial
 	 */
-	private void StartTrial() 
+    private void StartTrial()
     {
-		// Do not start if already running
-		if(trialController.IsStarted())
-			return;
+        // Do not start if already running
+        if (trialController.IsStarted())
+            return;
 
-		WriteLog("Starting trial");
+        WriteLog("Starting trial");
 
-		// Get next trial from list and setup trialController
-		Dictionary<string, string> trial = trialList.Pop();
+        // Get next trial from list and setup trialController
+        Dictionary<string, string> trial = trialList.Pop();
         PrepareTrial(trial, trialController);
-        
-		handController.StartRecording(GetLEAPFilename(trialCounter));
 
-		// Turn table lights on
-		tableLights.isOn = true;
+        handController.StartRecording(GetLEAPFilename(trialCounter));
 
-		trialController.initialState = TrialStates.AccomodationTime;
-		trialController.StartMachine();
-	}
+        // Turn table lights on
+        tableLights.isOn = true;
 
-
-	private string GetLEAPFilename(int trial){
-		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".csv";
-	}
+        trialController.initialState = TrialStates.AccomodationTime;
+        trialController.StartMachine();
+    }
 
 
-	private string GetLogFilename(){
-		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".log";
-	}
+    private string GetLEAPFilename(int trial)
+    {
+        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".csv";
+    }
 
 
-	private string GetResultsFilename() {
-		return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".csv";
-	}
+    private string GetLogFilename()
+    {
+        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".log";
+    }
 
-	
-	/**
+
+    private string GetResultsFilename()
+    {
+        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".csv";
+    }
+
+
+    /**
 	 * Appends the result of the previous trial to the datafile
 	 */
-	private void SaveTrialResult() 
+    private void SaveTrialResult()
     {
-		StreamWriter writer = new StreamWriter(GetResultsFilename(), true);
-		
-		// Append result of trial to data file
-		writer.Write(trialCounter);
-		writer.Write(", ");
-		
-		if(trialController.hand == 0)
-			writer.Write("Continuous Limb, ");
-		else if(trialController.hand == 1)
-			writer.Write("Discontinous Limb, ");
-		else
-			writer.Write("Gap unknown, ");
+        StreamWriter writer = new StreamWriter(GetResultsFilename(), true);
+
+        // Append result of trial to data file
+        writer.Write(trialCounter);
+        writer.Write(", ");
+
+        if (trialController.hand == 0)
+            writer.Write("Continuous Limb, ");
+        else if (trialController.hand == 1)
+            writer.Write("Discontinous Limb, ");
+        else
+            writer.Write("Gap unknown, ");
 
         if (trialController.knifePresent == true)
             writer.Write("Threat active, ");
@@ -362,29 +397,30 @@ public class ExperimentController: ICStateMachine<ExperimentStates, ExperimentEv
             writer.Write("Hand noise inactive, ");
         else if (trialController.noiseLevel == 1)
             writer.Write("Hand noise active, ");
-        else 
+        else
             writer.Write("No information, ");
 
         writer.Write(trialController.knifeOffset);
-        writer.Write(", ");		
-		writer.Write(trialController.offset);
-		writer.Write(", ");
-		writer.Write(waveController.waveCounter);
-		writer.Write(", ");
-		writer.Write(waveController.correctWaves);
-		writer.Write(", ");
-		writer.Write(waveController.incorrectWaves);
-		writer.Write(", ");
-		writer.Write(waveController.lateWaves);
-		writer.Write(", ");
+        writer.Write(", ");
+        writer.Write(trialController.offset);
+        writer.Write(", ");
+        writer.Write(waveController.waveCounter);
+        writer.Write(", ");
+        writer.Write(waveController.correctWaves);
+        writer.Write(", ");
+        writer.Write(waveController.incorrectWaves);
+        writer.Write(", ");
+        writer.Write(waveController.lateWaves);
+        writer.Write(", ");
         writer.Write(driftController.proprioceptiveDrift);
         writer.Write(", ");
-		writer.WriteLine();
-		
-		writer.Close();
-	}
+        writer.WriteLine();
 
-    private void SaveExperimentResult(){
+        writer.Close();
+    }
+
+    private void SaveExperimentResult()
+    {
         handController.StopRecording();
     }
 }
