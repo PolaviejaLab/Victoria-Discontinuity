@@ -62,6 +62,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
         threatController.handOffset = new Vector3 (0, 0, offset);
 
         testLights.SetActive(true);
+
+        OSCHandler.Instance.SendMessageToClient("BonsaiConnection", "/trialstarted", experimentController.trialCounter);
     }
 
 

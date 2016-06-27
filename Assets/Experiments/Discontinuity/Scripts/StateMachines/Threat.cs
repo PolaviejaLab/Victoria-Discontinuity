@@ -176,10 +176,12 @@ public class Threat: ICStateMachine<ThreatState, ThreatEvent>
             case ThreatState.Falling:
                 threat.transform.position += threatOffset/30;
                 threatSpeed = 0.0f;
+                OSCHandler.Instance.SendMessageToClient("BonsaiConnection", "/knifefalling", threatSpeed);
                 break;
 
             case ThreatState.Following:
                 savedRotation = targetTransform.rotation;
+                OSCHandler.Instance.SendMessageToClient("BonsaiConnection", "/knifefollowing", threatSpeed);
                 break;
         }
 	}    

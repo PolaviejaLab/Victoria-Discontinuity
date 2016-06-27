@@ -17,12 +17,15 @@ public class HandController : MonoBehaviour
     private StreamWriter streamWriter;
 
     // Use this for initialization
-    void Start () {
-	
+    void Start ()
+    {	
 	}
 	
+
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
+        if (!Application.isPlaying) return;
         if (!handController) return;
 
         UpdateRecorder();
@@ -31,7 +34,9 @@ public class HandController : MonoBehaviour
 
         foreach(var hand in frame.Hands) {
             foreach(var model in models) {
+                if (model == null) continue;
                 if (!model.enabled) continue;
+
                 if (model.Handedness == Chirality.Left && !hand.IsLeft) continue;
                 if (model.Handedness == Chirality.Right && !hand.IsRight) continue;
 

@@ -1,21 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum DriftEvents {
-    Start, 
+public enum DriftEvents
+{
+    Start,
     ButtonPressed,
-    Stopped, 
+    Stopped,
 };
 
-public enum DriftStates {
-    Idle, 
-    Moving, 
-    Measured, 
+public enum DriftStates
+{
+    Idle,
+    Moving,
+    Measured,
     Finished,
 };
 
 
-public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
+public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
+{
     public ExperimentController experimentController;
     public TrialController trialController;
 
@@ -39,9 +42,13 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
     public Vector3 handPosition;
 
 
-    new public void Start() {
-        marker = GameObject.Find("Marker");
-        pointer = GameObject.Find("Pointer");
+    new public void Start()
+    {
+        if (marker == null)
+            marker = GameObject.Find("Marker");
+
+        if (pointer == null)
+            pointer = GameObject.Find("Pointer");
 
         marker.SetActive(false);
 
@@ -51,24 +58,29 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
     }
 
 
-    protected override void OnStart() {
+    protected override void OnStart()
+    {
         proprioceptiveDrift = 0;
         isMeasured = false;
     }
 
 
-    public void HandleEvent(DriftEvents ev) {
+    public void HandleEvent(DriftEvents ev)
+    {
         Debug.Log("Event " + ev.ToString());
 
-        switch (GetState()) {
+        switch (GetState())
+        {
             case DriftStates.Idle:
-                if (ev == DriftEvents.Start && markerOn) {
+                if (ev == DriftEvents.Start && markerOn)
+                {
                     ChangeState(DriftStates.Moving);
                 }
                 break;
 
             case DriftStates.Moving:
-                if (ev == DriftEvents.ButtonPressed) {
+                if (ev == DriftEvents.ButtonPressed)
+                {
                     MeasureProprioceptiveDrift();
                     ChangeState(DriftStates.Measured);
                 }
@@ -81,43 +93,50 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
     }
 
 
-    public void Update() {
+    public void Update()
+    {
         if (!IsStarted())
             return;
 
-        switch (GetState()) {
+        switch (GetState())
+        {
             case DriftStates.Idle:
-                if (GetTimeInState() > 1.5f) {
+                if (GetTimeInState() > 1.5f)
+                {
                     marker.SetActive(true);
                     HandleEvent(DriftEvents.Start);
                 }
                 break;
 
             case DriftStates.Moving:
-                if (pointerMove) {
+                if (pointerMove)
+                {
                     StartMarker();
                 }
-                
+
                 break;
 
             case DriftStates.Measured:
-                if (GetTimeInState() > 1.0f && !isMeasured) {
+                if (GetTimeInState() > 1.0f && !isMeasured)
+                {
                     pointer.transform.localPosition = pointerPosition;
                     trialController.HandleEvent(TrialEvents.DriftMeasured);
                     isMeasured = true;
                 }
-                    
+
                 break;
 
         }
     }
 
 
-    protected override void OnEnter(DriftStates oldState) {
+    protected override void OnEnter(DriftStates oldState)
+    {
 
-        switch (GetState()) {
+        switch (GetState())
+        {
             case DriftStates.Idle:
-                
+
                 break;
 
             case DriftStates.Moving:
@@ -134,8 +153,10 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
     }
 
 
-    protected override void OnExit(DriftStates newState) {
-        switch (GetState()) {
+    protected override void OnExit(DriftStates newState)
+    {
+        switch (GetState())
+        {
             case DriftStates.Idle:
                 break;
 
@@ -148,15 +169,18 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
     }
 
 
-    public void StartMarker() {
+    public void StartMarker()
+    {
         Vector3 movement = new Vector3(0, 0, 1);
 
         // marker moving from left to right in the x axis
-        if (dirRight) {
+        if (dirRight)
+        {
             pointer.transform.Translate(movement * speed * Time.deltaTime);
             if (pointer.transform.localPosition.z >= 0.28f)
                 dirRight = false;
-        } else {
+        }
+        else {
             // change to the opposite direction along the axis. 
             pointer.transform.Translate(-movement * speed * Time.deltaTime);
             if (pointer.transform.localPosition.z <= -0.28f)
@@ -165,7 +189,8 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents> {
     }
 
     // Method that will be called when proprioceptive drift needs to be measured
-    public float MeasureProprioceptiveDrift() {
+    public float MeasureProprioceptiveDrift()
+    {
         speed = 0.0f;
         proprioceptiveDrift += pointer.transform.localPosition.z;
         handPosition = handTransform.position;

@@ -3,7 +3,8 @@ using System.IO.Ports;
 using System;
 
 
-public class MarkerStopper : MonoBehaviour {
+public class MarkerStopper : MonoBehaviour
+{
 
     SerialPort stream = new SerialPort("COM5", 9600);
 
@@ -12,13 +13,15 @@ public class MarkerStopper : MonoBehaviour {
     public bool aux = true;
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         stream.ReadTimeout = 1;
         stream.Open();
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         try
         {
             string b = stream.ReadLine();
