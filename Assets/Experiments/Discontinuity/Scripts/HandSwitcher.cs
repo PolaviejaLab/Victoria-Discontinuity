@@ -23,6 +23,12 @@ public class HandSwitcher : MonoBehaviour
     public float noiseLevelLeft;
     public float noiseLevelRight;
 
+    public bool ignoreUpdatesLeft = false;
+    public bool ignoreUpdatesRight = false;
+
+    private bool oldIgnoreUpdatesLeft = true;
+    private bool oldIgnoreUpdatesRright = true;
+
     private bool oldRight, oldLeft;
     private float oldNoiseRight, oldNoiseLeft;
 
@@ -40,7 +46,8 @@ public class HandSwitcher : MonoBehaviour
 
         if (selected != previous || useMale != oldUseMale ||
             showLeftHand != oldLeft || showRightHand != oldRight ||
-            noiseLevelLeft != oldNoiseLeft || noiseLevelRight != oldNoiseRight)
+            noiseLevelLeft != oldNoiseLeft || noiseLevelRight != oldNoiseRight ||
+            ignoreUpdatesLeft != oldIgnoreUpdatesLeft || ignoreUpdatesRight != oldIgnoreUpdatesRright)
         {
             UpdateModels();
             UpdateNoiseLevels();
@@ -53,6 +60,8 @@ public class HandSwitcher : MonoBehaviour
         oldRight = showRightHand;
         oldNoiseRight = noiseLevelRight;
         oldNoiseLeft = noiseLevelLeft;
+        oldIgnoreUpdatesLeft = ignoreUpdatesLeft;
+        oldIgnoreUpdatesRright = ignoreUpdatesRight;
 
     }
 
@@ -81,6 +90,7 @@ public class HandSwitcher : MonoBehaviour
 
             if (hand == null) continue;
 
+            hand.ignoreUpdates = ignoreUpdatesLeft;
             hand.noiseType = (noiseLevelLeft == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelLeft;
         }
@@ -91,6 +101,7 @@ public class HandSwitcher : MonoBehaviour
 
             if (hand == null) continue;
 
+            hand.ignoreUpdates = ignoreUpdatesRight;
             hand.noiseType = (noiseLevelRight == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelRight;
         }
@@ -99,6 +110,7 @@ public class HandSwitcher : MonoBehaviour
         {
             RiggedHandEx hand = leftGraphicsModelFemale[i].GetComponent<RiggedHandEx>();
 
+            hand.ignoreUpdates = ignoreUpdatesLeft;
             hand.noiseType = (noiseLevelLeft == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelLeft;
         }
@@ -107,6 +119,7 @@ public class HandSwitcher : MonoBehaviour
         {
             RiggedHandEx hand = rightGraphicsModelFemale[i].GetComponent<RiggedHandEx>();
 
+            hand.ignoreUpdates = ignoreUpdatesRight;
             hand.noiseType = (noiseLevelRight == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelRight;
         }
