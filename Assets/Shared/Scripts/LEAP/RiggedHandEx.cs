@@ -25,6 +25,7 @@ namespace Leap.Unity
         public bool partOfAvatar;
 
         public bool firstUpdate = true;
+        public bool ignoreUpdates = false;
 
         public NoiseType noiseType;
         public float noiseLevel = 0.01f;
@@ -95,6 +96,9 @@ namespace Leap.Unity
          */
         public override void UpdateHand()
         {
+            if (ignoreUpdates)
+                return;
+
             if(arm != null)
             {
                 if(partOfAvatar)
@@ -111,11 +115,78 @@ namespace Leap.Unity
 
             if (forearm != null)
             {
-                if (!partOfAvatar) {
-                    forearm.rotation = GetArmRotation() * Reorientation();
-                } else {
+                if (partOfAvatar) {
                     forearm.LookAt(GetWristPosition());
                     forearm.rotation *= Reorientation();
+                } else {
+                    /**
+                     * Sometimes the LEAP does not correctly detect arm rotation. Because
+                     * we use it as-it these incorrect arm rotations are present in the
+                     * virtual arm.
+                     *
+                     * There are a few things that we can do:
+                     *  - Use the reported arm rotation if confidence is high,
+                     *     move arm to straight position if confidence is low.
+                     *  - Restrict movement of arm to 'straighter' angles
+                     * 
+                     * If doing any of these, I would (using a property) keep the option
+                     * of using the LEAP arm rotation (like we did with the noise).
+                     * I'm not a mathematician, so I will chat with Mattia tomorrow, but
+                     * perhaps we can convert to Euler angles...
+                     */
+
+                    // Here we obtain a quaternion, which is a way to represent a
+                    // rotation.
+                    Quaternion armRotation = GetArmRotation();
+
+                    // Convert the quaternion to euler angles, a 3-element vector
+                    // each element representing rotation around 1 axis.
+                    //
+                    // The elements are:
+                    // X -> Pitch
+                    // Y -> Yaw
+                    // Z -> Roll
+                    //
+                    // Straight is 0, 270, 0
+                    Vector3 armEulerRotation = armRotation.eulerAngles;
+
+                    // Try this? It will restrict the range to 20 degrees
+                    // If i want to rotate the arm, to to like if i fold the elbow poiting to the sides, it does not respond...
+                    // I know
+                    float pitchRange = 20.0f;
+
+                    // The forearm is completely restricted :S I does not respond 
+
+                    if (pitchRange < 360.0f) {
+                        if (armEulerRotation.x > (0.5f * pitchRange) && armEulerRotation.x < 180.0f)
+                            armEulerRotation.x = (0.5f * pitchRange);
+                        if (armEulerRotation.x >= 180.0f && armEulerRotation.x < (360.0f - 0.5f * pitchRange))
+                            armEulerRotation.x = (360.0f - 0.5f * pitchRange);
+                    }
+
+                    //armEulerRotation.x = 0.0f;
+
+                    // Here we restrict "yaw" (side-ways) motion, now it's commented out -> no restriction on that
+                    //armEulerRotation.y = 270.0f;
+
+                    // But now the original problem is back hhehe
+                    // Ho w is it back? I thought the "bad" movements were in the up/down direction?yes Now? now you can see what i do
+
+                    // Looks fine to me? it does, let me check with the oculus! Yes it looks way way better!! Thanks so much!!!
+                    // You should make this into a property or something? Just remove the floatPitchRange and make it into a property.
+                    // Set it to 360.0f for full freedom
+                    // Ok let me just commit this in case I mess it up! :)
+
+                    armRotation.eulerAngles = armEulerRotation; // new Vector3(0.0f, 270.0f, armEulerRotation.z);
+
+                    forearm.rotation = armRotation * Reorientation();
+
+                    // TODO: Investigate this issue:
+                    // What is the issue?
+                    // When the arm seems to be in a certain position in respect to the table, it gets the weird angle/
+                    // in the wrist
+                    // Could it be distortion from the frame or reflections of some kind?
+                    // Yes, maybe the frame of the table.
                 }
             }
 
