@@ -207,7 +207,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                     WriteLog("Hand model is male");
                 }
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/TestNewer");
+                string[] dirProtocol = Directory.GetFiles("Protocol/Exp1_Frontiers");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
@@ -297,7 +297,17 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             WriteLog("NoiseLevel: " + noiseLevel);
         }
         else {
-            trialController.noiseLevel = 0;
+            trialController.noiseLevel = 0.0f;
+        }
+
+        if (trial.ContainsKey("LNoise")) {
+            float lNoise;
+            float.TryParse(trial["LNoise"], out lNoise);
+            trialController.lNoise = lNoise;
+            WriteLog("Lambda: " + lNoise);
+        }
+        else {
+            trialController.lNoise = 0.0f;
         }
 
         // Knife

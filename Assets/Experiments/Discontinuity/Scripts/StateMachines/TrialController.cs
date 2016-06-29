@@ -43,6 +43,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 	public int hand;
 	public float offset;
     public float noiseLevel;
+    public float lNoise;
     public bool knifePresent;
     public Vector3 knifeOffset;
 
@@ -58,6 +59,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
         handSwitcher.selected = hand;
         handSwitcher.noiseLevelLeft = noiseLevel;
         handSwitcher.noiseLevelRight = noiseLevel;
+        handSwitcher.lambdaLeft = lNoise;
+        handSwitcher.lambdaRight = lNoise;
         threatController.threatOffset = knifeOffset;
         threatController.handOffset = new Vector3 (0, 0, offset);
 
@@ -167,7 +170,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 experimentController.HandleEvent(ExperimentEvents.TrialFinished);
                 this.StopMachine();
                 break;
-
         }
     }
     
@@ -202,7 +204,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.TrialFinished:
                 break;
-
 		}
     }
 }

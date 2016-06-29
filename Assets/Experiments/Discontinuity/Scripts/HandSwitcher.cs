@@ -23,6 +23,9 @@ public class HandSwitcher : MonoBehaviour
     public float noiseLevelLeft;
     public float noiseLevelRight;
 
+    public float lambdaLeft;
+    public float lambdaRight;
+
     public bool ignoreUpdatesLeft = false;
     public bool ignoreUpdatesRight = false;
 
@@ -31,6 +34,7 @@ public class HandSwitcher : MonoBehaviour
 
     private bool oldRight, oldLeft;
     private float oldNoiseRight, oldNoiseLeft;
+    private float oldLambdaRight, oldLambdaLeft;
 
     // Use this for initialization
     void Start()
@@ -46,7 +50,8 @@ public class HandSwitcher : MonoBehaviour
 
         if (selected != previous || useMale != oldUseMale ||
             showLeftHand != oldLeft || showRightHand != oldRight ||
-            noiseLevelLeft != oldNoiseLeft || noiseLevelRight != oldNoiseRight ||
+            noiseLevelLeft != oldNoiseLeft || noiseLevelRight != oldNoiseRight ||  
+            lambdaLeft != oldLambdaLeft || lambdaRight != oldLambdaRight ||
             ignoreUpdatesLeft != oldIgnoreUpdatesLeft || ignoreUpdatesRight != oldIgnoreUpdatesRright)
         {
             UpdateModels();
@@ -60,6 +65,8 @@ public class HandSwitcher : MonoBehaviour
         oldRight = showRightHand;
         oldNoiseRight = noiseLevelRight;
         oldNoiseLeft = noiseLevelLeft;
+        oldLambdaRight = lambdaRight;
+        oldLambdaLeft = lambdaLeft;
         oldIgnoreUpdatesLeft = ignoreUpdatesLeft;
         oldIgnoreUpdatesRright = ignoreUpdatesRight;
 
@@ -93,6 +100,7 @@ public class HandSwitcher : MonoBehaviour
             hand.ignoreUpdates = ignoreUpdatesLeft;
             hand.noiseType = (noiseLevelLeft == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelLeft;
+            hand.lambda = lambdaLeft;
         }
 
         for (int i = 0; i < rightGraphicsModelMale.Length; i++)
@@ -104,6 +112,7 @@ public class HandSwitcher : MonoBehaviour
             hand.ignoreUpdates = ignoreUpdatesRight;
             hand.noiseType = (noiseLevelRight == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelRight;
+            hand.lambda = lambdaRight;
         }
 
         for (int i = 0; i < leftGraphicsModelFemale.Length; i++)
