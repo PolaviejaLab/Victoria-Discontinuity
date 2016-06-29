@@ -1,0 +1,9 @@
+GapStatus, HandOffset, WavesRequired, NoiseLevel, KnifeOnReal, IgnoreUpdate
+Inactive, 0, 10, 0, True, False
+Inactive, 0, 0, 0, False, True
+Inactive, 0, 20, 0, False, False
+Inactive, 10, 20, 0, False, False
+Inactive, 10, 20, 0, True, False
+Inactive, 10, 20, 1, False, False
+Active, 0, 0, 0, False, True
+Active, 0, 20, 0, True, False

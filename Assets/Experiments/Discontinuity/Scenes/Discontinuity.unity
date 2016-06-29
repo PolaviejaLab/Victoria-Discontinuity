@@ -321,6 +321,8 @@ MonoBehaviour:
   showRightHand: 1
   noiseLevelLeft: 0
   noiseLevelRight: 0
+  ignoreUpdatesLeft: 0
+  ignoreUpdatesRight: 0
 --- !u!1 &39094133
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,6 +2108,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -3098,6 +3101,7 @@ Transform:
   m_Children:
   - {fileID: 685971308}
   - {fileID: 1118483235}
+  - {fileID: 1582654674}
   - {fileID: 770215073}
   - {fileID: 2011203179}
   m_Father: {fileID: 741473816}
@@ -3144,6 +3148,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -4135,6 +4140,7 @@ MonoBehaviour:
   StartOnInstantiation: 1
   StartOnStopMachine: 0
   trialController: {fileID: 1118483234}
+  inactiveTrialController: {fileID: 1582654673}
   waveController: {fileID: 770215072}
   driftController: {fileID: 2011203178}
   threatController: {fileID: 924765751}
@@ -5050,7 +5056,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 494966288}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &773643588
 GameObject:
   m_ObjectHideFlags: 0
@@ -5260,6 +5266,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -5922,6 +5929,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -6195,6 +6203,7 @@ MonoBehaviour:
   arm: {fileID: 1733033638}
   partOfAvatar: 1
   firstUpdate: 1
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -8062,6 +8071,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -8195,6 +8205,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -8742,6 +8753,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -9086,6 +9098,56 @@ BoxCollider:
 Transform:
   m_PrefabParentObject: {fileID: 400050, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
   m_PrefabInternal: {fileID: 700101713}
+--- !u!1 &1582654672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1582654674}
+  - 114: {fileID: 1582654673}
+  m_Layer: 0
+  m_Name: Inactive Trial state-machine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1582654673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1582654672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11e627f817e56841996028ed37e6518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logToConsole: 1
+  logger: {fileID: 0}
+  initialState: 0
+  StartOnInstantiation: 0
+  StartOnStopMachine: 0
+  experimentController: {fileID: 685971307}
+  threatController: {fileID: 924765751}
+  handSwitcher: {fileID: 31432808}
+  hand: 0
+  knifePresent: 0
+--- !u!4 &1582654674
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1582654672}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.0954704, y: -1.0176758, z: -0.18083765}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 494966288}
+  m_RootOrder: 2
 --- !u!1 &1587425591
 GameObject:
   m_ObjectHideFlags: 0
@@ -9519,6 +9581,7 @@ MonoBehaviour:
   arm: {fileID: 0}
   partOfAvatar: 0
   firstUpdate: 0
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -10681,6 +10744,7 @@ MonoBehaviour:
   arm: {fileID: 1009799070}
   partOfAvatar: 1
   firstUpdate: 1
+  ignoreUpdates: 0
   noiseType: 0
   noiseLevel: 0.01
   lambda: 0.5
@@ -11355,7 +11419,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 494966288}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &2030185547
 GameObject:
   m_ObjectHideFlags: 0
