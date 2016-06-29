@@ -28,9 +28,9 @@ namespace Leap.Unity
         public bool ignoreUpdates = false;
 
         public NoiseType noiseType;
-        public float noiseLevel = 0.01f;
+        public float noiseLevel; // = 0.01f;
 
-        public float lambda = 0.5f;
+        public float lambda; // = 0.5f;
 
         private Vector3 prevActualPosition;
         private Vector3 prevVirtualPosition;

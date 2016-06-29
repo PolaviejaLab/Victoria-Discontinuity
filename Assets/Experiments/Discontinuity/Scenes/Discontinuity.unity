@@ -321,6 +321,8 @@ MonoBehaviour:
   showRightHand: 1
   noiseLevelLeft: 0
   noiseLevelRight: 0
+  lambdaLeft: 0
+  lambdaRight: 0
   ignoreUpdatesLeft: 0
   ignoreUpdatesRight: 0
 --- !u!1 &39094133
@@ -6795,6 +6797,7 @@ MonoBehaviour:
   hand: 0
   offset: 0
   noiseLevel: 0
+  lNoise: 0
   knifePresent: 0
   knifeOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &1118483235
@@ -9582,7 +9585,7 @@ MonoBehaviour:
   partOfAvatar: 0
   firstUpdate: 0
   ignoreUpdates: 0
-  noiseType: 0
+  noiseType: 2
   noiseLevel: 0.01
   lambda: 0.5
   modelFingerPointing: {x: 1, y: 0, z: 0}
