@@ -38,7 +38,21 @@ public enum ExperimentStates
 
 public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentEvents>
 {
+    /**
+     * Link to the Trial state machine which is responsible for the flow of a single trial.
+     */
     public TrialController trialController;
+    public InactiveTrialController inactiveTrialController;
+
+    /**
+     * Links to state machines used by the Trial state machine (TrialController)
+     * we need those here in order to load variables from the protocol file into those
+     * state machines.
+     *
+     * FIXME: This is undesirable behaviour as it breaks the hierarchical organization.
+     * Instead, we should tell the Trial state machine which should set variables on the
+     * child machines.
+     */
     public WaveController waveController;
     public PropDriftController driftController;
     public Threat threatController;
@@ -163,7 +177,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 string[] dir = Directory.GetDirectories("Results");
 
                 participantNumber = 1;
-                participantName = "PC1-Participant" + participantNumber.ToString();
+                participantName = "Participant" + participantNumber.ToString();
 
                 trialCounter = 0;
 
@@ -193,12 +207,13 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                     WriteLog("Hand model is male");
                 }
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/buttontest");
+                string[] dirProtocol = Directory.GetFiles("Protocol/TestNewer");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
 
                 // Load protocol
+                Debug.Log("Loading protocol: " + protocolFile);
                 trialList = new ICTrialList(protocolFile);
                 WriteLog("Loaded " + trialList.Count() + " trials");
 
@@ -258,10 +273,14 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
         // Get offset
         float offset;
-        float.TryParse(trial["Offset"], out offset);
-        trialController.offset = offset / 100.0f;
+        try {
+            float.TryParse(trial["HandOffset"], out offset);
+            trialController.offset = offset / 100.0f;
+        } catch(Exception e) {
+            throw new Exception("Could not parse HandOffset in ProtocolFile");
+        }
 
-        WriteLog("Offset: " + offset);
+        WriteLog("HandOffset: " + offset);
 
         // Determine the number of waves per each trial
         int wavesRequired;
@@ -290,6 +309,8 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 trialController.knifePresent = false;
             else
                 throw new Exception("Invalid value in trial list for field KnifePresent");
+
+            WriteLog("Knife Present" + trialController.knifePresent);
         }
 
         // Knife Offset
@@ -321,7 +342,11 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
             else
                 throw new Exception("Invalid value in trial list for field KnifeOnReal");
+            
+            WriteLog("Knife on Real" + threatController.knifeOnReal);
         }
+
+       
     }
 
 
@@ -346,7 +371,22 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         tableLights.isOn = true;
 
         trialController.initialState = TrialStates.AccomodationTime;
-        trialController.StartMachine();
+        inactiveTrialController.initialState = InactiveTrialStates.AccomodationTime;
+
+        if (trial.ContainsKey("IgnoreUpdate")) {
+            if (trial["IgnoreUpdate"].ToLower() == "true") {
+                inactiveTrialController.StartMachine();
+            }
+            else if (trial["IgnoreUpdate"].ToLower() == "false") {
+                trialController.StartMachine();
+            } else {
+                throw new Exception("Invalid value for IgnoreUpdate");
+            }
+
+            WriteLog("Right hand Still" + handSwitcher.ignoreUpdatesRight);
+        }
+
+        
     }
 
 
