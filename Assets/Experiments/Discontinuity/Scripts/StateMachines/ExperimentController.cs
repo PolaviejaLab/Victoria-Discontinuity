@@ -140,13 +140,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             WriteLog("Gender changed to male");
         }
 
-        if (Input.GetKeyDown(KeyCode.Keypad0))
-        {
-            WriteLog("Tracking Failed");
-        }
-
-        switch (GetState())
-        {
+        switch (GetState()) {
             case ExperimentStates.WaitingForFeedback:
                 if (Input.GetKeyDown(KeyCode.Tab))
                 {
@@ -183,7 +177,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
                 for (int i = 0; i < dir.Length; i++)
                 {
-                    outputDirectory = "Results/GABBAtesting" + participantNumber.ToString();
+                    outputDirectory = "Results/CCUSubjects" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);
@@ -222,8 +216,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 break;
 
             case ExperimentStates.Trial:
-                if (trialList.HasMore())
-                {
+                if (trialList.HasMore()) {
                     trialCounter++;
                     StartTrial();
                 }
@@ -260,13 +253,19 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
     private void PrepareTrial(Dictionary<string, string> trial, TrialController trialController)
     {
         // Determine which hand to use for given gapsize
-        if (trial["GapStatus"] == "Inactive")
+        if (trial["GapStatus"] == "Inactive") {
             trialController.hand = 0;
-        else if (trial["GapStatus"] == "Active")
+            inactiveTrialController.hand = 0;
+        }
+        else if (trial["GapStatus"] == "Active") {
             trialController.hand = 1;
+            inactiveTrialController.hand = 1;
+        }
+        
         else {
             WriteLog("Invalid GapSize in protocol");
             trialController.hand = -1;
+            inactiveTrialController.hand = -1;
         }
 
         WriteLog("Gap: " + trial["GapStatus"]);
@@ -385,15 +384,17 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
         if (trial.ContainsKey("IgnoreUpdate")) {
             if (trial["IgnoreUpdate"].ToLower() == "true") {
+                //handSwitcher.ignoreUpdatesRight = true;
                 inactiveTrialController.StartMachine();
             }
             else if (trial["IgnoreUpdate"].ToLower() == "false") {
+                handSwitcher.ignoreUpdatesRight = false;
                 trialController.StartMachine();
             } else {
                 throw new Exception("Invalid value for IgnoreUpdate");
             }
 
-            WriteLog("Right hand Still" + handSwitcher.ignoreUpdatesRight);
+            WriteLog("Right hand still " + handSwitcher.ignoreUpdatesRight);
         }
 
         
@@ -450,8 +451,11 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else
             writer.Write("No information, ");
 
-        writer.Write(trialController.knifeOffset);
-        writer.Write(", ");
+        if (threatController.knifeOnReal)
+            writer.Write("Knife on the real hand, ");
+        else if (!threatController.knifeOnReal)
+            writer.Write("Knife on the virtual hand, ");
+
         writer.Write(trialController.offset);
         writer.Write(", ");
         writer.Write(waveController.waveCounter);

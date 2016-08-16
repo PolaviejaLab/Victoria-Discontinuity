@@ -30,7 +30,7 @@ public class HandSwitcher : MonoBehaviour
     public bool ignoreUpdatesRight = false;
 
     private bool oldIgnoreUpdatesLeft = true;
-    private bool oldIgnoreUpdatesRright = true;
+    private bool oldIgnoreUpdatesRight = true;
 
     private bool oldRight, oldLeft;
     private float oldNoiseRight, oldNoiseLeft;
@@ -52,7 +52,7 @@ public class HandSwitcher : MonoBehaviour
             showLeftHand != oldLeft || showRightHand != oldRight ||
             noiseLevelLeft != oldNoiseLeft || noiseLevelRight != oldNoiseRight ||  
             lambdaLeft != oldLambdaLeft || lambdaRight != oldLambdaRight ||
-            ignoreUpdatesLeft != oldIgnoreUpdatesLeft || ignoreUpdatesRight != oldIgnoreUpdatesRright)
+            ignoreUpdatesLeft != oldIgnoreUpdatesLeft || ignoreUpdatesRight != oldIgnoreUpdatesRight)
         {
             UpdateModels();
             UpdateNoiseLevels();
@@ -68,7 +68,7 @@ public class HandSwitcher : MonoBehaviour
         oldLambdaRight = lambdaRight;
         oldLambdaLeft = lambdaLeft;
         oldIgnoreUpdatesLeft = ignoreUpdatesLeft;
-        oldIgnoreUpdatesRright = ignoreUpdatesRight;
+        oldIgnoreUpdatesRight = ignoreUpdatesRight;
 
     }
 

@@ -64,7 +64,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
                 break;
 
             case InactiveTrialStates.HandNotMoving:
-                if (GetTimeInState() > 30.0f)
+                if (GetTimeInState() > 50.0f)
                     ChangeState(InactiveTrialStates.TrialFinished);
                 break;
 
@@ -94,6 +94,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
     protected override void OnExit(InactiveTrialStates newState) {
         switch (GetState()) {
             case InactiveTrialStates.AccomodationTime:
+                handSwitcher.showLeftHand = false;
                 break;
 
             case InactiveTrialStates.HandNotMoving:

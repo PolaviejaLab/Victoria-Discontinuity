@@ -18,12 +18,28 @@ public class HandController : MonoBehaviour
 
     // Use this for initialization
     void Start ()
-    {	
-	}
-	
+    {
+        Debug.Log(transform.worldToLocalMatrix.m00);
+        Debug.Log(transform.worldToLocalMatrix.m01);
+        Debug.Log(transform.worldToLocalMatrix.m02);
+        Debug.Log(transform.worldToLocalMatrix.m03);
+        Debug.Log(transform.worldToLocalMatrix.m10);
+        Debug.Log(transform.worldToLocalMatrix.m11);
+        Debug.Log(transform.worldToLocalMatrix.m12);
+        Debug.Log(transform.worldToLocalMatrix.m13);
+        Debug.Log(transform.worldToLocalMatrix.m20);
+        Debug.Log(transform.worldToLocalMatrix.m21);
+        Debug.Log(transform.worldToLocalMatrix.m22);
+        Debug.Log(transform.worldToLocalMatrix.m23);
+        Debug.Log(transform.worldToLocalMatrix.m30);
+        Debug.Log(transform.worldToLocalMatrix.m31);
+        Debug.Log(transform.worldToLocalMatrix.m32);
+        Debug.Log(transform.worldToLocalMatrix.m33);
+    }
 
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update ()
     {
         if (!Application.isPlaying) return;
         if (!handController) return;

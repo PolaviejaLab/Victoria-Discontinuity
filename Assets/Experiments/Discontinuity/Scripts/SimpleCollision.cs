@@ -11,7 +11,7 @@ public class SimpleCollision : MonoBehaviour {
 
 	void OnTriggerStay(Collider col)
 	{
-        Debug.Log(col.name);
+     //   Debug.Log(col.name);
         if (col.name == "HandContainer"){
 			if(objects.Length == 0) {
                 waveController.HandleEvent(triggerEvent);

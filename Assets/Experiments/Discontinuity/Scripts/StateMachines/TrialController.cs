@@ -85,8 +85,13 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ProprioceptiveDrift:
-                if (ev == TrialEvents.DriftMeasured)
-                    ChangeState(TrialStates.ExtraWaves);
+                if (ev == TrialEvents.DriftMeasured) {
+                    if (knifePresent)
+                        ChangeState(TrialStates.ExtraWaves);
+                    else if (!knifePresent)
+                        ChangeState(TrialStates.TrialFinished);
+                }
+                    
                 break;
 
             case TrialStates.ExtraWaves:

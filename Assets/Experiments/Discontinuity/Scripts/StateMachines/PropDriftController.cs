@@ -67,6 +67,9 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
 
     public void HandleEvent(DriftEvents ev)
     {
+        if (!IsStarted())
+            return;
+
         Debug.Log("Event " + ev.ToString());
 
         switch (GetState())

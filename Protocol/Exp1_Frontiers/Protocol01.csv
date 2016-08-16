@@ -1,9 +1,0 @@
-TrialN, GapStatus, HandOffset, WavesRequired, NoiseLevel, LNoise, KnifeOnReal, IgnoreUpdate
-0, Inactive, 0, 10, 0.0, 0.0, True, False
-1, Inactive, 0, 0, 0.0, 0.0, False, True
-2, Inactive, 0, 20, 0.0, 0.0, False, False
-3, Inactive, 10, 20, 0.0, 0.0, False, False
-4, Inactive, 10, 20, 0.0, 0.0, True, False
-5, Inactive, 10, 20, 0.02, 0.9, False, False
-6, Active, 0, 0, 0.0, 0.0, False, True
-7, Active, 0, 20, 0.0, 0.0, True, False
