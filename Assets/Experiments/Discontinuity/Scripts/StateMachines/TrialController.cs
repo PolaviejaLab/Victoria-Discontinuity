@@ -38,6 +38,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 	public OffsetSwitcher offsetSwitcher;
 
     public GameObject testLights;
+    public GameObject room;
+    public GameObject table;
 
 	// Parameters of the current trial
 	public int hand;
@@ -143,7 +145,14 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ProprioceptiveDrift:
+                if (GetTimeInState() > 1.0f)
+                {
+                    room.SetActive(false);
+                    table.SetActive(false);
+                    driftController.markerOn = true;
+                    driftController.StartMachine();
 
+                }
                 break;
 
     		case TrialStates.Threat:
@@ -167,8 +176,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ProprioceptiveDrift:
-                driftController.StartMachine();
-                driftController.markerOn = true;
+
+ 
                 break;
 
             case TrialStates.ExtraWaves:
@@ -214,6 +223,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 driftController.markerOn = false;
                 driftController.marker.SetActive(false);
                 driftController.StopMachine();
+                room.SetActive(true);
+                table.SetActive(true);
                 break;
 
             case TrialStates.ExtraWaves:
