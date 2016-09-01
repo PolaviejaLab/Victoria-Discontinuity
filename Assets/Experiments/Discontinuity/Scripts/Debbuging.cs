@@ -4,6 +4,7 @@ using System.Collections;
 public class Debbuging : MonoBehaviour {
 
     public WaveController waveController;
+    public PropDriftController driftController;
 
 	void Start () {
 	}
@@ -15,5 +16,8 @@ public class Debbuging : MonoBehaviour {
             waveController.HandleEvent(WaveEvents.Wave_1);
 		if (Input.GetKeyDown (KeyCode.X))
             waveController.HandleEvent(WaveEvents.Wave_Initial);
+        if (Input.GetKeyDown(KeyCode.C))
+            driftController.HandleEvent(DriftEvents.ButtonPressed);
+
 	}
 }

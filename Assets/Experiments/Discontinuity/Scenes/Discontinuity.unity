@@ -2794,6 +2794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waveController: {fileID: 770215072}
+  driftController: {fileID: 2011203178}
 --- !u!1 &437938764
 GameObject:
   m_ObjectHideFlags: 0
@@ -9175,6 +9176,7 @@ MonoBehaviour:
   handSwitcher: {fileID: 31432808}
   hand: 0
   knifePresent: 0
+  testLights: {fileID: 2096310266}
 --- !u!4 &1582654674
 Transform:
   m_ObjectHideFlags: 0

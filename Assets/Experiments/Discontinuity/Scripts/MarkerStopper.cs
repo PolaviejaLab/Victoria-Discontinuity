@@ -24,21 +24,16 @@ public class MarkerStopper : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
-    {
-        try
-        {
+    void Update() {
+        try {
             string b = stream.ReadLine();
             b = b.Trim();
             Debug.Log(b);
-            if (b == "0" && aux)
-            {
+            if (b == "0" && aux) {
                 Debug.Log("Button pressed");
                 driftController.HandleEvent(DriftEvents.ButtonPressed);
                 aux = false;
-            }
-            else if (b == "1" && !aux)
-            {
+            } else if (b == "1" && !aux) {
                 aux = true;
             }
         }
