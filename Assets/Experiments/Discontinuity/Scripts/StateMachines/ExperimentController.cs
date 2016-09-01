@@ -191,9 +191,9 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 logger.OpenLog(GetLogFilename());
 
                 // Record participant number to log-file
+                
                 WriteLog("Participant" + participantNumber.ToString());
-                if (!handSwitcher.useMale)
-                {
+                if (!handSwitcher.useMale) {
                     WriteLog("Hand model is female");
                 }
                 else if (handSwitcher.useMale)
@@ -206,8 +206,11 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
 
+                
+
                 // Load protocol
                 Debug.Log("Loading protocol: " + protocolFile);
+                WriteLog("Protocol file " + protocolFile);
                 trialList = new ICTrialList(protocolFile);
                 WriteLog("Loaded " + trialList.Count() + " trials");
 
@@ -448,13 +451,21 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
         writer.Write(trialController.offset);
         writer.Write(", ");
-        writer.Write(waveController.waveCounter);
+        writer.Write(trialController.totWaves);
         writer.Write(", ");
-        writer.Write(waveController.correctWaves);
+        writer.Write(trialController.correctWaves);
         writer.Write(", ");
-        writer.Write(waveController.incorrectWaves);
+        writer.Write(trialController.incorrectWaves);
         writer.Write(", ");
-        writer.Write(waveController.lateWaves);
+        writer.Write(trialController.lateWaves);
+        writer.Write(", ");
+        writer.Write(trialController.totExtrWaves);
+        writer.Write(", ");
+        writer.Write(trialController.correctExtrWaves);
+        writer.Write(", ");
+        writer.Write(trialController.incorrectExtrWaves);
+        writer.Write(", ");
+        writer.Write(trialController.lateWaves);
         writer.Write(", ");
         writer.Write(driftController.proprioceptiveDrift);
         writer.Write(", ");

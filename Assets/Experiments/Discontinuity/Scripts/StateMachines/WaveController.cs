@@ -6,25 +6,27 @@ using System;
 * Events handled by the Wave State Machine
 */
 
-public enum WaveEvents {
+public enum WaveEvents
+{
     Wave_0 = 0,
     Wave_1 = 1,
-    Wave_Initial, 
+    Wave_Initial,
     Delay,
 };
 
 /**
 * States of the Wave State Machine
 */
-public enum WaveStates {
+public enum WaveStates
+{
     Initial,
-    Target, 
+    Target,
     CorrectWave,
     IncorrectWave,
     Waved,
     TooLate,
     ToOrigin,
-    EndWaving,  
+    EndWaving,
 };
 
 
@@ -60,13 +62,15 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     public GameObject collisionInitial;
 
 
-    public void Start () {
+    public void Start()
+    {
         collisionLights = GameObject.Find("CubeLight");
         collisionInitial = GameObject.Find("CubeInitial");
     }
 
 
-    protected override void OnStart() {
+    protected override void OnStart()
+    {
         // clear counters
         waveCounter = 0;
         lateWaves = 0;
@@ -75,18 +79,23 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     }
 
 
-    public void HandleEvent(WaveEvents ev) {
-        Debug.Log ("Event " + ev.ToString());
+    public void HandleEvent(WaveEvents ev)
+    {
+        Debug.Log("Event " + ev.ToString());
 
         if (!IsStarted())
             return;
 
-        switch (GetState()) {
+        switch (GetState())
+        {
             case WaveStates.Initial:
-                if (ev == WaveEvents.Delay && initialLightOn) {
+                if (ev == WaveEvents.Delay && initialLightOn)
+                {
                     initialLight.activeMaterial = 1;
                     collisionInitial.SetActive(true);
-                } else if (ev == WaveEvents.Wave_Initial){
+                }
+                else if (ev == WaveEvents.Wave_Initial)
+                {
                     WriteLog("Initial Waved");
 
                     ChangeState(WaveStates.Target);
@@ -94,7 +103,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.Target:
-                if (ev == WaveEvents.Delay && targetLightOn) {
+                if (ev == WaveEvents.Delay && targetLightOn)
+                {
                     // Turn on random target light
                     currentLight = UnityEngine.Random.Range(0, lights.Length);
 
@@ -110,7 +120,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     correctWaves++;
                     ChangeState(WaveStates.CorrectWave);
                 }
-                else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial) {
+                else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial)
+                {
                     WriteLog("Waved incorrectly");
 
                     incorrectWaves++;
@@ -137,13 +148,16 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     }
 
 
-    public void Update () {
+    public void Update()
+    {
         if (!IsStarted())
             return;
 
-        switch (GetState()) {
+        switch (GetState())
+        {
             case WaveStates.Initial:
-                if (GetTimeInState() > 0.5f && !initialLightOn) {
+                if (GetTimeInState() > 0.5f && !initialLightOn)
+                {
                     initialLightOn = true;
                     HandleEvent(WaveEvents.Delay);
                 }
@@ -151,14 +165,16 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
             case WaveStates.Target:
                 // Wait between the lights turning on and off
-                if (GetTimeInState() > 0.5f && !targetLightOn) {
+                if (GetTimeInState() > 0.5f && !targetLightOn)
+                {
                     targetLightOn = true;
                     HandleEvent(WaveEvents.Delay);
                 }
-                if (GetTimeInState () > 6.0f && targetLightOn) {
+                if (GetTimeInState() > 6.0f && targetLightOn)
+                {
                     WriteLog("Waved Late");
                     lateWaves++;
-                    
+
                     ChangeState(WaveStates.TooLate);
 
                 }
@@ -173,12 +189,15 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 if (GetTimeInState() > 0.5f)
                     ChangeState(WaveStates.Waved);
                 break;
-                
+
             case WaveStates.Waved:
-                if (GetTimeInState() > 1.5f) {
-                    if (waveCounter < wavesRequired) {
+                if (GetTimeInState() > 1.5f)
+                {
+                    if (waveCounter < wavesRequired)
+                    {
                         ChangeState(WaveStates.Initial);
-                    } else {
+                    }
+                    else {
                         ChangeState(WaveStates.ToOrigin);
                     }
                 }
@@ -196,9 +215,11 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     }
 
 
-    protected override void OnEnter(WaveStates oldState) {
+    protected override void OnEnter(WaveStates oldState)
+    {
 
-        switch (GetState()) {
+        switch (GetState())
+        {
             case WaveStates.Initial:
                 break;
 
@@ -233,8 +254,10 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     }
 
 
-    protected override void OnExit(WaveStates newState) {
-        switch (GetState()) {
+    protected override void OnExit(WaveStates newState)
+    {
+        switch (GetState())
+        {
             case WaveStates.Initial:
                 TurnOffInitial();
                 break;
@@ -259,14 +282,16 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     }
 
 
-    public void TurnOffInitial() {
+    public void TurnOffInitial()
+    {
         initialLight.activeMaterial = 0;
         collisionInitial.SetActive(false);
         initialLightOn = false;
     }
 
 
-    public void TurnOffTarget() {
+    public void TurnOffTarget()
+    {
         collisionLights.SetActive(false);
         lights[currentLight].activeMaterial = 0;
         targetLightOn = false;

@@ -47,6 +47,17 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
     public bool knifePresent;
     public Vector3 knifeOffset;
 
+    // wave recording variables
+    public int totWaves;
+    public int correctWaves;
+    public int incorrectWaves;
+    public int lateWaves;
+
+    public int totExtrWaves;
+    public int correctExtrWaves;
+    public int incorrectExtrWaves;
+    public int lateExtrWaves;
+
     private int extraWaves;
 
     public void Start() {
@@ -161,7 +172,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ExtraWaves:
-                waveController.wavesRequired = 4;
+                waveController.wavesRequired = extraWaves;
                 handSwitcher.showRightHand = true;
                 testLights.SetActive(true);
                 waveController.StartMachine();
@@ -192,6 +203,10 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
             case TrialStates.ExperimentWave:
                 testLights.SetActive(false);
                 handSwitcher.showRightHand = false;
+                totWaves = waveController.waveCounter;
+                correctWaves = waveController.correctWaves;
+                incorrectWaves = waveController.incorrectWaves;
+                lateWaves = waveController.lateWaves;
                 waveController.StopMachine();
                 break;
 
@@ -204,6 +219,10 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
             case TrialStates.ExtraWaves:
                 testLights.SetActive(false);
                 handSwitcher.showRightHand = false;
+                totExtrWaves = waveController.waveCounter;
+                correctExtrWaves = waveController.correctWaves;
+                incorrectExtrWaves = waveController.incorrectWaves;
+                lateExtrWaves = waveController.lateWaves;
                 waveController.StopMachine();
                 break;
 
