@@ -65,7 +65,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
         threatController.threatOffset = knifeOffset;
         threatController.handOffset = new Vector3 (0, 0, offset);
 
-        extraWaves = Random.Range(2, 6);
+        extraWaves = Random.Range(2, 4);
         
         testLights.SetActive(true);
     }
@@ -79,6 +79,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 	
 		switch (GetState()) {
             case TrialStates.AccomodationTime:
+                testLights.SetActive(false);
                 break;
 
             case TrialStates.ExperimentWave:
@@ -160,7 +161,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ExtraWaves:
-                waveController.wavesRequired = extraWaves;
+                waveController.wavesRequired = 4;
                 handSwitcher.showRightHand = true;
                 testLights.SetActive(true);
                 waveController.StartMachine();

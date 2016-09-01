@@ -72,8 +72,7 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
 
         Debug.Log("Event " + ev.ToString());
 
-        switch (GetState())
-        {
+        switch (GetState()) {
             case DriftStates.Idle:
                 if (ev == DriftEvents.Start && markerOn)
                 {
@@ -82,8 +81,7 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
                 break;
 
             case DriftStates.Moving:
-                if (ev == DriftEvents.ButtonPressed)
-                {
+                if (ev == DriftEvents.ButtonPressed) {
                     MeasureProprioceptiveDrift();
                     ChangeState(DriftStates.Measured);
                 }
@@ -101,34 +99,28 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
         if (!IsStarted())
             return;
 
-        switch (GetState())
-        {
+        switch (GetState()) {
             case DriftStates.Idle:
-                if (GetTimeInState() > 1.5f)
-                {
+                if (GetTimeInState() > 1.5f) {
                     marker.SetActive(true);
                     HandleEvent(DriftEvents.Start);
                 }
                 break;
 
             case DriftStates.Moving:
-                if (pointerMove)
-                {
+                if (pointerMove) {
                     StartMarker();
                 }
-
                 break;
 
             case DriftStates.Measured:
-                if (GetTimeInState() > 1.0f && !isMeasured)
-                {
+                if (GetTimeInState() > 1.0f && !isMeasured) {
                     pointer.transform.localPosition = pointerPosition;
                     trialController.HandleEvent(TrialEvents.DriftMeasured);
                     isMeasured = true;
                 }
 
                 break;
-
         }
     }
 
@@ -136,10 +128,8 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
     protected override void OnEnter(DriftStates oldState)
     {
 
-        switch (GetState())
-        {
+        switch (GetState()) {
             case DriftStates.Idle:
-
                 break;
 
             case DriftStates.Moving:

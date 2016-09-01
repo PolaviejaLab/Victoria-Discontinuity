@@ -177,7 +177,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
                 for (int i = 0; i < dir.Length; i++)
                 {
-                    outputDirectory = "Results/CCUSubjects" + participantNumber.ToString();
+                    outputDirectory = "Results/PreparingExp2" + participantNumber.ToString();
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);
@@ -201,7 +201,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                     WriteLog("Hand model is male");
                 }
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/Exp1_Frontiers");
+                string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Trial");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
@@ -375,15 +375,12 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         handSwitcher.ignoreUpdatesRight = false;
 
         if (trial.ContainsKey("IgnoreUpdate")) {
-            if (trial["IgnoreUpdate"].ToLower() == "true") {
-                inactiveTrialController.initialState = InactiveTrialStates.AccomodationTime;
-                handSwitcher.ignoreUpdatesRight = true;
-                inactiveTrialController.StartMachine();               
-            }
-            else if (trial["IgnoreUpdate"].ToLower() == "false") {
+            if (trial["IgnoreUpdate"].ToLower() == "false") {
                 trialController.initialState = TrialStates.AccomodationTime;
-                //handSwitcher.ignoreUpdatesRight = false;
                 trialController.StartMachine();
+            } else if (trial["IgnoreUpdate"].ToLower() == "true") {
+                inactiveTrialController.initialState = InactiveTrialStates.AccomodationTime;
+                inactiveTrialController.StartMachine(); 
             } else {
                 throw new Exception("Invalid value for IgnoreUpdate");
             }

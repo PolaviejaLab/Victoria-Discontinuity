@@ -28,6 +28,8 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
     public int hand;
     public bool knifePresent;
 
+    public GameObject testLights;
+
     public void Start () {
 	}
 
@@ -64,7 +66,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
                 break;
 
             case InactiveTrialStates.HandNotMoving:
-                if (GetTimeInState() > 50.0f)
+                if (GetTimeInState() > 5.0f)
                     ChangeState(InactiveTrialStates.TrialFinished);
                 break;
 
@@ -78,6 +80,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
         switch (GetState()) {
             case InactiveTrialStates.AccomodationTime:
                 handSwitcher.showRightHand = true;
+                testLights.SetActive(true);
                 break;
 
             case InactiveTrialStates.HandNotMoving:
@@ -86,6 +89,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
 
             case InactiveTrialStates.TrialFinished:
                 experimentController.HandleEvent(ExperimentEvents.TrialFinished);
+                testLights.SetActive(false);
                 this.StopMachine();
                 break;
         }
