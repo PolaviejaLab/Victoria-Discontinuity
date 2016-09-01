@@ -2958,6 +2958,10 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: 1.03
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: 5907f9d3e3e9bbd4b9db5bec7da6d834, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5907f9d3e3e9bbd4b9db5bec7da6d834, type: 3}
   m_IsPrefabParent: 0
@@ -5738,6 +5742,10 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 400148, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
   m_PrefabInternal: {fileID: 700101713}
+--- !u!1 &907814760 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100018, guid: 5907f9d3e3e9bbd4b9db5bec7da6d834, type: 3}
+  m_PrefabInternal: {fileID: 469048328}
 --- !u!1 &918722535
 GameObject:
   m_ObjectHideFlags: 0
@@ -6423,7 +6431,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1077385686
 Transform:
   m_ObjectHideFlags: 0
@@ -6790,12 +6798,22 @@ MonoBehaviour:
   handSwitcher: {fileID: 31432808}
   offsetSwitcher: {fileID: 1138750169}
   testLights: {fileID: 2096310266}
+  room: {fileID: 1118338594}
+  table: {fileID: 907814760}
   hand: 0
   offset: 0
   noiseLevel: 0
   lNoise: 0
   knifePresent: 0
   knifeOffset: {x: 0, y: 0, z: 0}
+  totWaves: 0
+  correctWaves: 0
+  incorrectWaves: 0
+  lateWaves: 0
+  totExtrWaves: 0
+  correctExtrWaves: 0
+  incorrectExtrWaves: 0
+  lateExtrWaves: 0
 --- !u!4 &1118483235
 Transform:
   m_ObjectHideFlags: 0
