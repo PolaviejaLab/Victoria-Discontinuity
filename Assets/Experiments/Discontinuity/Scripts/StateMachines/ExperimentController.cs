@@ -338,24 +338,18 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         }
 
         // Knife
-        if (trial.ContainsKey("KnifeOnReal"))
-        {
-            if (trial["KnifeOnReal"].ToLower() == "true")
-            {
-                threatController.knifeOnReal = true;
-            }
-            else if (trial["KnifeOnReal"].ToLower() == "false")
-            {
-                threatController.knifeOnReal = false;
+        if (trial.ContainsKey("KnifeOnReal")) {
+            if (trial["KnifeOnReal"].ToLower() == "true") {
+                threatController.knifeOnReal = true; 
+            } else if (trial["KnifeOnReal"].ToLower() == "false") {
+                threatController.knifeOnReal = false; 
             }
 
             else
                 throw new Exception("Invalid value in trial list for field KnifeOnReal");
             
             WriteLog("Knife on Real" + threatController.knifeOnReal);
-        }
-
-       
+        }      
     }
 
 
@@ -378,17 +372,17 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
         // Turn table lights on
         tableLights.isOn = true;
-
-        trialController.initialState = TrialStates.AccomodationTime;
-        inactiveTrialController.initialState = InactiveTrialStates.AccomodationTime;
+        handSwitcher.ignoreUpdatesRight = false;
 
         if (trial.ContainsKey("IgnoreUpdate")) {
             if (trial["IgnoreUpdate"].ToLower() == "true") {
-                //handSwitcher.ignoreUpdatesRight = true;
-                inactiveTrialController.StartMachine();
+                inactiveTrialController.initialState = InactiveTrialStates.AccomodationTime;
+                handSwitcher.ignoreUpdatesRight = true;
+                inactiveTrialController.StartMachine();               
             }
             else if (trial["IgnoreUpdate"].ToLower() == "false") {
-                handSwitcher.ignoreUpdatesRight = false;
+                trialController.initialState = TrialStates.AccomodationTime;
+                //handSwitcher.ignoreUpdatesRight = false;
                 trialController.StartMachine();
             } else {
                 throw new Exception("Invalid value for IgnoreUpdate");
@@ -446,15 +440,14 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
         if (trialController.noiseLevel == 0)
             writer.Write("Hand noise inactive, ");
-        else if (trialController.noiseLevel == 1)
-            writer.Write("Hand noise active, ");
         else
-            writer.Write("No information, ");
+            writer.Write("Hand noise active, ");
 
         if (threatController.knifeOnReal)
             writer.Write("Knife on the real hand, ");
         else if (!threatController.knifeOnReal)
             writer.Write("Knife on the virtual hand, ");
+
 
         writer.Write(trialController.offset);
         writer.Write(", ");
