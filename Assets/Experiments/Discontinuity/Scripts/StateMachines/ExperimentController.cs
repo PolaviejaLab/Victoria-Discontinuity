@@ -75,6 +75,8 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
     private bool trialEmpty;
 
+    public int noiseType;
+
 
     public void Start()
     {
@@ -290,7 +292,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
         // Determine noise type
         if (trial.ContainsKey("NoiseType")) {
-            int noiseType;
             int.TryParse(trial["NoiseType"], out noiseType);
             WriteLog("Noise type " + noiseType);
         }
@@ -455,10 +456,18 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else
             writer.Write("Threat unknown, ");
 
-        if (trialController.noiseLevel == 0)
+
+
+        if (noiseType == 0)
             writer.Write("Hand noise inactive, ");
+        else if (noiseType == 1)
+            writer.Write("Bodiliy noise active, ");
+        else if (noiseType == 2)
+            writer.Write("Outcome noise active, ");
+        else if (noiseType == 3)
+            writer.Write("Bodily and outcome noise active, ");
         else
-            writer.Write("Hand noise active, ");
+            writer.Write("no noise information available");
 
         if (threatController.knifeOnReal)
             writer.Write("Knife on the real hand, ");
