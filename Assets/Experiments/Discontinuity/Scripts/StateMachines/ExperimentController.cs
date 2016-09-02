@@ -288,10 +288,15 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         int.TryParse(trial["WavesRequired"], out wavesRequired);
         waveController.wavesRequired = wavesRequired;
 
+        // Determine noise type
+        if (trial.ContainsKey("NoiseType")) {
+            int noiseType;
+            int.TryParse(trial["NoiseType"], out noiseType);
+            WriteLog("Noise type " + noiseType);
+        }
 
         // Noise level
-        if (trial.ContainsKey("NoiseLevel"))
-        {
+        if (trial.ContainsKey("NoiseLevel")) {
             float noiseLevel;
             float.TryParse(trial["NoiseLevel"], out noiseLevel);
             trialController.noiseLevel = noiseLevel;
@@ -301,15 +306,29 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             trialController.noiseLevel = 0.0f;
         }
 
-        if (trial.ContainsKey("LNoise")) {
-            float lNoise;
-            float.TryParse(trial["LNoise"], out lNoise);
-            trialController.lNoise = lNoise;
-            WriteLog("Lambda: " + lNoise);
+        if (trial.ContainsKey("NoiseLambda")) {
+            float noiseLambda;
+            float.TryParse(trial["NoiseLambda"], out noiseLambda);
+            trialController.lNoise = noiseLambda;
+            WriteLog("Lambda: " + noiseLambda);
         }
         else {
             trialController.lNoise = 0.0f;
         }
+
+
+        // Determine collision probability
+        if (trial.ContainsKey("CollisionProbability"))
+        {
+            float collisionProbability;
+            float.TryParse(trial["CollisionProbability"], out collisionProbability);
+            waveController.collisionProbability = collisionProbability;
+            WriteLog("Collision probability: " + collisionProbability);
+        }
+        else {
+            waveController.collisionProbability = 1.0f;
+        }
+
 
         // Knife
         if (trial.ContainsKey("KnifePresent"))
@@ -325,8 +344,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         }
 
         // Knife Offset
-        if (trial.ContainsKey("KnifeOffset"))
-        {
+        if (trial.ContainsKey("KnifeOffset")) {
             float knifeOffsetx; float knifeOffsety; float knifeOffsetz;
             float.TryParse(trial["OffsetX"], out knifeOffsetx);
             float.TryParse(trial["OffsetY"], out knifeOffsety);

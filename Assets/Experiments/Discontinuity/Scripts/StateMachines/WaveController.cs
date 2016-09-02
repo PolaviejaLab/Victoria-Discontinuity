@@ -60,6 +60,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     // Colliders on/off
     public GameObject collisionLights;
     public GameObject collisionInitial;
+    public float collisionProbability;  
 
 
     public void Start()
