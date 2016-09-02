@@ -205,8 +205,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
-
-                
+                              
 
                 // Load protocol
                 Debug.Log("Loading protocol: " + protocolFile);

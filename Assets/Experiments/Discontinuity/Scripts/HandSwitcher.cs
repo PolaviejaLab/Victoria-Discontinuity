@@ -122,6 +122,7 @@ public class HandSwitcher : MonoBehaviour
             hand.ignoreUpdates = ignoreUpdatesLeft;
             hand.noiseType = (noiseLevelLeft == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelLeft;
+            hand.lambda = lambdaLeft;
         }
 
         for (int i = 0; i < rightGraphicsModelFemale.Length; i++)
@@ -131,6 +132,7 @@ public class HandSwitcher : MonoBehaviour
             hand.ignoreUpdates = ignoreUpdatesRight;
             hand.noiseType = (noiseLevelRight == 0) ? NoiseType.NoNoise : NoiseType.NormalRandomWalk;
             hand.noiseLevel = noiseLevelRight;
+            hand.lambda = lambdaRight;
         }
 
     }
