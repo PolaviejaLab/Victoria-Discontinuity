@@ -6,12 +6,14 @@ public class SimpleCollision : MonoBehaviour {
 	public WaveController waveController;
 	public WaveEvents triggerEvent;
 	public GameObject[] objects;
+    public float probability;
 
 	public bool CompareByName = false;	
 
 	void OnTriggerStay(Collider col)
 	{
-     //   Debug.Log(col.name);
+        //   Debug.Log(col.name);
+        probability = Random.Range(0.01f, 0.99f);
         if (col.name == "HandContainer"){
 			if(objects.Length == 0) {
                 waveController.HandleEvent(triggerEvent);
@@ -26,6 +28,7 @@ public class SimpleCollision : MonoBehaviour {
 					}
 				}
 			}
+            waveController.randomProbability = probability;
 		}
 	}	
 }

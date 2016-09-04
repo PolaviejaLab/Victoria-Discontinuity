@@ -60,7 +60,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     // Colliders on/off
     public GameObject collisionLights;
     public GameObject collisionInitial;
-    public float collisionProbability;  
+    public float collisionProbability;
+    public float randomProbability;
 
 
     public void Start()
@@ -114,17 +115,24 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     lights[currentLight].activeMaterial = 1;
                     collisionLights.SetActive(true);
                 }
-                else if ((int)ev == currentLight)
+                else if ((int)ev == currentLight && randomProbability <= collisionProbability)
                 {
+                    Debug.Log("correct " + collisionProbability);
+                    WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
                     WriteLog("Waved correctly");
-
                     correctWaves++;
                     ChangeState(WaveStates.CorrectWave);
+                }
+                else if ((int)ev == currentLight && randomProbability >= collisionProbability) {
+                    Debug.Log("incorrect " + collisionProbability);
+                    WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
+                    WriteLog("Waved incorrectly");
+                    incorrectWaves++;
+                    ChangeState(WaveStates.IncorrectWave);
                 }
                 else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial)
                 {
                     WriteLog("Waved incorrectly");
-
                     incorrectWaves++;
                     ChangeState(WaveStates.IncorrectWave);
                 }
