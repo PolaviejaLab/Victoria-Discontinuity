@@ -474,8 +474,10 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else if (!threatController.knifeOnReal)
             writer.Write("Knife on the virtual hand, ");
 
-
+       
         writer.Write(trialController.offset);
+        writer.Write(", ");
+        writer.Write(waveController.collisionProbability);
         writer.Write(", ");
         writer.Write(trialController.totWaves);
         writer.Write(", ");
