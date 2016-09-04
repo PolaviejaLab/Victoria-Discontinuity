@@ -330,7 +330,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             waveController.collisionProbability = 1.0f;
         }
 
-
         // Knife
         if (trial.ContainsKey("KnifePresent"))
         {
