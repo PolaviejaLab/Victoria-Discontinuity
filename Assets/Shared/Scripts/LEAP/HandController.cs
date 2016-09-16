@@ -19,6 +19,30 @@ public class HandController : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        // Last time we found that the LEAP Unity Assets apply this transformation
+        // matrix to convert the LEAP coordinates into Unity coordinates.
+        //
+        //  -> I've just confirmed that this occurs in LeapServiceProvider.cs, see CurrentFrame() function.
+        //
+        // That means that just using the PalmPosition from CurrentFrame() at this point is not a good idea, 
+        // because it has been transformed.
+        // There are two options: 
+        //  1) We can try and invert the operation (multiply the aforementioned matrix, or it's inverse, by this vector).
+        //  2) We can try to obtain the unprocessed position.
+        //
+        // -> If you look at LeapServiceProvider.cs, last function, you will see that is uses
+        //    LeapHandController.Provider.GetLeapController().Frame
+        //    To obtain the real frame (before transformation). I have changed the code below
+        //    to do the same.
+        //
+        //  Your job is to verify that this code does indeed do what it's supposed to do.
+        //  Perhaps make some recordings of you moving the hand in a known way and
+        //  look at the data to see if it is correct.
+        //
+        //  Hope this helps... I've got a (customer) deadline this week, so might be a bit unresponsive (that's why 
+        //  I forgot to call you last week as well)... should be more reachable next week :)
+        // 
+
         Debug.Log(transform.worldToLocalMatrix.m00);
         Debug.Log(transform.worldToLocalMatrix.m01);
         Debug.Log(transform.worldToLocalMatrix.m02);
@@ -91,7 +115,10 @@ public class HandController : MonoBehaviour
         if (streamWriter == null || handController == null)
             return;
 
-        Frame frame = handController.Provider.CurrentFrame;
+   
+        LeapServiceProvider provider = (LeapServiceProvider) handController.Provider;
+        Frame frame = provider.GetLeapController().Frame();
+
         bool gotHand = false;
 
         streamWriter.Write(DateTime.UtcNow.ToString("o") + ", ");
@@ -103,7 +130,7 @@ public class HandController : MonoBehaviour
 
                 streamWriter.Write(frame.Hands[h].Confidence);
                 streamWriter.Write(", ");
-
+                
                 WritePosition(streamWriter, frame.Hands[h].PalmPosition);
                 break;
             }
