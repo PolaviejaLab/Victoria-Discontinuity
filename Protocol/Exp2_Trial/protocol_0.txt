@@ -1,10 +1,10 @@
-TrialNumber, WavesRequired, IgnoreUpdate, GapStatus, HandOffset, NoiseType, NoiseLevel, NoiseLambda, CollisionProbability, KnifePresent, KnifeOnReal
-1, 0, True, Inactive, 0, 0, 0, 0, 1.0, True, False
-2, 0, True, Active, 0, 0, 0, 0, 1.0, True, False
-3, 1, False, Inactive, 0, 0, 0, 0, 1.0, False, False
-4, 2, False, Inactive, 10, 0, 0, 0, 1.0, True, False
-5, 2, False, Active, 10, 0, 0, 0, 1.0, True, False
-6, 2, False, Inactive, 10, 1, 0.15, 0.9, 1.0, True, False
-7, 2, False, Active, 10, 1, 0.15, 0.9, 1.0, True, False
-8, 15, False, Inactive, 10, 2, 0, 0, 0.50, True, False
-9, 2, False, Inactive, 10, 3, 0.15, 0.9, 0.50, True, False
+TrialNumber, WavesRequired, IgnoreUpdate, GapStatus, HandOffset, NoiseType, NoiseLevel, NoiseLambda, CollisionProbability, KnifePresent, KnifeOnReal, GenderChanged
+3, 1, False, Inactive, 0, 0, 0, 0, 1.0, False, False, False
+4, 2, False, Inactive, 10, 0, 0, 0, 1.0, True, False, False
+9, 2, False, Inactive, 10, 0, 0, 0, 1.0, True, False, True
+5, 2, False, Active, 10, 0, 0, 0, 1.0, True, False, False
+6, 2, False, Inactive, 10, 1, 0.15, 0.9, 1.0, True, False, False
+7, 2, False, Active, 10, 1, 0.15, 0.9, 1.0, True, False, False
+8, 2, False, Inactive, 10, 2, 0, 0, 0.014, True, False, False
+1, 0, True, Inactive, 0, 0, 0, 0, 1.0, True, False, False
+2, 0, True, Active, 0, 0, 0, 0, 1.0, True, False, False
