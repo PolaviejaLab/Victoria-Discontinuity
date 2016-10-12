@@ -4143,6 +4143,7 @@ MonoBehaviour:
   protocolFile: Protocol/TestNewer
   trialCounter: 0
   randomProtocol: 0
+  noiseType: 0
 --- !u!4 &685971308
 Transform:
   m_ObjectHideFlags: 0
@@ -4341,7 +4342,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 100174, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
       propertyPath: m_IsActive
@@ -5038,6 +5039,8 @@ MonoBehaviour:
   targetLightOn: 0
   collisionLights: {fileID: 0}
   collisionInitial: {fileID: 0}
+  collisionProbability: 0
+  randomProbability: 0
 --- !u!4 &770215073
 Transform:
   m_ObjectHideFlags: 0
@@ -6155,6 +6158,7 @@ MonoBehaviour:
   waveController: {fileID: 770215072}
   triggerEvent: 2
   objects: []
+  probability: 0
   CompareByName: 1
 --- !u!65 &1000434702
 BoxCollider:
@@ -6806,6 +6810,8 @@ MonoBehaviour:
   lNoise: 0
   knifePresent: 0
   knifeOffset: {x: 0, y: 0, z: 0}
+  changeGender: 0
+  genderChanged: 0
   totWaves: 0
   correctWaves: 0
   incorrectWaves: 0
@@ -10524,6 +10530,7 @@ MonoBehaviour:
   waveController: {fileID: 770215072}
   triggerEvent: 0
   objects: []
+  probability: 0
   CompareByName: 0
 --- !u!4 &1788458929 stripped
 Transform:
@@ -11107,6 +11114,7 @@ MonoBehaviour:
   waveController: {fileID: 770215072}
   triggerEvent: 1
   objects: []
+  probability: 0
   CompareByName: 0
 --- !u!1 &1943522744
 GameObject:
