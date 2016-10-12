@@ -369,7 +369,17 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 throw new Exception("Invalid value in trial list for field KnifeOnReal");
             
             WriteLog("Knife on Real" + threatController.knifeOnReal);
-        }      
+        }
+
+        // Gender Change
+        if (trial.ContainsKey("ChangeGender")) {
+            if (trial["ChangeGender"].ToLower() == "true") {
+                trialController.changeGender = true;
+            } else if (trial["ChangeGender"].ToLower() == "false"){
+                trialController.changeGender = false;
+            }
+
+        }
     }
 
 
@@ -472,6 +482,14 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             writer.Write("Knife on the real hand, ");
         else if (!threatController.knifeOnReal)
             writer.Write("Knife on the virtual hand, ");
+
+        if (handSwitcher.useMale)
+        {
+            writer.Write("Male model");
+        }
+        else if (!handSwitcher.useMale) {
+            writer.Write("Female model");
+        }
 
        
         writer.Write(trialController.offset);

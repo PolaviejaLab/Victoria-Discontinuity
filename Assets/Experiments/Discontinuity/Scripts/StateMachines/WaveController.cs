@@ -126,11 +126,11 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 else if ((int)ev == currentLight && randomProbability > collisionProbability) {
                     WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
 
-                    // WriteLog("Not waved"); // Uncomment for noise-type 2.2, that waits until timeout
+                    WriteLog("Not waved"); // Uncomment for noise-type 2.2, that waits until timeout
 
-                    WriteLog("Waved incorrectly"); // uncomment for type of noise 2 that send directly to incorrecy wave
-                    incorrectWaves++;
-                    ChangeState(WaveStates.IncorrectWave);
+                    //WriteLog("Waved incorrectly"); // uncomment for type of noise 2 that send directly to incorrecy wave
+                    //incorrectWaves++;
+                    //ChangeState(WaveStates.IncorrectWave);
                 }
                 else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial)
                 {

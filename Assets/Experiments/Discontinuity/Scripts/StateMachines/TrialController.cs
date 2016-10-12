@@ -48,6 +48,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
     public float lNoise;
     public bool knifePresent;
     public Vector3 knifeOffset;
+    public bool changeGender;
+    public bool genderChanged;
 
     // wave recording variables
     public int totWaves;
@@ -151,7 +153,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                     table.SetActive(false);
                     driftController.markerOn = true;
                     driftController.StartMachine();
-
                 }
                 break;
 
@@ -169,7 +170,35 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.AccomodationTime:
     			handSwitcher.showRightHand = true;
-    			break;
+
+                if (genderChanged == false && changeGender == true)
+                {
+                    if (handSwitcher.useMale)
+                    {
+                        handSwitcher.useMale = false;
+                        WriteLog("Gender changed to female");
+                    }
+                    else if (!handSwitcher.useMale)
+                    {
+                        handSwitcher.useMale = true;
+                        WriteLog("Gender changed to male");
+                    }
+                    genderChanged = true;
+                }
+                else if (genderChanged == true && changeGender == false) {
+                    if (handSwitcher.useMale)
+                    {
+                        handSwitcher.useMale = false;
+                        WriteLog("Gender changed to female");
+                    }
+                    else if (!handSwitcher.useMale)
+                    {
+                        handSwitcher.useMale = true;
+                        WriteLog("Gender changed to male");
+                    }
+                    genderChanged = false;
+                }
+                break;
 
             case TrialStates.ExperimentWave:
                 waveController.StartMachine();
