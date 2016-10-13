@@ -476,7 +476,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else if (noiseType == 3)
             writer.Write("Bodily and outcome noise active, ");
         else
-            writer.Write("no noise information available");
+            writer.Write("no noise information available, ");
 
         if (threatController.knifeOnReal)
             writer.Write("Knife on the real hand, ");
@@ -485,10 +485,10 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
         if (handSwitcher.useMale)
         {
-            writer.Write("Male model");
+            writer.Write("Male model, ");
         }
         else if (!handSwitcher.useMale) {
-            writer.Write("Female model");
+            writer.Write("Female model, ");
         }
 
        
