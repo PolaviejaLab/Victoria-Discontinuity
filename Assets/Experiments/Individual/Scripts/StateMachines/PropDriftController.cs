@@ -33,7 +33,8 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
 
     public float speed;
 
-    public float proprioceptiveDrift;
+    public float pre_proprioceptiveDrift;
+    public float post_proprioceptiveDrift;
 
     public Transform handTransform;
 
@@ -60,7 +61,10 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
 
     protected override void OnStart()
     {
-        proprioceptiveDrift = 0;
+        if (!trialController.waved)
+            pre_proprioceptiveDrift = 0;
+        if(trialController.waved)
+            post_proprioceptiveDrift = 0;
         isMeasured = false;
     }
 
@@ -184,10 +188,21 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
     // Method that will be called when proprioceptive drift needs to be measured
     public float MeasureProprioceptiveDrift()
     {
-        speed = 0.0f;
-        proprioceptiveDrift += pointer.transform.localPosition.z;
+        if (!trialController.waved)
+        {
+            speed = 0.0f;
+        pre_proprioceptiveDrift += pointer.transform.localPosition.z;
         handPosition = handTransform.position;
-
-        return proprioceptiveDrift;
+            Debug.Log("proprioceptive" + pre_proprioceptiveDrift);
+            return pre_proprioceptiveDrift;
+        }
+        else {
+            speed = 0.0f;
+            post_proprioceptiveDrift += pointer.transform.localPosition.z;
+            handPosition = handTransform.position;
+            Debug.Log("proprioceptive" + post_proprioceptiveDrift);
+            return post_proprioceptiveDrift;
+        }
+        
     }
 }
