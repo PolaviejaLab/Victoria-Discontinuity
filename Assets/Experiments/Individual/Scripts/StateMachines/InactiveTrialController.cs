@@ -30,7 +30,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
 
     public GameObject testLights;
 
-    public void Start () {
+    public void Start() {
 	}
 
     protected override void OnStart() {

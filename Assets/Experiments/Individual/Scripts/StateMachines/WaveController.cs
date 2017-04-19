@@ -12,6 +12,8 @@ public enum WaveEvents
     Wave_1 = 1,
     Wave_Initial,
     Delay,
+
+    ThreatDone,
 };
 
 /**
@@ -19,21 +21,24 @@ public enum WaveEvents
 */
 public enum WaveStates
 {
-    Initial,
-    Target,
-    CorrectWave,
-    IncorrectWave,
-    Waved,
-    TooLate,
-    ToOrigin,
-    EndWaving,
+    Initial,                    // Initial Light
+    Target,                     // Target Light
+    CorrectWave,                // Waved Correctly
+    IncorrectWave,              // Waved Incorrectly
+    TooLate,                    // Waved too late
+    Waved,                      // Finished the wave
+    Threat,                     // Threat to the virtual hand
+    ToOrigin,                   // Go back to origin after the 
+    EndWaving,                  // Task finished
 };
 
 
 public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 {
+
     // Reference to other classes
     public TrialController trialController;
+    public Threat threatController;
 
     // Initial and subsequent lights
     public MaterialChanger initialLight;
@@ -41,6 +46,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
     // Parameters for the waving
     public int wavesRequired;
+    public int waveThreat;
 
     // Keep track of the number of waves
     public int waveCounter;
@@ -68,6 +74,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     {
         collisionLights = GameObject.Find("CubeLight");
         collisionInitial = GameObject.Find("CubeInitial");
+
+        threatController.Stopped += (obj, ev) => HandleEvent(WaveEvents.ThreatDone);
     }
 
 
@@ -78,6 +86,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
         lateWaves = 0;
         correctWaves = 0;
         incorrectWaves = 0;
+
+        trialController.threatened = false;
     }
 
 
@@ -118,6 +128,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 else if ((int)ev == currentLight && randomProbability <= collisionProbability)
                 {
                     WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
+
                     WriteLog("Waved correctly");
 
                     correctWaves++;
@@ -155,6 +166,11 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     trialController.HandleEvent(TrialEvents.WavingFinished);
                 break;
 
+            case WaveStates.Threat:
+                if (ev == WaveEvents.ThreatDone)
+                    trialController.threatened = true;
+                break;
+
         }
     }
 
@@ -187,7 +203,6 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     lateWaves++;
 
                     ChangeState(WaveStates.TooLate);
-
                 }
                 break;
 
@@ -205,12 +220,9 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 if (GetTimeInState() > 1.5f)
                 {
                     if (waveCounter < wavesRequired)
-                    {
                         ChangeState(WaveStates.Initial);
-                    }
-                    else {
+                    else
                         ChangeState(WaveStates.ToOrigin);
-                    }
                 }
                 break;
 
@@ -248,6 +260,11 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
             case WaveStates.Waved:
                 TurnOffTarget();
+                if (waveThreat == waveCounter && trialController.knifePresent)
+                {
+                    threatController.StartMachine();
+                    threatController.HandleEvent(ThreatEvent.ReleaseThreat);
+                }
                 break;
 
             case WaveStates.ToOrigin:
@@ -303,8 +320,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
     public void TurnOffTarget()
     {
-        collisionLights.SetActive(false);
         lights[currentLight].activeMaterial = 0;
+        collisionLights.SetActive(false);
         targetLightOn = false;
     }
 }

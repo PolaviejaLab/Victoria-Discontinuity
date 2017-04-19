@@ -384,7 +384,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             } else if (trial["ChangeGender"].ToLower() == "false"){
                 trialController.changeGender = false;
             }
-
         }
     }
 
@@ -482,7 +481,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else if (noiseType == 3)
             writer.Write("Bodily and outcome noise active, ");
         else
-            writer.Write("no noise information available, ");
+            writer.Write("No noise information available, ");
 
         if (threatController.knifeOnReal)
             writer.Write("Knife on the real hand, ");
@@ -510,14 +509,14 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         writer.Write(", ");
         writer.Write(trialController.lateWaves);
         writer.Write(", ");
-        writer.Write(trialController.totExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.correctExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.incorrectExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.lateWaves);
-        writer.Write(", ");
+        //writer.Write(trialController.totExtrWaves);
+        //writer.Write(", ");
+        //writer.Write(trialController.correctExtrWaves);
+        //writer.Write(", ");
+        //writer.Write(trialController.incorrectExtrWaves);
+        //writer.Write(", ");
+        //writer.Write(trialController.lateExtrWaves);
+        //writer.Write(", ");
         writer.Write(driftController.pre_proprioceptiveDrift);
         writer.Write(", ");
         writer.Write(driftController.post_proprioceptiveDrift);
