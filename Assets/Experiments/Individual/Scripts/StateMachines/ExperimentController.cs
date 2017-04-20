@@ -517,10 +517,10 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         //writer.Write(", ");
         //writer.Write(trialController.lateExtrWaves);
         //writer.Write(", ");
-        writer.Write(driftController.pre_proprioceptiveDrift);
-        writer.Write(", ");
-        writer.Write(driftController.post_proprioceptiveDrift);
-        writer.Write(", ");
+        //writer.Write(driftController.pre_proprioceptiveDrift);
+        //writer.Write(", ");
+        //writer.Write(driftController.post_proprioceptiveDrift);
+        //writer.Write(", ");
         writer.WriteLine();
 
         writer.Close();

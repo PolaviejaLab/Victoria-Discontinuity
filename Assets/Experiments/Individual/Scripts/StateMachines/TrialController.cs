@@ -18,7 +18,7 @@ public enum TrialEvents {
 public enum TrialStates {
 	AccomodationTime,           // Get used to the environment
     ExperimentWave,             // Reaching-like task
-    ProprioceptiveDrift,        // Measure proprioceptive drift
+    //ProprioceptiveDrift,        // Measure proprioceptive drift
     //Threat,                     // Threat to the virtual hand
     TrialFinished,              // End of the trial
 };
@@ -95,22 +95,22 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.ExperimentWave:
                 if (ev == TrialEvents.WavingFinished){
-                    ChangeState(TrialStates.ProprioceptiveDrift);
+                    ChangeState(TrialStates.TrialFinished);
                 }
                 break;
 
-            case TrialStates.ProprioceptiveDrift:
-                if (ev == TrialEvents.DriftMeasured)
-                {
-                    if (!waved) {
-                        ChangeState(TrialStates.ExperimentWave);
-                    }
-                    else {
-                        ChangeState(TrialStates.TrialFinished);
-                    }
-                }
+            //case TrialStates.ProprioceptiveDrift:
+            //    if (ev == TrialEvents.DriftMeasured)
+            //    {
+            //        if (!waved) {
+            //            ChangeState(TrialStates.ExperimentWave);
+            //        }
+            //        else {
+            //            ChangeState(TrialStates.TrialFinished);
+            //        }
+            //    }
                     
-                break;
+            //    break;
 
             case TrialStates.TrialFinished:
                 break;	
@@ -127,19 +127,19 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 		switch (GetState ()) {  
     		case TrialStates.AccomodationTime:
                 if (Input.GetKey(KeyCode.Q))
-                    ChangeState(TrialStates.ProprioceptiveDrift);
+                    ChangeState(TrialStates.ExperimentWave);
     			break;
 
             case TrialStates.ExperimentWave:
                 break;
 
-            case TrialStates.ProprioceptiveDrift:
-                if (GetTimeInState() > 1.0f)
-                {
-                    driftController.markerOn = true;
-                    driftController.StartMachine();
-                }
-                break;
+            //case TrialStates.ProprioceptiveDrift:
+            //    if (GetTimeInState() > 1.0f)
+            //    {
+            //        driftController.markerOn = true;
+            //        driftController.StartMachine();
+            //    }
+            //    break;
 
             case TrialStates.TrialFinished:
                 break;
@@ -188,12 +188,12 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 waveController.StartMachine();
                 break;
 
-            case TrialStates.ProprioceptiveDrift:
-                testLights.SetActive(false);
-                handSwitcher.showRightHand = false;
-                room.SetActive(false);
-                table.SetActive(false);
-                break;
+            //case TrialStates.ProprioceptiveDrift:
+            //    testLights.SetActive(false);
+            //    handSwitcher.showRightHand = false;
+            //    room.SetActive(false);
+            //    table.SetActive(false);
+            //    break;
 
             case TrialStates.TrialFinished:
                 experimentController.HandleEvent(ExperimentEvents.TrialFinished);
@@ -220,13 +220,13 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 waved = true;
                 break;
 
-            case TrialStates.ProprioceptiveDrift:
-                driftController.markerOn = false;
-                driftController.marker.SetActive(false);
-                driftController.StopMachine();
-                room.SetActive(true);
-                table.SetActive(true);
-                break;
+            //case TrialStates.ProprioceptiveDrift:
+            //    driftController.markerOn = false;
+            //    driftController.marker.SetActive(false);
+            //    driftController.StopMachine();
+            //    room.SetActive(true);
+            //    table.SetActive(true);
+            //    break;
 
             case TrialStates.TrialFinished:
                 break;
