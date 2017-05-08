@@ -8,12 +8,18 @@ public class SimpleCollision : MonoBehaviour {
 	public GameObject[] objects;
     public float probability;
 
+    private float mean;
+    private float sigma;
+
 	public bool CompareByName = false;	
 
 	void OnTriggerStay(Collider col)
 	{
         //   Debug.Log(col.name);
+        
         probability = Random.Range(0.01f, 0.99f);
+
+        
         if (col.name == "HandContainer"){
 			if(objects.Length == 0) {
                 waveController.HandleEvent(triggerEvent);
@@ -30,5 +36,6 @@ public class SimpleCollision : MonoBehaviour {
 			}
             waveController.randomProbability = probability;
 		}
-	}	
+	}
+
 }

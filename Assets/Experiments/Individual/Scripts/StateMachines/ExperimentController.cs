@@ -73,6 +73,8 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
     public int trialCounter;
     public int randomProtocol;
+    public string experimentName;
+    public string protocolFolder;
 
     private bool trialEmpty;
 
@@ -209,7 +211,11 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                     WriteLog("Hand model is male");
                 }
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Experiment");
+                // string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Experiment1");
+
+                protocolFolder = "Protocol/" + experimentName;
+                string[] dirProtocol = Directory.GetFiles(protocolFolder);
+                Debug.Log(protocolFolder);
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];

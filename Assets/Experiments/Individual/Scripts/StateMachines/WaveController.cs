@@ -12,7 +12,7 @@ public enum WaveEvents
     Wave_1 = 1,
     Wave_Initial,
     Delay,
-
+    QuestionAnswered, 
     ThreatDone,
 };
 
@@ -27,8 +27,9 @@ public enum WaveStates
     IncorrectWave,              // Waved Incorrectly
     TooLate,                    // Waved too late
     Waved,                      // Finished the wave
-    Threat,                     // Threat to the virtual hand
-    ToOrigin,                   // Go back to origin after the 
+    Question,                   // Show the questionnaire and Pause the experiment
+    //Threat,                     // Threat to the virtual hand
+    //ToOrigin,                   // Go back to origin after the 
     EndWaving,                  // Task finished
 };
 
@@ -43,6 +44,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     // Initial and subsequent lights
     public MaterialChanger initialLight;
     public MaterialChanger[] lights;
+    public MaterialChanger display;
 
     // Parameters for the waving
     public int wavesRequired;
@@ -69,6 +71,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     public float collisionProbability;
     public float randomProbability;
 
+    // QUestionnaire canvas
+    public GameObject Questionnaire;
 
     public void Start()
     {
@@ -154,9 +158,6 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
             case WaveStates.Waved:
                 break;
 
-            case WaveStates.ToOrigin:
-                break;
-
             case WaveStates.TooLate:
                 ChangeState(WaveStates.Waved);
                 break;
@@ -166,12 +167,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     trialController.HandleEvent(TrialEvents.WavingFinished);
                 break;
 
-            case WaveStates.Threat:
-                if (ev == WaveEvents.ThreatDone)
-                    trialController.threatened = true;
-                break;
-
-        }
+       }
     }
 
 
@@ -197,7 +193,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     targetLightOn = true;
                     HandleEvent(WaveEvents.Delay);
                 }
-                if (GetTimeInState() > 6.0f && targetLightOn)
+                if (GetTimeInState() > 5.0f && targetLightOn)
                 {
                     WriteLog("Waved Late");
                     lateWaves++;
@@ -207,12 +203,15 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.CorrectWave:
-                if (GetTimeInState() > 0.5f)
+                if (GetTimeInState() > 0.75f)
                     ChangeState(WaveStates.Waved);
                 break;
 
+            case WaveStates.TooLate:
+                break;
+
             case WaveStates.IncorrectWave:
-                if (GetTimeInState() > 0.5f)
+                if (GetTimeInState() > 0.75f)
                     ChangeState(WaveStates.Waved);
                 break;
 
@@ -220,18 +219,27 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 if (GetTimeInState() > 1.5f)
                 {
                     if (waveCounter < wavesRequired)
-                        ChangeState(WaveStates.Initial);
-                    else
-                        ChangeState(WaveStates.ToOrigin);
+                    {
+                        if (waveCounter % 4 == 0) {
+                            ChangeState(WaveStates.Question);
+                        }                   
+                        else
+                            ChangeState(WaveStates.Initial);
+                    }
+                    else {
+                        if (GetTimeInState() > 0.5f)
+                            ChangeState(WaveStates.EndWaving);
+                    }
                 }
                 break;
 
-            case WaveStates.ToOrigin:
-                if (GetTimeInState() > 0.5f)
-                    ChangeState(WaveStates.EndWaving);
-                break;
-
-            case WaveStates.TooLate:
+            case WaveStates.Question:
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    Questionnaire.SetActive(false);
+                    ChangeState(WaveStates.Initial);
+                }
+                
                 break;
 
         }
@@ -251,15 +259,18 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.CorrectWave:
-                lights[currentLight].activeMaterial = 2;
+                TurnOffTarget();
+                display.activeMaterial = 1; 
                 break;
 
             case WaveStates.IncorrectWave:
-                lights[currentLight].activeMaterial = 3;
+                TurnOffTarget();
+                display.activeMaterial = 2;
                 break;
 
             case WaveStates.Waved:
                 TurnOffTarget();
+                display.activeMaterial = 0;
                 if (waveThreat == waveCounter && trialController.knifePresent)
                 {
                     threatController.StartMachine();
@@ -267,11 +278,13 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 }
                 break;
 
-            case WaveStates.ToOrigin:
-                break;
-
             case WaveStates.TooLate:
                 ChangeState(WaveStates.IncorrectWave);
+                break;
+
+
+            case WaveStates.Question:
+                Questionnaire.SetActive(true);
                 break;
 
             case WaveStates.EndWaving:
@@ -298,9 +311,6 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.TooLate:
-                break;
-
-            case WaveStates.ToOrigin:
                 break;
 
             case WaveStates.EndWaving:
