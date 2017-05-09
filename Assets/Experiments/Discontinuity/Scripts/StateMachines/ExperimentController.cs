@@ -56,6 +56,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
     public WaveController waveController;
     public PropDriftController driftController;
     public Threat threatController;
+    public getSubjectCode subjectCode;
 
     public HandController handController;
     public HandSwitcher handSwitcher;
@@ -164,6 +165,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
     protected override void OnEnter(ExperimentStates oldState)
     {
+
         switch (GetState())
         {
             case ExperimentStates.WaitingForFeedback:
@@ -173,13 +175,13 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 string[] dir = Directory.GetDirectories("Results");
 
                 participantNumber = 1;
-                participantName = "Participant" + participantNumber.ToString();
+                // participantName = "Participant" + participantNumber.ToString();
 
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++)
                 {
-                    outputDirectory = "Results/PreparingExp2" + participantNumber.ToString();
+                    outputDirectory = "Results/PreparingExp2/" + subjectCode.subjectCode;
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);
@@ -193,8 +195,10 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 logger.OpenLog(GetLogFilename());
 
                 // Record participant number to log-file
-                
-                WriteLog("Participant" + participantNumber.ToString());
+
+                // WriteLog("Participant: " + participantNumber.ToString());
+                WriteLog("Participant: " + subjectCode.subjectCode);
+
                 if (!handSwitcher.useMale) {
                     WriteLog("Hand model is female");
                 }
@@ -256,6 +260,8 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
      */
     private void PrepareTrial(Dictionary<string, string> trial, TrialController trialController)
     {
+
+
         // Determine which hand to use for given gapsize
         if (trial["GapStatus"] == "Inactive") {
             trialController.hand = 0;
@@ -342,6 +348,10 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
             WriteLog("Knife Present" + waveController.knifePresent);
         }
+        else {
+            waveController.knifePresent = false;
+        }
+
 
         // Knife Offset
         if (trial.ContainsKey("KnifeOffset")) {
