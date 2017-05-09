@@ -116,7 +116,7 @@ public class PropDriftController : ICStateMachine<DriftStates, DriftEvents>
             case DriftStates.Measured:
                 if (GetTimeInState() > 1.0f && !isMeasured) {
                     pointer.transform.localPosition = pointerPosition;
-                    trialController.HandleEvent(TrialEvents.DriftMeasured);
+                    // trialController.HandleEvent(TrialEvents.DriftMeasured);
                     isMeasured = true;
                 }
 

@@ -5026,6 +5026,8 @@ MonoBehaviour:
   StartOnInstantiation: 0
   StartOnStopMachine: 0
   trialController: {fileID: 1118483234}
+  threatController: {fileID: 924765751}
+  handSwitcher: {fileID: 31432808}
   initialLight: {fileID: 243545321}
   lights:
   - {fileID: 357780511}
@@ -5041,6 +5043,8 @@ MonoBehaviour:
   collisionInitial: {fileID: 0}
   collisionProbability: 0
   randomProbability: 0
+  waveThreat: 0
+  knifePresent: 0
 --- !u!4 &770215073
 Transform:
   m_ObjectHideFlags: 0
@@ -6808,7 +6812,6 @@ MonoBehaviour:
   offset: 0
   noiseLevel: 0
   lNoise: 0
-  knifePresent: 0
   knifeOffset: {x: 0, y: 0, z: 0}
   changeGender: 0
   genderChanged: 0
@@ -6816,10 +6819,6 @@ MonoBehaviour:
   correctWaves: 0
   incorrectWaves: 0
   lateWaves: 0
-  totExtrWaves: 0
-  correctExtrWaves: 0
-  incorrectExtrWaves: 0
-  lateExtrWaves: 0
 --- !u!4 &1118483235
 Transform:
   m_ObjectHideFlags: 0

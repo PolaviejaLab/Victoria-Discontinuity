@@ -203,7 +203,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                     WriteLog("Hand model is male");
                 }
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Trial");
+                string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Experiment2");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
@@ -334,13 +334,13 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         if (trial.ContainsKey("KnifePresent"))
         {
             if (trial["KnifePresent"].ToLower() == "true")
-                trialController.knifePresent = true;
+                waveController.knifePresent = true;
             else if (trial["KnifePresent"].ToLower() == "false")
-                trialController.knifePresent = false;
+                waveController.knifePresent = false;
             else
                 throw new Exception("Invalid value in trial list for field KnifePresent");
 
-            WriteLog("Knife Present" + trialController.knifePresent);
+            WriteLog("Knife Present" + waveController.knifePresent);
         }
 
         // Knife Offset
@@ -458,9 +458,9 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else
             writer.Write("Gap unknown, ");
 
-        if (trialController.knifePresent == true)
+        if (waveController.knifePresent == true)
             writer.Write("Threat active, ");
-        else if (trialController.knifePresent == false)
+        else if (waveController.knifePresent == false)
             writer.Write("Threat inactive, ");
         else
             writer.Write("Threat unknown, ");
@@ -504,15 +504,9 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         writer.Write(", ");
         writer.Write(trialController.lateWaves);
         writer.Write(", ");
-        writer.Write(trialController.totExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.correctExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.incorrectExtrWaves);
-        writer.Write(", ");
         writer.Write(trialController.lateWaves);
         writer.Write(", ");
-        writer.Write(driftController.proprioceptiveDrift);
+        writer.Write(waveController.waveThreat);
         writer.Write(", ");
         writer.WriteLine();
 
