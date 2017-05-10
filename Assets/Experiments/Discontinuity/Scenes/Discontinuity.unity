@@ -8517,6 +8517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handSwitcher: {fileID: 31432808}
+  expNum: 0
   experimentName: 
 --- !u!1 &1186296942
 GameObject:
@@ -10557,6 +10558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handSwitcher: {fileID: 31432808}
+  expNum: 0
   experimentName: 
 --- !u!4 &1535472345
 Transform:
@@ -10843,6 +10845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handSwitcher: {fileID: 31432808}
+  expNum: 0
   experimentName: 
 --- !u!1 &1556515927
 GameObject:

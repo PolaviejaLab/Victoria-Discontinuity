@@ -8,6 +8,7 @@ public class getGender : MonoBehaviour {
     //public int male_ = 0;
     //public int female_ = 0;
 
+    public int expNum;
     public string experimentName;
 
 	// Use this for initialization
@@ -43,6 +44,7 @@ public class getGender : MonoBehaviour {
     }
 
     public void getExperimentNumber(int expNum) {
+        Debug.Log("int passed: " + expNum);
         if (expNum == 1) {
             experimentName = "Exp2_Experiment2";
         }
