@@ -5078,6 +5078,7 @@ MonoBehaviour:
   driftController: {fileID: 2011203178}
   threatController: {fileID: 924765751}
   subjectCode: {fileID: 82504199}
+  expInfo: {fileID: 0}
   handController: {fileID: 1138750165}
   handSwitcher: {fileID: 31432808}
   tableLights: {fileID: 2096310268}
@@ -8420,6 +8421,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1184343704}
   - 114: {fileID: 1184343705}
+  - 114: {fileID: 1184343706}
   m_Layer: 0
   m_Name: Male
   m_TagString: Untagged
@@ -8489,9 +8491,9 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1968070010}
+      - m_Target: {fileID: 1184343706}
         m_MethodName: isMale
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8503,6 +8505,19 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
+--- !u!114 &1184343706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1184343703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba6083bba255579458f6cef5d90022ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handSwitcher: {fileID: 31432808}
+  experimentName: 
 --- !u!1 &1186296942
 GameObject:
   m_ObjectHideFlags: 0
@@ -10404,6 +10419,7 @@ GameObject:
   - 222: {fileID: 1516022020}
   - 114: {fileID: 1516022019}
   - 114: {fileID: 1516022018}
+  - 114: {fileID: 1516022021}
   m_Layer: 0
   m_Name: ExperimentNumber
   m_TagString: Untagged
@@ -10482,7 +10498,18 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1516022021}
+        m_MethodName: getExperimentNumber
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Dropdown+DropdownEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1516022019
@@ -10518,6 +10545,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1516022016}
+--- !u!114 &1516022021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1516022016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba6083bba255579458f6cef5d90022ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handSwitcher: {fileID: 31432808}
+  experimentName: 
 --- !u!4 &1535472345
 Transform:
   m_ObjectHideFlags: 0
@@ -10707,6 +10747,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1546006128}
   - 114: {fileID: 1546006129}
+  - 114: {fileID: 1546006130}
   m_Layer: 0
   m_Name: Female
   m_TagString: Untagged
@@ -10776,9 +10817,9 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1968070010}
+      - m_Target: {fileID: 1546006130}
         m_MethodName: isFemale
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10790,6 +10831,19 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
+--- !u!114 &1546006130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1546006127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba6083bba255579458f6cef5d90022ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handSwitcher: {fileID: 31432808}
+  experimentName: 
 --- !u!1 &1556515927
 GameObject:
   m_ObjectHideFlags: 0
@@ -13440,7 +13494,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1968070009}
-  - 114: {fileID: 1968070010}
   m_Layer: 0
   m_Name: Gender
   m_TagString: Untagged
@@ -13468,19 +13521,6 @@ RectTransform:
   m_AnchoredPosition: {x: 226.90002, y: 171}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1968070010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1968070008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba6083bba255579458f6cef5d90022ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  male_: 0
-  female_: 0
 --- !u!1 &1969078483
 GameObject:
   m_ObjectHideFlags: 0

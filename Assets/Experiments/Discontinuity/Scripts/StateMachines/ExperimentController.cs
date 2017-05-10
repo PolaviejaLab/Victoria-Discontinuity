@@ -57,6 +57,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
     public PropDriftController driftController;
     public Threat threatController;
     public getSubjectCode subjectCode;
+    public getGender expInfo;
 
     public HandController handController;
     public HandSwitcher handSwitcher;
@@ -207,7 +208,9 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                     WriteLog("Hand model is male");
                 }
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Experiment2");
+                // string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Experiment2");
+
+                string[] dirProtocol = Directory.GetFiles("Protocol/" + expInfo.experimentName);
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
