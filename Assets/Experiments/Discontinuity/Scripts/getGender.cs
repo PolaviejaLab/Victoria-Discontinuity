@@ -3,8 +3,8 @@ using System.Collections;
 
 public class getGender : MonoBehaviour {
 
-    public int male = 0;
-    public int female = 0;
+    public int male_ = 0;
+    public int female_ = 0;
 
 
 	// Use this for initialization
@@ -18,19 +18,21 @@ public class getGender : MonoBehaviour {
     }
 
     public void isMale() {
-        if (female == 0) {
-            male = 1;
+        if (female_ == 0) {
+            male_ = 1;
+            
             Debug.Log("Gender is male");
-        } else if (female == 1) {
+        } else if (female_ == 1) {
             Debug.Log("Female already selected");
         }
     }
 
     public void isFemale() {
-        if (male == 0) {
-            female = 1;
+        if (male_ == 0) {
+            female_ = 1;
+           
             Debug.Log("Gender is female");
-        } else if (male == 1) {
+        } else if (male_ == 1) {
             Debug.Log("Male already selected");
         }
     }
