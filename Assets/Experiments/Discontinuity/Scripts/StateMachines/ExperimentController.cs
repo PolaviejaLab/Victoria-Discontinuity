@@ -121,8 +121,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 if (ev == ExperimentEvents.QuestionsFinished)
                     ChangeState(ExperimentStates.Trial);
                 break;
-
-
         }
     }
 
@@ -182,7 +180,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
                 for (int i = 0; i < dir.Length; i++)
                 {
-                    outputDirectory = "Results/PreparingExp2/" + subjectCode.subjectCode;
+                    outputDirectory = "Results/ElementsAgency/" + subjectCode.subjectCode;
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);
@@ -210,7 +208,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
                 // string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Experiment2");
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/" + expInfo.experimentName);
+                string[] dirProtocol = Directory.GetFiles("Protocol/" + expInfo.experimentName.ToString() + "/");
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];

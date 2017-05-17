@@ -4,6 +4,7 @@ using System.Collections;
 public class SimpleCollision : MonoBehaviour {
 
 	public WaveController waveController;
+
 	public WaveEvents triggerEvent;
 	public GameObject[] objects;
     public float probability;

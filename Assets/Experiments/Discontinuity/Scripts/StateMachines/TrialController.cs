@@ -28,8 +28,9 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 	// Reference to the experiment controller
 	public ExperimentController experimentController;
     public WaveController waveController;
-    public PropDriftController driftController;
+  //   public PropDriftController driftController;
     public Threat threatController;
+    public ImplicitMeasure measureController;
 
 	// Scripts to manipulate the hand and offset according to condition
 	public HandSwitcher handSwitcher;
@@ -56,8 +57,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
 
     public void Start() {
-        
-       
 	}
 
     protected override void OnStart() {
@@ -168,7 +167,9 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 waveController.StartMachine();
                 break;
 
-            case TrialStates.Measure:
+            case TrialStates.Measure:         
+                measureController.measure.SetActive(true);
+                measureController.StartMachine();
                 break;
 
             case TrialStates.TrialFinished:
@@ -187,7 +188,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.ExperimentWave:
                 testLights.SetActive(false);
-                handSwitcher.showRightHand = false;
                 totWaves = waveController.waveCounter;
                 correctWaves = waveController.correctWaves;
                 incorrectWaves = waveController.incorrectWaves;

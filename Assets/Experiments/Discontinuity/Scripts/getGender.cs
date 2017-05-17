@@ -4,6 +4,7 @@ using System.Collections;
 public class getGender : MonoBehaviour {
 
     public HandSwitcher handSwitcher;
+    public ExperimentController experimentController;
 
     //public int male_ = 0;
     //public int female_ = 0;
@@ -48,5 +49,12 @@ public class getGender : MonoBehaviour {
         if (expNum == 1) {
             experimentName = "Exp2_Experiment2";
         }
+
+        Debug.Log("This program will load protocol for " + experimentName);
+    }
+
+    public void startExperiment() {
+        experimentController.ChangeState(ExperimentStates.Start);
+        Debug.Log("Experiment has been started");
     }
 }
