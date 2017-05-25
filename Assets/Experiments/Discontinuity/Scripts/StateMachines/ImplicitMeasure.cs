@@ -19,6 +19,7 @@ public enum MeasureStates
 public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
 {
     public TrialController trialController;
+    public OffsetSwitcher offsetSwitcher;
 
     public GameObject measure;
 
@@ -30,6 +31,9 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
 
     public bool startLightOn;
     public bool finishLightOn;
+
+    public float updatedDisplacement;
+
 
     new public void Start()
     {
@@ -81,12 +85,17 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
                     ChangeState(MeasureStates.WaitingToStart);
                 break;
 
+            case MeasureStates.Measuring:
+                offsetSwitcher.displaceHand(updatedDisplacement);
+                updatedDisplacement += 0.00001f;
+                break;
+
             case MeasureStates.Finished:
                 if (GetTimeInState() > 0.5f) {
                     trialController.HandleEvent(TrialEvents.MeasureDone);
+                    this.StopMachine();
                     measure.SetActive(false);
-                }
-                    
+                }           
                 break;
         }
     }
@@ -109,6 +118,7 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
                 WriteLog("Implicit Measure Started");
                 // Code here that is going to do the changes in the Virtual hand
                 // Be sure that it records both the real and the virtual hand positions. 
+                
                 break;
 
             case MeasureStates.Finished:

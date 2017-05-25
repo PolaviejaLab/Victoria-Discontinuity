@@ -61,7 +61,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
     protected override void OnStart() {
         // Set trial parameters
-        offsetSwitcher.offset = offset;
+        offsetSwitcher.initialOffset = offset;
         handSwitcher.selected = hand;
         handSwitcher.noiseLevelLeft = noiseLevel;
         handSwitcher.noiseLevelRight = noiseLevel;

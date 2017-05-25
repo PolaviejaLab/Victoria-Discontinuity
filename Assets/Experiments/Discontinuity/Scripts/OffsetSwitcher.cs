@@ -3,7 +3,7 @@ using System.Collections;
 
 public class OffsetSwitcher : MonoBehaviour {
 
-	public float offset = 0;
+    public float initialOffset = 0;
 
 	private float previous = -1; 
 
@@ -17,9 +17,9 @@ public class OffsetSwitcher : MonoBehaviour {
 //		if (selectedOffset < -1) {
 //			selectedOffset = 0;
 //		}
-		if (offset != previous) {
+		if (initialOffset != previous) {
 			UpdateOffset ();
-			previous = offset;
+			previous = initialOffset;
 		}
 	}
 
@@ -27,8 +27,14 @@ public class OffsetSwitcher : MonoBehaviour {
 		// method that will make the offset change, get the handcontroller to shift with the offset
 		// use a find method 
 		controller = GameObject.Find ("LeapHandController");
-		controller.transform.localPosition = new Vector3(-offset, 0, 0);
+		controller.transform.localPosition = new Vector3(-initialOffset, 0, 0);
 
 		Debug.Log("Changing offset: " + controller.transform.localPosition);
 	}
+
+    public void displaceHand(float displacement) {
+        Vector3 displacement3 = new Vector3(-displacement, 0, 0);
+        controller.transform.localPosition += displacement3;
+
+    }
 }

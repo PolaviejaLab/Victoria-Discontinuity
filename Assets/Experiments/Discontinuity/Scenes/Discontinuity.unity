@@ -9558,6 +9558,7 @@ MonoBehaviour:
   StartOnInstantiation: 0
   StartOnStopMachine: 0
   trialController: {fileID: 1118483234}
+  offsetSwitcher: {fileID: 0}
   measure: {fileID: 1313222461}
   startLight: {fileID: 395648790}
   finishLight: {fileID: 446403029}
