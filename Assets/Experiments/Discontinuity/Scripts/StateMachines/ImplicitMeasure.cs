@@ -32,7 +32,7 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
     public bool startLightOn;
     public bool finishLightOn;
 
-    public float updatedDisplacement;
+    public float updatedDisplacement = 0;
 
 
     new public void Start()
@@ -93,8 +93,11 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
             case MeasureStates.Finished:
                 if (GetTimeInState() > 0.5f) {
                     trialController.HandleEvent(TrialEvents.MeasureDone);
-                    this.StopMachine();
                     measure.SetActive(false);
+                    offsetSwitcher.noDisplacement();
+                    this.StopMachine();
+
+
                 }           
                 break;
         }
