@@ -33,10 +33,12 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
     public bool finishLightOn;
 
     public float updatedDisplacement = 0;
+    public int framesDisplaced;
 
 
     new public void Start()
     {
+        framesDisplaced = 0;
     }
 
 
@@ -88,6 +90,7 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
             case MeasureStates.Measuring:
                 offsetSwitcher.displaceHand(updatedDisplacement);
                 updatedDisplacement += 0.00001f;
+                framesDisplaced += 1;
                 break;
 
             case MeasureStates.Finished:
@@ -117,11 +120,9 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
                 break;
 
             case MeasureStates.Measuring:
-                TurnOnFinishLight();
                 WriteLog("Implicit Measure Started");
-                // Code here that is going to do the changes in the Virtual hand
-                // Be sure that it records both the real and the virtual hand positions. 
-                
+                TurnOnFinishLight();
+                    
                 break;
 
             case MeasureStates.Finished:

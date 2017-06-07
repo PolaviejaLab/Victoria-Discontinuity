@@ -55,6 +55,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
      */
     public WaveController waveController;
     public PropDriftController driftController;
+    public ImplicitMeasure measureController;
     public Threat threatController;
     public getSubjectCode subjectCode;
     public getGender expInfo;
@@ -518,6 +519,8 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         writer.Write(trialController.lateWaves);
         writer.Write(", ");
         writer.Write(waveController.waveThreat);
+        writer.Write(", ");
+        writer.Write(measureController.framesDisplaced);
         writer.Write(", ");
         writer.WriteLine();
 

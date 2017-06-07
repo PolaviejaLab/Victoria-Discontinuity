@@ -270,7 +270,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.EndWaving:
-                initialLight.activeMaterial = 0;
+                initialLight.activeMaterial = 1;
                 collisionInitial.SetActive(true);
                 break;
         }

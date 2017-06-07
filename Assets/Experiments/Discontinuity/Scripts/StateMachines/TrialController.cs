@@ -120,6 +120,11 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.Measure:
+                if (GetTimeInState() > 1.5)
+                {
+                    measureController.measure.SetActive(true);
+                    measureController.StartMachine();
+                }
                 break;
 
             case TrialStates.TrialFinished:
@@ -167,9 +172,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 waveController.StartMachine();
                 break;
 
-            case TrialStates.Measure:         
-                measureController.measure.SetActive(true);
-                measureController.StartMachine();
+            case TrialStates.Measure: 
                 break;
 
             case TrialStates.TrialFinished:
