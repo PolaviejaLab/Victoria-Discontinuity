@@ -66,7 +66,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
                 break;
 
             case InactiveTrialStates.HandNotMoving:
-                if (GetTimeInState() > 2.0f)
+                if (GetTimeInState() > 60.0f)
                     ChangeState(InactiveTrialStates.TrialFinished);
                 break;
 

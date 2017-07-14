@@ -188,7 +188,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 correctWaves = waveController.correctWaves;
                 incorrectWaves = waveController.incorrectWaves;
                 lateWaves = waveController.lateWaves;
-                
+                waveController.StopMachine();
                 break;
 
             case TrialStates.TrialFinished:
