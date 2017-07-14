@@ -53,10 +53,13 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
      * Instead, we should tell the Trial state machine which should set variables on the
      * child machines.
      */
+    public GetInfo expInfo;
+    public getExperimentNumber expNumber;
     public WaveController waveController;
 
     public HandController handController;
     public HandSwitcher handSwitcher;
+
 
     public TableLights tableLights;
 
@@ -171,13 +174,14 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 string[] dir = Directory.GetDirectories("Results");
 
                 participantNumber = 1;
-                participantName = "Participant" + participantNumber.ToString();
+                // participantName = "Participant" + participantNumber.ToString();
 
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++)
                 {
-                    outputDirectory = "Results/PreparingExp2" + participantNumber.ToString();
+                    // outputDirectory = "Results/PreparingExp2" + participantNumber.ToString();
+                    outputDirectory = "Results/RepExperiment/" + expInfo.subjectCode;
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);
@@ -191,8 +195,10 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 logger.OpenLog(GetLogFilename());
 
                 // Record participant number to log-file
-                
-                WriteLog("Participant" + participantNumber.ToString());
+
+                // WriteLog("Participant" + participantNumber.ToString());
+                WriteLog("Participant: " + expInfo.subjectCode);
+
                 if (!handSwitcher.useMale) {
                     WriteLog("Hand model is female");
                 }
@@ -201,11 +207,13 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                     WriteLog("Hand model is male");
                 }
 
-                string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Trial");
+                // string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Trial");
+                string[] dirProtocol = Directory.GetFiles("Protocol/" + expNumber.experimentName.ToString() + "/");
+
 
                 randomProtocol = UnityEngine.Random.Range(0, dirProtocol.Length);
                 protocolFile = dirProtocol[randomProtocol];
-                              
+
 
                 // Load protocol
                 Debug.Log("Loading protocol: " + protocolFile);
@@ -409,19 +417,19 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
     private string GetLEAPFilename(int trial)
     {
-        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + " Trial " + trial + ".csv";
+        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + expInfo.subjectCode + " Trial " + trial + ".csv";
     }
 
 
     private string GetLogFilename()
     {
-        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".log";
+        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + expInfo.subjectCode + ".log";
     }
 
 
     private string GetResultsFilename()
     {
-        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + participantName + ".csv";
+        return outputDirectory + "\\" + DateTime.UtcNow.ToString("yyyy-MM-dd hh.mm ") + expInfo.subjectCode + ".csv";
     }
 
 
