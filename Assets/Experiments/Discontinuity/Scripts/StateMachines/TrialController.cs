@@ -18,9 +18,6 @@ public enum TrialEvents {
 public enum TrialStates {
 	AccomodationTime,           // Get used to the environment
     ExperimentWave,             // Reaching-like task
-    ProprioceptiveDrift,        // Measure proprioceptive drift
-    ExtraWaves,                 // Waves before the threat
-    Threat,                     // Threat to the virtual hand
     TrialFinished,              // End of the trial
 };
 
@@ -99,29 +96,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.ExperimentWave:
                 if (ev == TrialEvents.WavingFinished){
-                    ChangeState(TrialStates.ProprioceptiveDrift);
-                }
-                break;
-
-            case TrialStates.ProprioceptiveDrift:
-                if (ev == TrialEvents.DriftMeasured) {
-                    if (knifePresent)
-                        ChangeState(TrialStates.ExtraWaves);
-                    else if (!knifePresent)
-                        ChangeState(TrialStates.TrialFinished);
-                }
-                    
-                break;
-
-            case TrialStates.ExtraWaves:
-                if (ev == TrialEvents.WavingFinished) {
-                    ChangeState(TrialStates.Threat);
-                }
-                break;
-
-            case TrialStates.Threat:
-                if (ev == TrialEvents.ThreatDone)
                     ChangeState(TrialStates.TrialFinished);
+                }
                 break;
 
             case TrialStates.TrialFinished:
@@ -145,19 +121,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.ExperimentWave:
                 break;
-
-            case TrialStates.ProprioceptiveDrift:
-                if (GetTimeInState() > 1.0f)
-                {
-                    room.SetActive(false);
-                    table.SetActive(false);
-                    driftController.markerOn = true;
-                    driftController.StartMachine();
-                }
-                break;
-
-    		case TrialStates.Threat:
-    			break;
 
             case TrialStates.TrialFinished:
                 break;
@@ -204,26 +167,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 waveController.StartMachine();
                 break;
 
-            case TrialStates.ProprioceptiveDrift:
-
- 
-                break;
-
-            case TrialStates.ExtraWaves:
-                waveController.wavesRequired = extraWaves;
-                handSwitcher.showRightHand = true;
-                testLights.SetActive(true);
-                waveController.StartMachine();
-                break;
-
-            case TrialStates.Threat:
-                if (knifePresent) {
-                    handSwitcher.showRightHand = true;
-                    threatController.StartMachine();
-                    threatController.HandleEvent(ThreatEvent.ReleaseThreat);
-                }
-                break;
-
             case TrialStates.TrialFinished:
                 experimentController.HandleEvent(ExperimentEvents.TrialFinished);
                 this.StopMachine();
@@ -246,28 +189,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 incorrectWaves = waveController.incorrectWaves;
                 lateWaves = waveController.lateWaves;
                 waveController.StopMachine();
-                break;
-
-            case TrialStates.ProprioceptiveDrift:
-                driftController.markerOn = false;
-                driftController.marker.SetActive(false);
-                driftController.StopMachine();
-                room.SetActive(true);
-                table.SetActive(true);
-                break;
-
-            case TrialStates.ExtraWaves:
-                testLights.SetActive(false);
-                handSwitcher.showRightHand = false;
-                totExtrWaves = waveController.waveCounter;
-                correctExtrWaves = waveController.correctWaves;
-                incorrectExtrWaves = waveController.incorrectWaves;
-                lateExtrWaves = waveController.lateWaves;
-                waveController.StopMachine();
-                break;
-
-            case TrialStates.Threat:
-                threatController.StopMachine();
                 break;
 
             case TrialStates.TrialFinished:

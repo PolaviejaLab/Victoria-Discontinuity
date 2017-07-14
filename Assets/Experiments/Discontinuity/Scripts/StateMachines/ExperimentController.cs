@@ -54,8 +54,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
      * child machines.
      */
     public WaveController waveController;
-    public PropDriftController driftController;
-    public Threat threatController;
 
     public HandController handController;
     public HandSwitcher handSwitcher;
@@ -290,6 +288,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         int.TryParse(trial["WavesRequired"], out wavesRequired);
         waveController.wavesRequired = wavesRequired;
 
+
         // Determine noise type
         if (trial.ContainsKey("NoiseType")) {
             int.TryParse(trial["NoiseType"], out noiseType);
@@ -355,20 +354,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             trialController.knifeOffset = knifeVector;
 
             WriteLog("Knife Offset: " + knifeVector);
-        }
-
-        // Knife
-        if (trial.ContainsKey("KnifeOnReal")) {
-            if (trial["KnifeOnReal"].ToLower() == "true") {
-                threatController.knifeOnReal = true; 
-            } else if (trial["KnifeOnReal"].ToLower() == "false") {
-                threatController.knifeOnReal = false; 
-            }
-
-            else
-                throw new Exception("Invalid value in trial list for field KnifeOnReal");
-            
-            WriteLog("Knife on Real" + threatController.knifeOnReal);
         }
 
         // Gender Change
@@ -458,15 +443,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else
             writer.Write("Gap unknown, ");
 
-        if (trialController.knifePresent == true)
-            writer.Write("Threat active, ");
-        else if (trialController.knifePresent == false)
-            writer.Write("Threat inactive, ");
-        else
-            writer.Write("Threat unknown, ");
-
-
-
+        
         if (noiseType == 0)
             writer.Write("Hand noise inactive, ");
         else if (noiseType == 1)
@@ -478,10 +455,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         else
             writer.Write("no noise information available, ");
 
-        if (threatController.knifeOnReal)
-            writer.Write("Knife on the real hand, ");
-        else if (!threatController.knifeOnReal)
-            writer.Write("Knife on the virtual hand, ");
 
         if (handSwitcher.useMale)
         {
@@ -503,16 +476,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         writer.Write(trialController.incorrectWaves);
         writer.Write(", ");
         writer.Write(trialController.lateWaves);
-        writer.Write(", ");
-        writer.Write(trialController.totExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.correctExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.incorrectExtrWaves);
-        writer.Write(", ");
-        writer.Write(trialController.lateWaves);
-        writer.Write(", ");
-        writer.Write(driftController.proprioceptiveDrift);
         writer.Write(", ");
         writer.WriteLine();
 
