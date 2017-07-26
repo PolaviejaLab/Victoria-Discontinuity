@@ -35,6 +35,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
 
     protected override void OnStart() {
         handSwitcher.selected = hand;
+
     }
 
     public void HandleEvent(InactiveTrialEvents ev) {
@@ -45,6 +46,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
 
         switch (GetState()) {
             case InactiveTrialStates.AccomodationTime:
+                testLights.SetActive(false);
                 break;
 
             case InactiveTrialStates.HandNotMoving:
@@ -80,7 +82,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
         switch (GetState()) {
             case InactiveTrialStates.AccomodationTime:
                 handSwitcher.showRightHand = true;
-                testLights.SetActive(true);
+                
                 break;
 
             case InactiveTrialStates.HandNotMoving:
