@@ -181,7 +181,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 for (int i = 0; i < dir.Length; i++)
                 {
                     // outputDirectory = "Results/PreparingExp2" + participantNumber.ToString();
-                    outputDirectory = "Results/RepExperiment/" + expInfo.subjectCode;
+                    outputDirectory = "E:/Data/Experiment_Rep/Unity_Files/" + expInfo.subjectCode;
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);

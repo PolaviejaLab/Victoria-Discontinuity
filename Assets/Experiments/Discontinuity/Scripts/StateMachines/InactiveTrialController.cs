@@ -82,7 +82,7 @@ public class InactiveTrialController : ICStateMachine<InactiveTrialStates, Inact
         switch (GetState()) {
             case InactiveTrialStates.AccomodationTime:
                 handSwitcher.showRightHand = true;
-                
+                testLights.SetActive(false);
                 break;
 
             case InactiveTrialStates.HandNotMoving:

@@ -317,7 +317,7 @@ MonoBehaviour:
   - {fileID: 1495711316}
   selected: 0
   useMale: 1
-  showLeftHand: 1
+  showLeftHand: 0
   showRightHand: 1
   noiseLevelLeft: 0
   noiseLevelRight: 0
