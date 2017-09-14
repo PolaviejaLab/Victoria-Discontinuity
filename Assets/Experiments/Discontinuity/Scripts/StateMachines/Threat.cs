@@ -148,10 +148,6 @@ public class Threat: ICStateMachine<ThreatState, ThreatEvent>
         if (Vector3.Distance(threat.transform.position, handPositionReWorld + handOffset) < 0.001 && knifeOnReal) {
             HandleEvent(ThreatEvent.TargetReached);
         }
-
-
-
-
     }
 
 

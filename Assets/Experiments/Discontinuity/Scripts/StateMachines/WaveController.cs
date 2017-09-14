@@ -27,6 +27,7 @@ public enum WaveStates
     IncorrectWave,
     Waved,
     TooLate,
+    Question, 
     Threat,
     EndWaving,
 };
@@ -70,6 +71,10 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     // threat
     public int waveThreat;
     public bool knifePresent;
+    public GameObject threat;
+
+    // Questionnaire
+    public GameObject Questionnaire;
 
     public void Start()
     {
@@ -89,6 +94,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
         incorrectWaves = 0;
 
         waveThreat = UnityEngine.Random.Range(2, wavesRequired - 1);
+        WriteLog("Threat wave is: " + waveThreat);
     }
 
 
@@ -138,10 +144,6 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
 
                     WriteLog("Not waved"); // Uncomment for noise-type 2.2, that waits until timeout
-
-                    //WriteLog("Waved incorrectly"); // uncomment for type of noise 2 that send directly to incorrecy wave
-                    //incorrectWaves++;
-                    //ChangeState(WaveStates.IncorrectWave);
                 }
                 else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial)
                 {
@@ -158,6 +160,9 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 ChangeState(WaveStates.Waved);
                 break;
 
+            case WaveStates.Question:
+                break;
+
             case WaveStates.Threat:
                 if (ev == WaveEvents.ThreatDone)
                     ChangeState(WaveStates.Initial);
@@ -167,7 +172,6 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 if (ev == WaveEvents.Wave_Initial)
                     trialController.HandleEvent(TrialEvents.WavingFinished);
                 break;
-
         }
     }
 
@@ -213,8 +217,11 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
             case WaveStates.Waved:
                 if (GetTimeInState() > 1.5f) {
                     if (waveCounter < wavesRequired) {
-                        if (waveCounter == waveThreat) {
+                        if (waveCounter == waveThreat && wavesRequired % waveCounter != 0) {
                             ChangeState(WaveStates.Threat);
+                        }
+                        else if (wavesRequired % waveCounter == 0) {
+                            ChangeState(WaveStates.Question);
                         }
                         else {
                             ChangeState(WaveStates.Initial);
@@ -228,6 +235,12 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.TooLate:
+                break;
+
+            case WaveStates.Question:
+                if (Input.GetKeyDown(KeyCode.Return)) {
+                    ChangeState(WaveStates.Initial);
+                }
                 break;
 
         }
@@ -262,16 +275,23 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.Threat:
-                if (knifePresent) {
-                    handSwitcher.showRightHand = true;
+                if (knifePresent == true)
+                {
                     threatController.StartMachine();
                     threatController.HandleEvent(ThreatEvent.ReleaseThreat);
+                }
+                else {
+                    ChangeState(WaveStates.Initial);
                 }
                 break;
 
             case WaveStates.EndWaving:
                 initialLight.activeMaterial = 1;
                 collisionInitial.SetActive(true);
+                break;
+
+            case WaveStates.Question:
+                Questionnaire.SetActive(true);
                 break;
         }
     }
@@ -297,6 +317,10 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
             case WaveStates.Threat:
                 threatController.StopMachine();
+                break;
+
+            case WaveStates.Question:
+                Questionnaire.SetActive(false);
                 break;
 
             case WaveStates.EndWaving:
