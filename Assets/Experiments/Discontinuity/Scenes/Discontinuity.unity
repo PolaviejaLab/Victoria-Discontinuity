@@ -528,6 +528,99 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 400034, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
   m_PrefabInternal: {fileID: 700101713}
+--- !u!1 &70230314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 70230318}
+  - 223: {fileID: 70230317}
+  - 114: {fileID: 70230316}
+  - 114: {fileID: 70230315}
+  m_Layer: 0
+  m_Name: Instructions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &70230315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 70230314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1301386320, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &70230316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 70230314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1980459831, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+--- !u!223 &70230317
+Canvas:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 70230314}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!224 &70230318
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 70230314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 515373315}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1 &77100438
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +661,7 @@ GameObject:
   - 222: {fileID: 82504198}
   - 114: {fileID: 82504197}
   - 114: {fileID: 82504196}
-  - 114: {fileID: 82504199}
+  - 114: {fileID: 82504200}
   m_Layer: 0
   m_Name: SubjectCode
   m_TagString: Untagged
@@ -645,7 +738,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 82504199}
+      - m_Target: {fileID: 82504200}
         m_MethodName: getCode
         m_Mode: 0
         m_Arguments:
@@ -703,7 +796,7 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 82504194}
---- !u!114 &82504199
+--- !u!114 &82504200
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -711,10 +804,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 82504194}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3c11c2d51ac90543a65af1e7d922325, type: 3}
+  m_Script: {fileID: 11500000, guid: ba6083bba255579458f6cef5d90022ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handSwitcher: {fileID: 31432808}
+  experimentController: {fileID: 685971307}
   subjectCode: 
+  male_: 0
+  female_: 0
+  expNum: 0
+  experimentName: 
 --- !u!4 &84403603 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400036, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
@@ -1408,7 +1507,7 @@ RectTransform:
   - {fileID: 1516022017}
   - {fileID: 1605251041}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -2261,11 +2360,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c342f534dfbd0f4dba8697d293b1e2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  measureController: {fileID: 1271076273}
+  measureController: {fileID: 1388145610}
   triggerEvent: 1
   objects: []
   probability: 0
-  CompareByName: 1
+  CompareByName: 0
 --- !u!65 &269037686
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3512,7 +3611,7 @@ MonoBehaviour:
   activeMaterial: 0
   materials:
   - {fileID: 2100000, guid: 743a08f069973f44cacdc4104c40b0b5, type: 2}
-  - {fileID: 2100000, guid: 1ba24c4ca1a37384fbcc3e5b5fb088df, type: 2}
+  - {fileID: 2100000, guid: 07267485653fa6f4a859a3c27e544040, type: 2}
 --- !u!1 &458939634
 GameObject:
   m_ObjectHideFlags: 0
@@ -3770,6 +3869,7 @@ Transform:
   - {fileID: 770215073}
   - {fileID: 2011203179}
   - {fileID: 1271076272}
+  - {fileID: 1388145609}
   m_Father: {fileID: 741473816}
   m_RootOrder: 0
 --- !u!1 &495259210
@@ -4094,6 +4194,80 @@ MonoBehaviour:
   deformPosition: 0
   modelFingerPointing: {x: 1, y: 0, z: 0}
   modelPalmFacing: {x: -0, y: -1, z: -0}
+--- !u!1 &515373314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 515373315}
+  - 222: {fileID: 515373317}
+  - 114: {fileID: 515373316}
+  m_Layer: 0
+  m_Name: Instruction_ImplicitMeasure
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &515373315
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 515373314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 70230318}
+  m_RootOrder: 0
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 142}
+  m_SizeDelta: {x: 800, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &515373316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 515373314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 30
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1.5
+  m_Text: 'Move your hand with a straight line from one point the another. '
+--- !u!222 &515373317
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 515373314}
 --- !u!1 &516096389
 GameObject:
   m_ObjectHideFlags: 0
@@ -5190,9 +5364,9 @@ MonoBehaviour:
   inactiveTrialController: {fileID: 1582654673}
   waveController: {fileID: 770215072}
   driftController: {fileID: 2011203178}
-  measureController: {fileID: 1271076273}
+  measureController: {fileID: 1388145610}
   threatController: {fileID: 924765751}
-  subjectCode: {fileID: 82504199}
+  subjectCode: {fileID: 82504200}
   expInfo: {fileID: 1516022021}
   handController: {fileID: 1138750165}
   handSwitcher: {fileID: 31432808}
@@ -7449,7 +7623,7 @@ RectTransform:
   m_Children:
   - {fileID: 1553509071}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -8090,11 +8264,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c342f534dfbd0f4dba8697d293b1e2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  measureController: {fileID: 1271076273}
+  measureController: {fileID: 1388145610}
   triggerEvent: 0
   objects: []
   probability: 0
-  CompareByName: 1
+  CompareByName: 0
 --- !u!65 &1105871205
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8318,12 +8492,13 @@ MonoBehaviour:
   experimentController: {fileID: 685971307}
   waveController: {fileID: 770215072}
   threatController: {fileID: 924765751}
-  measureController: {fileID: 1271076273}
+  measureController: {fileID: 1388145610}
   handSwitcher: {fileID: 31432808}
   offsetSwitcher: {fileID: 1138750169}
   testLights: {fileID: 2096310266}
   room: {fileID: 1118338594}
   table: {fileID: 907814760}
+  measure: {fileID: 1313222461}
   hand: 0
   offset: 0
   noiseLevel: 0
@@ -8782,7 +8957,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1184343706}
         m_MethodName: isMale
-        m_Mode: 6
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -8806,7 +8981,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handSwitcher: {fileID: 31432808}
-  experimentController: {fileID: 0}
+  experimentController: {fileID: 685971307}
+  subjectCode: 
+  male_: 0
+  female_: 0
   expNum: 0
   experimentName: 
 --- !u!1 &1186296942
@@ -9629,7 +9807,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1271076272}
-  - 114: {fileID: 1271076273}
   m_Layer: 0
   m_Name: Measure State Machine
   m_TagString: Untagged
@@ -9650,33 +9827,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 494966288}
   m_RootOrder: 5
---- !u!114 &1271076273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1271076271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebfb44a3857dff742abe3dd42945712a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logToConsole: 1
-  logger: {fileID: 1590201058}
-  initialState: 0
-  StartOnInstantiation: 0
-  StartOnStopMachine: 0
-  trialController: {fileID: 1118483234}
-  offsetSwitcher: {fileID: 1138750169}
-  measure: {fileID: 1313222461}
-  startLight: {fileID: 395648790}
-  finishLight: {fileID: 446403029}
-  startCollision: {fileID: 1105871202}
-  finishCollision: {fileID: 269037683}
-  startLightOn: 0
-  finishLightOn: 0
-  updatedDisplacement: 0
-  framesDisplaced: 0
 --- !u!4 &1272889715
 Transform:
   m_ObjectHideFlags: 0
@@ -10396,6 +10546,66 @@ BoxCollider:
 Transform:
   m_PrefabParentObject: {fileID: 400068, guid: 32e11b8ebedf1f8418968688df2226a6, type: 3}
   m_PrefabInternal: {fileID: 700101713}
+--- !u!1 &1388145608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1388145609}
+  - 114: {fileID: 1388145610}
+  m_Layer: 0
+  m_Name: ImplicitMeasure StateMachine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1388145609
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1388145608}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 494966288}
+  m_RootOrder: 6
+--- !u!114 &1388145610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1388145608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebfb44a3857dff742abe3dd42945712a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logToConsole: 1
+  logger: {fileID: 1590201058}
+  initialState: 0
+  StartOnInstantiation: 0
+  StartOnStopMachine: 0
+  trialController: {fileID: 1118483234}
+  offsetSwitcher: {fileID: 1138750169}
+  handSwitcher: {fileID: 31432808}
+  measureObject: {fileID: 1313222461}
+  startLight: {fileID: 395648790}
+  finishLight: {fileID: 446403029}
+  startCollision: {fileID: 1105871202}
+  finishCollision: {fileID: 269037683}
+  startLightOn: 0
+  finishLightOn: 0
+  updatedDisplacement: 0
+  framesDisplaced: 0
+  totalIterations: 3
+  currentIteration: 0
+  instructionCanvas: {fileID: 70230314}
 --- !u!1 &1390795464
 GameObject:
   m_ObjectHideFlags: 0
@@ -10996,7 +11206,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handSwitcher: {fileID: 31432808}
-  experimentController: {fileID: 0}
+  experimentController: {fileID: 685971307}
+  subjectCode: 
+  male_: 0
+  female_: 0
   expNum: 0
   experimentName: 
 --- !u!4 &1535472345
@@ -11260,7 +11473,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1546006130}
         m_MethodName: isFemale
-        m_Mode: 6
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11284,7 +11497,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handSwitcher: {fileID: 31432808}
-  experimentController: {fileID: 0}
+  experimentController: {fileID: 685971307}
+  subjectCode: 
+  male_: 0
+  female_: 0
   expNum: 0
   experimentName: 
 --- !u!1 &1553509070
@@ -11319,7 +11535,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2, y: 141}
+  m_AnchoredPosition: {x: 2, y: 81}
   m_SizeDelta: {x: 800, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1553509072
@@ -11334,7 +11550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -11348,12 +11564,12 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 1
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 2
+    m_LineSpacing: 1.5
   m_Text: From 1 (no control) to 9 (full control), how much did you feel in control
     over the action?
 --- !u!222 &1553509073
@@ -11955,7 +12171,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 376, y: -216}
+  m_AnchoredPosition: {x: 377, y: -216}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1605251042
@@ -12067,6 +12283,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handSwitcher: {fileID: 31432808}
   experimentController: {fileID: 685971307}
+  subjectCode: 
+  male_: 0
+  female_: 0
   expNum: 0
   experimentName: 
 --- !u!1 &1606042001

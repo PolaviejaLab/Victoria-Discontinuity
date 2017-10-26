@@ -57,7 +57,7 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
     public PropDriftController driftController;
     public ImplicitMeasure measureController;
     public Threat threatController;
-    public getSubjectCode subjectCode;
+    public getGender subjectCode;
     public getGender expInfo;
 
     public HandController handController;
@@ -175,12 +175,12 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 string[] dir = Directory.GetDirectories("Results");
 
                 participantNumber = 1;
-                // participantName = "Participant" + participantNumber.ToString();
 
                 trialCounter = 0;
 
                 for (int i = 0; i < dir.Length; i++)
                 {
+                    Debug.Log("subject code is " + subjectCode.subjectCode);
                     outputDirectory = "Results/ElementsAgency/" + subjectCode.subjectCode;
                     if (!Directory.Exists(outputDirectory))
                     {
@@ -188,7 +188,8 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                         break;
                     }
                     else {
-                        participantNumber = participantNumber + 1;
+                        Debug.Log("Subject code already exists");
+                        this.StopMachine();
                     }
                 }
 
@@ -519,8 +520,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         writer.Write(trialController.lateWaves);
         writer.Write(", ");
         writer.Write(waveController.waveThreat);
-        writer.Write(", ");
-        writer.Write(measureController.framesDisplaced);
         writer.Write(", ");
         writer.WriteLine();
 

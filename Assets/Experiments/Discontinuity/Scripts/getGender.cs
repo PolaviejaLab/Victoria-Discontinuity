@@ -6,8 +6,10 @@ public class getGender : MonoBehaviour {
     public HandSwitcher handSwitcher;
     public ExperimentController experimentController;
 
-    //public int male_ = 0;
-    //public int female_ = 0;
+    public string subjectCode;
+
+    public int male_ = 0;
+    public int female_ = 0;
 
     public int expNum;
     public string experimentName;
@@ -22,26 +24,32 @@ public class getGender : MonoBehaviour {
 
     }
 
+    public void getCode(string subjectName)
+    {
+        subjectCode = subjectName;
+        Debug.Log("Subject Code " + subjectCode);
+    }
+
     public void isMale(bool male) {
         handSwitcher.useMale = true;
         Debug.Log("Changed gender to male");
-        //if (female_ == 0) {
-        //    male_ = 1;  
-        //    Debug.Log("Gender is male");
-        //} else if (female_ == 1) {
-        //    Debug.Log("Female already selected");
-        //}
+        if (female_ == 0) {
+            male_ = 1;  
+            Debug.Log("Gender is male");
+       } else if (female_ == 1) {
+            Debug.Log("Female already selected");
+        }
     }
 
     public void isFemale(bool female) {
         handSwitcher.useMale = false;
         Debug.Log("Changed gender to female");
-        //if (male_ == 0) {
-        //    female_ = 1;
-        //    Debug.Log("Gender is female");
-        //} else if (male_ == 1) {
-        //    Debug.Log("Male already selected");
-        //}
+        if (male_ == 0) {
+            female_ = 1;
+            Debug.Log("Gender is female");
+        } else if (male_ == 1) {
+            Debug.Log("Male already selected");
+        }
     }
 
     public void getExperimentNumber(int expNum) {

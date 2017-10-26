@@ -17,8 +17,10 @@ public enum TrialEvents {
  */
 public enum TrialStates {
 	AccomodationTime,           // Get used to the environment
+    PreMeasure,                 // Implicit Measure (before task)
     ExperimentWave,             // Reaching-like task
-    Measure,                    // Implicit measure
+    Delay,                      // In between measures and task
+    PostMeasure,                // Implicit measure (after task)
     TrialFinished,              // End of the trial
 };
 
@@ -28,7 +30,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 	// Reference to the experiment controller
 	public ExperimentController experimentController;
     public WaveController waveController;
-  //   public PropDriftController driftController;
     public Threat threatController;
     public ImplicitMeasure measureController;
 
@@ -39,6 +40,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
     public GameObject testLights;
     public GameObject room;
     public GameObject table;
+    public GameObject measure;
 
 	// Parameters of the current trial
 	public int hand;
@@ -69,8 +71,9 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
         handSwitcher.lambdaRight = lNoise;
         threatController.threatOffset = knifeOffset;
         threatController.handOffset = new Vector3 (0, 0, offset);
-        
-        testLights.SetActive(true);
+
+        testLights.SetActive(false);
+
     }
 
 
@@ -82,49 +85,55 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 	
 		switch (GetState()) {
             case TrialStates.AccomodationTime:
-                testLights.SetActive(false);
+                break;
+
+            case TrialStates.PreMeasure:
+                if (ev == TrialEvents.MeasureDone)
+                    ChangeState(TrialStates.Delay);
                 break;
 
             case TrialStates.ExperimentWave:
-                if (ev == TrialEvents.WavingFinished){
-                    ChangeState(TrialStates.Measure);
-                }
+                if (ev == TrialEvents.WavingFinished)
+                    ChangeState(TrialStates.PostMeasure);
                 break;
 
-            case TrialStates.Measure:
-                if (ev == TrialEvents.MeasureDone) {
+            case TrialStates.PostMeasure:
+                if (ev == TrialEvents.MeasureDone)
                     ChangeState(TrialStates.TrialFinished);
-                }
                 break;
 
             case TrialStates.TrialFinished:
                 break;
-			
         }
     }
     
     
-
-
 	public void Update(){
 		if (!IsStarted ())
 			return;
 
 		switch (GetState ()) {  
-    		case TrialStates.AccomodationTime:				
-    			if (Input.GetKey(KeyCode.Q))
-    				ChangeState(TrialStates.ExperimentWave);
+    		case TrialStates.AccomodationTime:							
+                if (GetTimeInState() > 1.5f)
+    				ChangeState(TrialStates.PreMeasure);
     			break;
+
+            case TrialStates.PreMeasure:
+                if (GetTimeInState() > 1.0f)
+                    measureController.StartMachine();
+                break;
+
+            case TrialStates.Delay:
+                if (Input.GetKeyDown(KeyCode.Q))
+                    ChangeState(TrialStates.ExperimentWave);
+                break;
 
             case TrialStates.ExperimentWave:
                 break;
 
-            case TrialStates.Measure:
-                if (GetTimeInState() > 1.5)
-                {
-                    measureController.measure.SetActive(true);
+            case TrialStates.PostMeasure:
+                if (GetTimeInState() > 1.5f)
                     measureController.StartMachine();
-                }
                 break;
 
             case TrialStates.TrialFinished:
@@ -134,45 +143,23 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 	
 
 	protected override void OnEnter(TrialStates oldState){
-		switch (GetState ()) {
 
+        switch (GetState ()) {
             case TrialStates.AccomodationTime:
     			handSwitcher.showRightHand = true;
+                break;
 
-                if (genderChanged == false && changeGender == true)
-                {
-                    if (handSwitcher.useMale)
-                    {
-                        handSwitcher.useMale = false;
-                        WriteLog("Gender changed to female");
-                    }
-                    else if (!handSwitcher.useMale)
-                    {
-                        handSwitcher.useMale = true;
-                        WriteLog("Gender changed to male");
-                    }
-                    genderChanged = true;
-                }
-                else if (genderChanged == true && changeGender == false) {
-                    if (handSwitcher.useMale)
-                    {
-                        handSwitcher.useMale = false;
-                        WriteLog("Gender changed to female");
-                    }
-                    else if (!handSwitcher.useMale)
-                    {
-                        handSwitcher.useMale = true;
-                        WriteLog("Gender changed to male");
-                    }
-                    genderChanged = false;
-                }
+            case TrialStates.PreMeasure:
+                measure.SetActive(true);
                 break;
 
             case TrialStates.ExperimentWave:
+                testLights.SetActive(true);
                 waveController.StartMachine();
                 break;
 
-            case TrialStates.Measure: 
+            case TrialStates.PostMeasure:
+                measure.SetActive(true);
                 break;
 
             case TrialStates.TrialFinished:
@@ -189,6 +176,11 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
     			handSwitcher.showLeftHand = false;
     			break;
 
+            case TrialStates.PreMeasure:
+                measure.SetActive(false);
+                testLights.SetActive(true);
+                break;
+
             case TrialStates.ExperimentWave:
                 testLights.SetActive(false);
                 totWaves = waveController.waveCounter;
@@ -198,7 +190,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 waveController.StopMachine();
                 break;
 
-            case TrialStates.Measure:
+            case TrialStates.PostMeasure:
                 break;
 
             case TrialStates.TrialFinished:
