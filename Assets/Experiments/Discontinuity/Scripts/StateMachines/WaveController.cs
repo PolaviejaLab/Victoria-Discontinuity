@@ -26,6 +26,7 @@ public enum WaveStates
     CorrectWave,
     IncorrectWave,
     Waved,
+    Feedback,
     TooLate,
     Question, 
     Threat,
@@ -43,6 +44,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
     // Initial and subsequent lights
     public MaterialChanger initialLight;
     public MaterialChanger[] lights;
+    public MaterialChanger feedbackScreen;
 
     // Parameters for the waving
     public int wavesRequired;
@@ -195,7 +197,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     targetLightOn = true;
                     HandleEvent(WaveEvents.Delay);
                 }
-                if (GetTimeInState() > 6.0f && targetLightOn)
+                if (GetTimeInState() > 3.0f && targetLightOn)
                 {
                     WriteLog("Waved Late");
                     lateWaves++;
@@ -259,14 +261,15 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.CorrectWave:
-                lights[currentLight].activeMaterial = 2;
+                feedbackScreen.activeMaterial = 1;
                 break;
 
             case WaveStates.IncorrectWave:
-                lights[currentLight].activeMaterial = 3;
+                feedbackScreen.activeMaterial = 2;
                 break;
 
             case WaveStates.Waved:
+                feedbackScreen.activeMaterial = 0;
                 TurnOffTarget();
                 break;
 
@@ -286,8 +289,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.EndWaving:
-                initialLight.activeMaterial = 1;
-                collisionInitial.SetActive(true);
+                TurnOnInitial();
                 break;
 
             case WaveStates.Question:
@@ -311,7 +313,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
             case WaveStates.Waved:
                 break;
-
+                
             case WaveStates.TooLate:
                 break;
 
@@ -329,13 +331,23 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
         }
     }
 
-
+    public void TurnOnInitial() {
+        initialLight.activeMaterial = 1;
+        collisionInitial.SetActive(true);
+        initialLightOn = true;
+    }
+    
     public void TurnOffInitial() {
         initialLight.activeMaterial = 0;
         collisionInitial.SetActive(false);
         initialLightOn = false;
     }
 
+    public void TurnOnTarget() {
+        collisionLights.SetActive(true);
+        lights[currentLight].activeMaterial = 1;
+        targetLightOn = true;
+    }
 
     public void TurnOffTarget() {
         collisionLights.SetActive(false);
