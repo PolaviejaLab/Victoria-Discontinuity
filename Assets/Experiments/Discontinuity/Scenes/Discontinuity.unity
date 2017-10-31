@@ -6353,6 +6353,8 @@ MonoBehaviour:
   knifePresent: 0
   threat: {fileID: 924765750}
   Questionnaire: {fileID: 989738545}
+  timeOut: 3
+  lightResults: 0
 --- !u!4 &770215073
 Transform:
   m_ObjectHideFlags: 0
@@ -10919,7 +10921,7 @@ Transform:
   m_GameObject: {fileID: 1464355302}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.4, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 0.65, z: 0.65}
+  m_LocalScale: {x: 3, y: 0.65, z: 0.65}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1688073951}
@@ -13116,8 +13118,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1688073950}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.4593, y: 1.015, z: 0.243}
-  m_LocalScale: {x: 0.01, y: 0.25, z: 0.25}
+  m_LocalPosition: {x: -0.4528, y: 1.015, z: 0.262}
+  m_LocalScale: {x: 0.005, y: 0.25, z: 0.25}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1464355303}
