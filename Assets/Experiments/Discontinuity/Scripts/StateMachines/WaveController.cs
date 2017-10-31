@@ -23,14 +23,18 @@ public enum WaveStates
 {
     Initial,
     Target,
-    CorrectWave,
-    IncorrectWave,
     Waved,
     Feedback,
-    TooLate,
     Question, 
     Threat,
     EndWaving,
+};
+
+public enum LightResults
+{
+    Correct,
+    Incorrect,
+    TimeOut,
 };
 
 
@@ -77,6 +81,11 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
     // Questionnaire
     public GameObject Questionnaire;
+
+    public float timeOut = 3.0f;
+
+    public LightResults lightResults;
+
 
     public void Start()
     {
@@ -133,6 +142,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
                     lights[currentLight].activeMaterial = 1;
                     collisionLights.SetActive(true);
+                    
                 }
                 else if ((int)ev == currentLight && randomProbability <= collisionProbability)
                 {
@@ -140,26 +150,25 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     WriteLog("Waved correctly");
 
                     correctWaves++;
-                    ChangeState(WaveStates.CorrectWave);
+                    lightResults = LightResults.Correct;
+                    ChangeState(WaveStates.Feedback);
                 }
                 else if ((int)ev == currentLight && randomProbability > collisionProbability) {
                     WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
 
-                    WriteLog("Not waved"); // Uncomment for noise-type 2.2, that waits until timeout
+                    WriteLog("Not waved");
+                    ChangeState(WaveStates.Feedback);
                 }
                 else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial)
                 {
                     WriteLog("Waved incorrectly");
                     incorrectWaves++;
-                    ChangeState(WaveStates.IncorrectWave);
+                    lightResults = LightResults.Incorrect;
+                    ChangeState(WaveStates.Feedback);
                 }
                 break;
 
             case WaveStates.Waved:
-                break;
-
-            case WaveStates.TooLate:
-                ChangeState(WaveStates.Waved);
                 break;
 
             case WaveStates.Question:
@@ -193,31 +202,29 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
             case WaveStates.Target:
                 // Wait between the lights turning on and off
-                if (GetTimeInState() > 0.5f && !targetLightOn) {
+                if (GetTimeInState() > 1.0f && !targetLightOn) {
                     targetLightOn = true;
                     HandleEvent(WaveEvents.Delay);
                 }
-                if (GetTimeInState() > 3.0f && targetLightOn)
+                if (GetTimeInState() > timeOut && targetLightOn)
                 {
                     WriteLog("Waved Late");
                     lateWaves++;
 
-                    ChangeState(WaveStates.TooLate);
+                    lightResults = LightResults.TimeOut;
+                    ChangeState(WaveStates.Feedback);
                 }
                 break;
 
-            case WaveStates.CorrectWave:
+            case WaveStates.Feedback:
                 if (GetTimeInState() > 0.5f)
-                    ChangeState(WaveStates.Waved);
-                break;
-
-            case WaveStates.IncorrectWave:
-                if (GetTimeInState() > 0.5f)
+                    GiveFeedback();
+                if (GetTimeInState() > 1.5f)
                     ChangeState(WaveStates.Waved);
                 break;
 
             case WaveStates.Waved:
-                if (GetTimeInState() > 1.5f) {
+                if (GetTimeInState() > 0.5f) {
                     if (waveCounter < wavesRequired) {
                         if (waveCounter == waveThreat && wavesRequired % waveCounter != 0) {
                             ChangeState(WaveStates.Threat);
@@ -234,9 +241,6 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                             ChangeState(WaveStates.EndWaving);
                     }
                 }
-                break;
-
-            case WaveStates.TooLate:
                 break;
 
             case WaveStates.Question:
@@ -260,21 +264,12 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 waveCounter++;
                 break;
 
-            case WaveStates.CorrectWave:
-                feedbackScreen.activeMaterial = 1;
-                break;
-
-            case WaveStates.IncorrectWave:
-                feedbackScreen.activeMaterial = 2;
-                break;
-
             case WaveStates.Waved:
                 feedbackScreen.activeMaterial = 0;
-                TurnOffTarget();
                 break;
 
-            case WaveStates.TooLate:
-                ChangeState(WaveStates.IncorrectWave);
+            case WaveStates.Feedback:
+
                 break;
 
             case WaveStates.Threat:
@@ -314,9 +309,6 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
             case WaveStates.Waved:
                 break;
                 
-            case WaveStates.TooLate:
-                break;
-
             case WaveStates.Threat:
                 threatController.StopMachine();
                 break;
@@ -353,5 +345,14 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
         collisionLights.SetActive(false);
         lights[currentLight].activeMaterial = 0;
         targetLightOn = false;
+    }
+
+    public void GiveFeedback() {
+        if (lightResults == LightResults.Correct)
+            feedbackScreen.activeMaterial = 1;
+        if (lightResults == LightResults.Incorrect)
+            feedbackScreen.activeMaterial = 2;
+        if (lightResults == LightResults.TimeOut)
+            feedbackScreen.activeMaterial = 2;
     }
 }

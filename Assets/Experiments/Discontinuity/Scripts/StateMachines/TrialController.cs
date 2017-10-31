@@ -124,6 +124,8 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.Delay:
+                if (GetTimeInState() > 2.0f)
+                    testLights.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.Q))
                     ChangeState(TrialStates.ExperimentWave);
                 break;
@@ -154,7 +156,6 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
                 break;
 
             case TrialStates.ExperimentWave:
-                testLights.SetActive(true);
                 waveController.StartMachine();
                 break;
 
@@ -178,7 +179,7 @@ public class TrialController : ICStateMachine<TrialStates, TrialEvents>
 
             case TrialStates.PreMeasure:
                 measure.SetActive(false);
-                testLights.SetActive(true);
+                
                 break;
 
             case TrialStates.ExperimentWave:
