@@ -14,7 +14,7 @@ public class SimpleCollision : MonoBehaviour {
 	void OnTriggerStay(Collider col)
 	{
         //   Debug.Log(col.name);
-        probability = Random.Range(0.01f, 0.99f);
+        probability = Random.Range(0.00f, 1.00f);
         if (col.name == "HandContainer"){
 			if(objects.Length == 0) {
                 waveController.HandleEvent(triggerEvent);

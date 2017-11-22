@@ -77,9 +77,9 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
 
             case MeasureStates.Measuring:
                 if (ev == MeasureEvents.Wave_Finished && finishLightOn) {
-                    if (currentIteration < 3)
+                    if (currentIteration < totalIterations)
                         ChangeState(MeasureStates.Delay);
-                    else if (currentIteration == 3)
+                    else if (currentIteration == totalIterations)
                         ChangeState(MeasureStates.Finished);
                 }
                 break;
@@ -95,11 +95,11 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
         switch (GetState())
         {
             case MeasureStates.Instructions:
-                if (GetTimeInState() > 2.0f)
+                if (GetTimeInState() > 4.0f)
                     ChangeState(MeasureStates.Idle);
                 break;
             case MeasureStates.Idle:
-                if (GetTimeInState() > 1.0f)
+                if (GetTimeInState() > 0.5f)
                 {
                     ChangeState(MeasureStates.WaitingToStart);
                     offsetSwitcher.noDisplacement();
@@ -110,12 +110,14 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
 
             case MeasureStates.Measuring:
                 offsetSwitcher.displaceHand(updatedDisplacement);
-                updatedDisplacement += 0.00001f;
+                updatedDisplacement += 0.000025f;
                 framesDisplaced += 1;
+                if (Input.GetKeyDown(KeyCode.Space))
+                    HandleEvent(MeasureEvents.Wave_Finished);
                 break;
 
             case MeasureStates.Delay:
-                if (GetTimeInState() > 1.0f) {
+                if (GetTimeInState() > 2.0f) {
                     ChangeState(MeasureStates.Idle);
                 }
                 break;
@@ -137,8 +139,6 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
         {
             case MeasureStates.Instructions:
                 instructionCanvas.SetActive(true);
-                TurnOnStartLight();
-                TurnOnFinishLight();
                 break;
 
             case MeasureStates.Idle:
@@ -146,12 +146,12 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
                 break;
 
             case MeasureStates.WaitingToStart:
-                TurnOnStartLight(); 
+                TurnOnStartLight();
+                TurnOnFinishLight();
                 break;
 
             case MeasureStates.Measuring:
-                WriteLog("Iteration measure " + currentIteration + " started");
-                TurnOnFinishLight();
+                WriteLog("Iteration measure " + currentIteration + " started");           
                 break;
 
             case MeasureStates.Delay:
@@ -173,8 +173,6 @@ public class ImplicitMeasure : ICStateMachine<MeasureStates, MeasureEvents>
         switch (GetState())
         {
             case MeasureStates.Instructions:
-                TurnOffStartLight();
-                TurnOffFinishLight();
                 instructionCanvas.SetActive(false);
                 break;
             case MeasureStates.Idle:

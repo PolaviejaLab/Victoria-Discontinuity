@@ -81,6 +81,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
 
     // Questionnaire
     public GameObject Questionnaire;
+    public float timeInState;
 
     public float timeOut = 3.0f;
 
@@ -104,7 +105,9 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
         correctWaves = 0;
         incorrectWaves = 0;
 
-        waveThreat = UnityEngine.Random.Range(2, wavesRequired - 1);
+        waveThreat = UnityEngine.Random.Range(4, wavesRequired - 5);
+        if (waveThreat % 2 == 0)
+            waveThreat += 1;
         WriteLog("Threat wave is: " + waveThreat);
     }
 
@@ -146,7 +149,7 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 }
                 else if ((int)ev == currentLight && randomProbability <= collisionProbability)
                 {
-                    WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
+                    WriteLog("Probability for Wave " + waveCounter + ": " + randomProbability);
                     WriteLog("Waved correctly");
 
                     correctWaves++;
@@ -154,13 +157,11 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                     ChangeState(WaveStates.Feedback);
                 }
                 else if ((int)ev == currentLight && randomProbability > collisionProbability) {
-                    WriteLog("Probability for wave" + waveCounter + " is " + randomProbability);
+                    WriteLog("Probability for Wave " + waveCounter + ": " + randomProbability);
 
                     WriteLog("Not waved");
-                    ChangeState(WaveStates.Feedback);
                 }
-                else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial)
-                {
+                else if ((int)ev != currentLight && ev != WaveEvents.Wave_Initial) {
                     WriteLog("Waved incorrectly");
                     incorrectWaves++;
                     lightResults = LightResults.Incorrect;
@@ -219,17 +220,17 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
             case WaveStates.Feedback:
                 if (GetTimeInState() > 0.5f)
                     GiveFeedback();
-                if (GetTimeInState() > 1.5f)
+                if (GetTimeInState() > 3.0f)
                     ChangeState(WaveStates.Waved);
                 break;
 
             case WaveStates.Waved:
                 if (GetTimeInState() > 0.5f) {
                     if (waveCounter < wavesRequired) {
-                        if (waveCounter == waveThreat && wavesRequired % waveCounter != 0) {
+                        if (waveCounter == waveThreat) {
                             ChangeState(WaveStates.Threat);
                         }
-                        else if (wavesRequired % waveCounter == 0) {
+                        else if (waveCounter % 2 == 0) {
                             ChangeState(WaveStates.Question);
                         }
                         else {
@@ -307,6 +308,8 @@ public class WaveController : ICStateMachine<WaveStates, WaveEvents>
                 break;
 
             case WaveStates.Waved:
+                timeInState = GetTimeInState();
+                WriteLog("Time to wave: " + timeInState);
                 break;
                 
             case WaveStates.Threat:

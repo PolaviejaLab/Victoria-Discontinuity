@@ -21,6 +21,7 @@ public enum ExperimentEvents
 {
     ProtocolLoaded,
     TrialFinished,
+    LightsDimmed,
     QuestionsFinished,
     ExperimentFinished,
 };
@@ -31,7 +32,8 @@ public enum ExperimentStates
     WaitingForFeedback,
     Start,
     Trial,
-    Questionnaires,
+    DimLights,
+    Questionnaire,
     Finished,
 };
 
@@ -41,45 +43,45 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
     /**
      * Link to the Trial state machine which is responsible for the flow of a single trial.
      */
-    public TrialController trialController;
-    public InactiveTrialController inactiveTrialController;
 
     /**
-     * Links to state machines used by the Trial state machine (TrialController)
-     * we need those here in order to load variables from the protocol file into those
-     * state machines.
-     *
-     * FIXME: This is undesirable behaviour as it breaks the hierarchical organization.
-     * Instead, we should tell the Trial state machine which should set variables on the
-     * child machines.
-     */
+    * Links to state machines used by the Trial state machine (TrialController)
+    * we need those here in order to load variables from the protocol file into those
+    * state machines.
+    *
+    * FIXME: This is undesirable behaviour as it breaks the hierarchical organization.
+    * Instead, we should tell the Trial state machine which should set variables on the
+    * child machines.
+    */
+
+    public TrialController trialController;
     public WaveController waveController;
-    public PropDriftController driftController;
     public ImplicitMeasure measureController;
     public Threat threatController;
-    public getGender subjectCode;
-    public getGender expInfo;
 
     public HandController handController;
     public HandSwitcher handSwitcher;
 
+    public getGender subjectCode;
+    public getGender expInfo;
+
+    public Light[] roomLights;
+    public MaterialChanger[] roomWalls;
+    private bool lightsDimmed = false;
+    private bool lightsOff = false;
+
     public TableLights tableLights;
 
     private ICTrialList trialList;
+    public int randomProtocol;
     public string protocolFile;
 
     private string outputDirectory;
-
-    private int participantNumber;
     private string participantName;
 
     public int trialCounter;
-    public int randomProtocol;
-
-    private bool trialEmpty;
 
     public int noiseType;
-
 
     public void Start()
     {
@@ -111,14 +113,23 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
 
             case ExperimentStates.Trial:
-                if (ev == ExperimentEvents.TrialFinished)
-                {
+                if (ev == ExperimentEvents.TrialFinished) {
                     SaveTrialResult();
-                    ChangeState(ExperimentStates.Questionnaires);
+                    ChangeState(ExperimentStates.DimLights);
                 }
                 break;
 
-            case ExperimentStates.Questionnaires:
+            case ExperimentStates.DimLights:
+                if (ev == ExperimentEvents.LightsDimmed && lightsDimmed) {
+                    foreach (MaterialChanger i in roomWalls) {
+                        i.activeMaterial = 1;
+                    }
+                    lightsOff = true;         
+                }
+                    
+                break;
+
+            case ExperimentStates.Questionnaire:
                 if (ev == ExperimentEvents.QuestionsFinished)
                     ChangeState(ExperimentStates.Trial);
                 break;
@@ -132,13 +143,11 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             return;
 
         // Change the gender of the hand
-        if (Input.GetKeyDown(KeyCode.F))
-        {
+        if (Input.GetKeyDown(KeyCode.F)) {
             handSwitcher.useMale = false;
             WriteLog("Gender changed to female");
         }
-        else if (Input.GetKeyDown(KeyCode.M))
-        {
+        else if (Input.GetKeyDown(KeyCode.M)) {
             handSwitcher.useMale = true;
             WriteLog("Gender changed to male");
         }
@@ -146,16 +155,17 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         switch (GetState()) {
             case ExperimentStates.WaitingForFeedback:
                 if (Input.GetKeyDown(KeyCode.Tab))
-                {
                     ChangeState(ExperimentStates.Start);
-                }
                 else if (Input.GetKeyDown(KeyCode.Escape))
-                {
                     ChangeState(ExperimentStates.Finished);
-                }
                 break;
 
-            case ExperimentStates.Questionnaires:
+            case ExperimentStates.DimLights:
+                if (lightsOff)
+                    ChangeState(ExperimentStates.Questionnaire);
+                break;
+
+            case ExperimentStates.Questionnaire:
                 if (Input.GetKeyDown(KeyCode.W))
                     HandleEvent(ExperimentEvents.QuestionsFinished);
                 break;
@@ -173,8 +183,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
 
             case ExperimentStates.Start:
                 string[] dir = Directory.GetDirectories("Results");
-
-                participantNumber = 1;
 
                 trialCounter = 0;
 
@@ -196,8 +204,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 logger.OpenLog(GetLogFilename());
 
                 // Record participant number to log-file
-
-                // WriteLog("Participant: " + participantNumber.ToString());
                 WriteLog("Participant: " + subjectCode.subjectCode);
 
                 if (!handSwitcher.useMale) {
@@ -207,8 +213,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 {
                     WriteLog("Hand model is male");
                 }
-
-                // string[] dirProtocol = Directory.GetFiles("Protocol/Exp2_Experiment2");
 
                 string[] dirProtocol = Directory.GetFiles("Protocol/" + expInfo.experimentName.ToString() + "/");
 
@@ -236,13 +240,17 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 }
                 break;
 
-            case ExperimentStates.Questionnaires:
+            case ExperimentStates.DimLights:
+                
+                break;
+
+            case ExperimentStates.Questionnaire:
                 handSwitcher.showRightHand = false;
                 break;
 
             case ExperimentStates.Finished:
                 StopMachine();
-                WriteLog("No more subjects, stopping machine");
+                WriteLog("Experiment Finished");
                 break;
         }
     }
@@ -253,6 +261,19 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         switch (GetState())
         {
             case ExperimentStates.Trial:
+                break;
+
+            case ExperimentStates.WaitingForFeedback:
+                break;
+
+            case ExperimentStates.Start:
+                break;
+
+            case ExperimentStates.Questionnaire:
+                resetRoomLight();
+                break;
+
+            case ExperimentStates.Finished:
                 break;
         }
     }
@@ -268,17 +289,14 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         // Determine which hand to use for given gapsize
         if (trial["GapStatus"] == "Inactive") {
             trialController.hand = 0;
-            inactiveTrialController.hand = 0;
         }
         else if (trial["GapStatus"] == "Active") {
             trialController.hand = 1;
-            inactiveTrialController.hand = 1;
         }
         
         else {
             WriteLog("Invalid GapSize in protocol");
             trialController.hand = -1;
-            inactiveTrialController.hand = -1;
         }
 
         WriteLog("Gap: " + trial["GapStatus"]);
@@ -391,7 +409,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
             } else if (trial["ChangeGender"].ToLower() == "false"){
                 trialController.changeGender = false;
             }
-
         }
     }
 
@@ -422,8 +439,8 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
                 trialController.initialState = TrialStates.AccomodationTime;
                 trialController.StartMachine();
             } else if (trial["IgnoreUpdate"].ToLower() == "true") {
-                inactiveTrialController.initialState = InactiveTrialStates.AccomodationTime;
-                inactiveTrialController.StartMachine(); 
+                // inactiveTrialController.initialState = InactiveTrialStates.AccomodationTime;
+                // inactiveTrialController.StartMachine(); 
             } else {
                 throw new Exception("Invalid value for IgnoreUpdate");
             }
@@ -517,8 +534,6 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
         writer.Write(", ");
         writer.Write(trialController.lateWaves);
         writer.Write(", ");
-        writer.Write(trialController.lateWaves);
-        writer.Write(", ");
         writer.Write(waveController.waveThreat);
         writer.Write(", ");
         writer.WriteLine();
@@ -529,5 +544,23 @@ public class ExperimentController : ICStateMachine<ExperimentStates, ExperimentE
     private void SaveExperimentResult()
     {
         handController.StopRecording();
+    }
+
+    private void DimLights()
+    {
+        foreach (Light l in roomLights) {
+            l.intensity = 0;
+        }
+        lightsDimmed = true;
+        HandleEvent(ExperimentEvents.LightsDimmed);
+    }
+
+    private void resetRoomLight() {
+
+        foreach (MaterialChanger i in roomWalls) {
+            i.activeMaterial = 0;
+        }
+        lightsDimmed = false;
+        lightsOff = false;
     }
 }

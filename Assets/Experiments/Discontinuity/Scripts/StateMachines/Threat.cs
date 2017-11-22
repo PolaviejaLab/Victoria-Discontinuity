@@ -63,7 +63,7 @@ public class Threat: ICStateMachine<ThreatState, ThreatEvent>
         if(hideOnStopped)
             threat.SetActive(false);
 
-        followingTimeout = 1.0f;
+        followingTimeout = 3.0f;
 	}
 	
     
